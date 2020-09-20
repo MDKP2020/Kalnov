@@ -20,7 +20,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2ab2c6f7-fb55-40a8-9792-a9fca38b35e0" name="Default Changelist" comment="initial laravel">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -187,6 +187,7 @@
       <workItem from="1600002196667" duration="2438000" />
       <workItem from="1600004866197" duration="1028000" />
       <workItem from="1600006387706" duration="465000" />
+      <workItem from="1600600737707" duration="315000" />
     </task>
     <task id="LOCAL-00001" summary="initial laravel">
       <created>1600005810079</created>
@@ -254,9 +255,9 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="277" y="57" key="SettingsEditor/0.0.1536.824@0.0.1536.824" timestamp="1599999423774" />
-    <state x="361" y="145" key="Vcs.Push.Dialog.v2" timestamp="1600005811610">
+    <state x="361" y="145" key="Vcs.Push.Dialog.v2" timestamp="1600600933320">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state x="361" y="145" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1600005811610" />
+    <state x="361" y="145" key="Vcs.Push.Dialog.v2/0.0.1536.824@0.0.1536.824" timestamp="1600600933320" />
   </component>
 </project>
