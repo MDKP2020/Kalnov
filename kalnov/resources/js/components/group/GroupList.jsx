@@ -1,6 +1,17 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
+import React, { useEffect, useState } from "react";
+import ReactDOM from 'react-dom';
 
-const GroupList = ({}) => {
+export const GroupList = (props) => {
 
+
+    return (
+        <>
+            <h1>Работа со студентами</h1>
+            <div>
+
+            </div>
+        </>
+    )
 }
+
+ReactDOM.render(<GroupList/>, document.getElementById('groups-root'));
