@@ -13,5 +13,3 @@ export const GroupList = (props) => {
         </>
     )
 }
-
-ReactDOM.render(<GroupList/>, document.getElementById('groups-root'));
