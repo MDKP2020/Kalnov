@@ -22,7 +22,7 @@ const getBreadcrumbsForCurrentPath = ({ routes, currentPath }) => {
             if(match !== null) {
 
                 matches.push({
-                    breadcrumb: render(route.breadcrumb, match),
+                    breadcrumb: renderBreadcrumb(route.breadcrumb, match),
                     path: route.path,
                     match
                 })
