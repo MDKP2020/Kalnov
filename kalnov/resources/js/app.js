@@ -7,7 +7,8 @@ import {
 } from 'react-router-dom';
 import { GroupList } from "./components/group/GroupList";
 import {Header} from "./components/ui/Header";
-import { makeStyles } from '@material-ui/core';
+import {makeStyles, MuiThemeProvider} from '@material-ui/core';
+import {theme} from "./theme";
 
 const useStyles = makeStyles({
     root: {
@@ -19,16 +20,18 @@ export const App = (props) => {
     const styles = useStyles()
 
     return (
-        <div className={styles.root}>
-            <Router>
-                <Header/>
-                <Switch>
-                    <Route exact path="/groups">
-                        <GroupList/>
-                    </Route>
-                </Switch>
-            </Router>
-        </div>
+        <MuiThemeProvider theme={theme}>
+            <div className={styles.root}>
+                <Router>
+                    <Header/>
+                    <Switch>
+                        <Route exact path="/groups">
+                            <GroupList/>
+                        </Route>
+                    </Switch>
+                </Router>
+            </div>
+        </MuiThemeProvider>
     )
 }
 
