@@ -9,6 +9,7 @@ import { GroupList } from "./components/group/GroupList";
 import {Header} from "./components/ui/Header";
 import {makeStyles, MuiThemeProvider} from '@material-ui/core';
 import {theme} from "./theme";
+import '../css/app.css';
 
 const useStyles = makeStyles({
     root: {
