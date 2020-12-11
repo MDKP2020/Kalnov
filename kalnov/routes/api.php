@@ -2,6 +2,7 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Models\YearRange;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,4 +17,16 @@ use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::get('/years', function() {
+    return YearRange::all();
+});
+
+Route::get('/years/{id}', function($id) {
+    return YearRange::find($id);
+});
+
+Route::post('/years', function(Request $request) {
+    return YearRange::store($request);
 });
