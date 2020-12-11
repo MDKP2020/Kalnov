@@ -1,6 +1,13 @@
 import React from 'react';
 import { matchPath, withRouter } from 'react-router';
 
+const renderBreadcrumb = (breadcrumb, match) => {
+    if(typeof breadcrumb === 'function')
+        return breadcrumb(match)
+    else
+        return breadcrumb;
+}
+
 const getBreadcrumbsForCurrentPath = ({ routes, currentPath }) => {
     const pathSections = routes
         .replace(/\/$/, '') // удаление последнего слэша
@@ -13,8 +20,9 @@ const getBreadcrumbsForCurrentPath = ({ routes, currentPath }) => {
         routes.some(route => {
             const match = matchPath(path, { path: route.path, exact: true })
             if(match !== null) {
+
                 matches.push({
-                    breadcrumb: route.breadcrumb,
+                    breadcrumb: render(route.breadcrumb, match),
                     path: route.path,
                     match
                 })
