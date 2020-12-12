@@ -19,6 +19,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+// API годов обучения
+
 Route::get('/years', function() {
     return YearRange::all()->sortByDesc('start')->values()->all();
 });
@@ -30,3 +32,5 @@ Route::get('/years/{id}', function($id) {
 Route::post('/years', function(Request $request) {
     return YearRange::store($request);
 });
+
+// API групп
