@@ -20,7 +20,7 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::get('/years', function() {
-    return YearRange::all()->sortByDesc('start');
+    return YearRange::all()->sortByDesc('start')->values()->all();
 });
 
 Route::get('/years/{id}', function($id) {
