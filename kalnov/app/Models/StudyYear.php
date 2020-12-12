@@ -21,4 +21,10 @@ class StudyYear extends Model
 
         $studyYear->saveOrFail();
     }
+
+    public static function getAllByType(string $type) {
+        return StudyYear::where('type', $type)->orderBy('year')->get();
+    }
+
+
 }
