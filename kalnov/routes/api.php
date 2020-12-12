@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\StudyYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\YearRange;
@@ -31,6 +32,11 @@ Route::get('/years/{id}', function($id) {
 
 Route::post('/years', function(Request $request) {
     return YearRange::store($request);
+});
+
+// API курсов обучения
+Route::post('/study_years', function(Request $request) {
+    return StudyYear::store($request);
 });
 
 // API групп
