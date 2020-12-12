@@ -47,6 +47,10 @@ Route::get('/study_years', function(Request $request) {
         return StudyYear::getAllByType($type);
 });
 
+Route::get('/study_years/types', function() {
+    return StudyYear::getTypes();
+});
+
 // API групп
 Route::get('/groups', function(Request $request) {
     // TODO: создать модель группы, добавить метод получения списка групп в заданном учебном году и на заданном курсе
