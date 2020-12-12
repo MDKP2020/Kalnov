@@ -18,5 +18,7 @@ class StudyYear extends Model
         if(strcasecmp('bachelor', $studyType) == 0 || strcasecmp('master', $studyType) == 0)
             $studyYear->type = $studyType;
         else throw new InvalidStudyYearTypeException();
+
+        $studyYear->saveOrFail();
     }
 }
