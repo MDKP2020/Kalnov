@@ -15,6 +15,8 @@ class GroupAddStudyYearColumn extends Migration
     {
         Schema::table('groups', function(Blueprint $table) {
             $table->dropColumn(['year']);
+            $table->smallInteger('study_year');
+            $table->string('study_year_type');
             $table->foreign(['study_year', 'study_year_type'])->references(['year', 'type'])->on('study_years');
         });
     }
