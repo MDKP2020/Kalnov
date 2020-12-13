@@ -20,7 +20,7 @@ class CreateGroupsTable extends Migration
             $table->date('year_range');
             $table->foreign('year_range')->references('start')->on('year_ranges');
             $table->foreignId('major_id')->constrained('majors');
-            $table->foreignId('previous_group_id')->nullable()->constrained();
+            $table->foreignId('previous_group_id')->nullable()->constrained('groups', 'id');
             $table->integer('year');
             $table->date('last_exam_date')->nullable();
         });
