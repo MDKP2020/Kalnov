@@ -6,6 +6,7 @@ use App\Exceptions\InvalidStudyYearTypeException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class StudyYear extends Model
 {
@@ -26,5 +27,7 @@ class StudyYear extends Model
         return StudyYear::where('type', $type)->orderBy('year')->get();
     }
 
-
+    public static function getTypes() {
+        return StudyYear::distinct()->get(['type']);
+    }
 }
