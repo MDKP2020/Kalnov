@@ -17,6 +17,7 @@ class CreateGroupsTable extends Migration
             $table->id();
             $table->timestamps();
             $table->integer('number');
+            $table->date('year_range');
             $table->foreign('year_range')->references('start')->on('year_ranges');
             $table->foreignId('major_id')->constrained('majors');
             $table->foreignId('previous_group_id')->nullable()->constrained();
