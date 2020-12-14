@@ -5,9 +5,16 @@ namespace App\Models;
 use App\Exceptions\InvalidStudyYearTypeException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
+/**
+ * Class StudyYear
+ *
+ * @package App\Models
+ * @mixin Builder
+ */
 class StudyYear extends Model
 {
     use HasFactory;
