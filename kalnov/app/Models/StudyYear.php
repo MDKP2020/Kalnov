@@ -28,6 +28,8 @@ class StudyYear extends Model
     }
 
     public static function getTypes() {
-        return StudyYear::distinct()->get(['type']);
+        return StudyYear::distinct()->get(['type'])->map(function($item) {
+            return $item['type'];
+        });
     }
 }
