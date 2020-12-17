@@ -13,7 +13,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }))
 
-export const GroupList = (props) => {
+export const GroupPicker = (props) => {
 
     const styles = useStyles()
     const location = useLocation()

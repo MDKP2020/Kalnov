@@ -5,7 +5,7 @@ import {
     Switch,
     Route
 } from 'react-router-dom';
-import { GroupList } from "./components/group/GroupList";
+import { GroupPicker } from "./components/group/GroupPicker";
 import {Header} from "./components/ui/Header";
 import {makeStyles, MuiThemeProvider} from '@material-ui/core';
 import {theme} from "./theme";
@@ -27,7 +27,7 @@ export const App = (props) => {
                     <Header/>
                     <Switch>
                         <Route path="/groups">
-                            <GroupList/>
+                            <GroupPicker/>
                         </Route>
                     </Switch>
                 </Router>
