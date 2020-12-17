@@ -19,8 +19,12 @@ class Group extends Model
         $group->saveOrFail();
     }
 
+    private static function findAllByYearAndStudyYear($year, $studyYear, $studyYearType) {
+        return Group::where('year_range', $year)->where('study_year', $studyYear)->where('study_year_type', $studyYearType);
+    }
+
     public static function getAllByYearAndStudyYear($year, $studyYear, $studyYearType) {
-        return Group::where('year_range', $year)->where('study_year', $studyYear)->where('study_year_type', $studyYearType)->get();
+        return Group::findAllByYearAndStudyYear($year, $studyYear, $studyYearType)->get();
     }
 
     public function moveToNextYear() {
