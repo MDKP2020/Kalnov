@@ -2,8 +2,10 @@ import React, { useEffect, useState } from "react";
 import ReactDOM from 'react-dom';
 import axios from '../../axios'
 import {makeStyles} from "@material-ui/core";
-import {Route, Switch} from "react-router";
+import {Route, Switch, useLocation} from "react-router";
 import {YearPicker} from "./YearPicker";
+import {StudyYearPicker} from "./StudyYearPicker";
+import {Group} from "./Group";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -14,13 +16,23 @@ const useStyles = makeStyles((theme) => ({
 export const GroupList = (props) => {
 
     const styles = useStyles()
+    const location = useLocation()
+    console.log(location)
 
     return (
         <div className={styles.container}>
             <h1>Работа со студентами</h1>
             <Switch>
-                <Route path='/groups'>
+                <Route path='/groups' exact>
                     <YearPicker/>
+                </Route>
+
+                <Route path='/groups/:year/:studyYearType/:studyYear'>
+                    <Group/>
+                </Route>
+
+                <Route path='/groups/:year'>
+                    <StudyYearPicker/>
                 </Route>
             </Switch>
         </div>
