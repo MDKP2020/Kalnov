@@ -1,5 +1,6 @@
 <?php
 
+use App\Exceptions\InvalidNextYearTransfer;
 use App\Models\Group;
 use App\Models\StudyYear;
 use Illuminate\Http\Request;
@@ -82,5 +83,8 @@ Route::post('/groups/nextYear', function(Request $request) {
         $request->input('number')
     );
 
-    return $group->moveToNextYear();
+    if(time() < $group->getAttribute('last_exam_date')->getTimestamp())
+        return $group->moveToNextYear();
+    else
+        throw new InvalidNextYearTransfer();
 });
