@@ -72,5 +72,15 @@ Route::post('/groups', function(Request $request) {
     );
 });
 
-// TODO эндпоинт перевода группы на следующий курс
-Route::post('/groups/nextYear');
+Route::post('/groups/nextYear', function(Request $request) {
+    // TODO валидация корректности времени перевода группы
+
+    $group = Group::get(
+        $request->input('year'),
+        $request->input('studyYearType'),
+        $request->input('studyYear'),
+        $request->input('number')
+    );
+
+    return $group->moveToNextYear();
+});
