@@ -19,11 +19,15 @@ class StudyYear extends Model
 {
     use HasFactory;
 
+    public static function isTypeValid(string $type) {
+        return strcasecmp('bachelor', $type) == 0 || strcasecmp('master', $type) == 0;
+    }
+
     public static function store (Request $request) {
         $studyYear = new StudyYear();
         $studyYear->year = $request->input('year');
         $studyType = $request->input('type');
-        if(strcasecmp('bachelor', $studyType) == 0 || strcasecmp('master', $studyType) == 0)
+        if(self::isTypeValid($studyType))
             $studyYear->type = $studyType;
         else throw new InvalidStudyYearTypeException();
 
