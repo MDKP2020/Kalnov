@@ -34,4 +34,8 @@ class Group extends Model
     public function moveToNextYear() {
         // TODO создать и вернуть новую группу
     }
+
+    public function setLastExamDate($date) {
+        $this->setAttribute('last_exam_date', $date);
+    }
 }

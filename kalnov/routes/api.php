@@ -87,5 +87,5 @@ Route::post('/groups/nextYear', function(Request $request) {
 
 Route::post('/groups/lastExamDate', function(Request $request) {
     $group = getGroup($request);
-    $group->setAttribute('last_exam_date', $request->input('lastExamDate'));
+    $group->setLastExamDate($request->input('lastExamDate'));
 });
