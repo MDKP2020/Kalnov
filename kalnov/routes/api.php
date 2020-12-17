@@ -60,3 +60,17 @@ Route::get('/groups', function(Request $request) {
 
     return Group::getAllByYearAndStudyYear($year, $studyYear, $studyYearType);
 });
+
+Route::post('/groups', function(Request $request) {
+    return Group::newGroup(
+        $request->input('number'),
+        $request->input('year'),
+        $request->input('studyYear'),
+        $request->input('studyYearType'),
+        $request->input('previousGroupId'),
+        $request->input('majorId')
+    );
+});
+
+// TODO эндпоинт перевода группы на следующий курс
+Route::post('/groups/nextYear');
