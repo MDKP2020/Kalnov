@@ -6,6 +6,7 @@ use App\Models\StudyYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\YearRange;
+use function App\Helpers\Api\getGroup;
 
 /*
 |--------------------------------------------------------------------------
@@ -76,15 +77,15 @@ Route::post('/groups', function(Request $request) {
 Route::post('/groups/nextYear', function(Request $request) {
     // TODO валидация корректности времени перевода группы
 
-    $group = Group::get(
-        $request->input('year'),
-        $request->input('studyYearType'),
-        $request->input('studyYear'),
-        $request->input('number')
-    );
+    $group = getGroup($request);
 
     if(time() < $group->getAttribute('last_exam_date')->getTimestamp())
         return $group->moveToNextYear();
     else
         throw new InvalidNextYearTransfer();
+});
+
+Route::post('/groups/lastExamDate', function(Request $request) {
+    $group = getGroup($request);
+    $group->setAttribute('last_exam_date', $request->input('lastExamDate'));
 });
