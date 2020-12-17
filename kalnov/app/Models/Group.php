@@ -27,6 +27,10 @@ class Group extends Model
         return Group::findAllByYearAndStudyYear($year, $studyYear, $studyYearType)->get();
     }
 
+    public static function get($year, $studyYearType, $studyYear, $number) {
+        return Group::findAllByYearAndStudyYear($year, $studyYear, $studyYearType)->where('number', $number)->get();
+    }
+
     public function moveToNextYear() {
         // TODO создать и вернуть новую группу
     }
