@@ -5,7 +5,10 @@ export const theme = createMuiTheme({
         primary: {
             main: '#6099B9'
         },
-        background: '#C4C4C4',
+        background: {
+            main: '#C4C4C4',
+            light: '#9C9C9C'
+        },
         error: {
             main: '#D31F1F'
         },

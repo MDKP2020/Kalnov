@@ -6,7 +6,7 @@ const useStyles = makeStyles((theme) => ({
     header: {
         display: 'flex',
         alignItems: 'flex-end',
-        backgroundColor: theme.palette.background,
+        backgroundColor: theme.palette.background.main,
         padding: "22px 60px"
     },
     logo: {
