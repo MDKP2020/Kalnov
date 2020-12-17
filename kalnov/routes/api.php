@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Group;
 use App\Models\StudyYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -53,5 +54,9 @@ Route::get('/study_years/types', function() {
 
 // API групп
 Route::get('/groups', function(Request $request) {
-    // TODO: создать модель группы, добавить метод получения списка групп в заданном учебном году и на заданном курсе
+    $year = $request->input('year');
+    $studyYear = $request->input('studyYear');
+    $studyYearType = $request->input('studyYearType');
+
+    return Group::getAllByYearAndStudyYear($year, $studyYear, $studyYearType);
 });
