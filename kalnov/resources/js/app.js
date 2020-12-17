@@ -26,7 +26,7 @@ export const App = (props) => {
                 <Router>
                     <Header/>
                     <Switch>
-                        <Route exact path="/groups">
+                        <Route path="/groups">
                             <GroupList/>
                         </Route>
                     </Switch>
