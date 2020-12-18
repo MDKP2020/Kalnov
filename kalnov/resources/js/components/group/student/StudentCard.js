@@ -1,5 +1,8 @@
 import React from 'react'
 import {useTheme} from "@material-ui/core";
+import ExpelIcon from '../../../../img/icons/close-icon.svg'
+import EditIcon from '../../../../img/icons/edit-icon.svg'
+import TransferIcon from '../../../../img/icons/transfer-icon.svg'
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -18,14 +21,28 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export const StudentCard = ({ name,  }) => {
+export const StudentCard = ({ name, id }) => {
     const styles = useStyles(useTheme())
+
+    const handleExpelButtonClick = () => {
+
+    }
+
+    const handleEditButtonClick = () => {
+
+    }
+
+    const handleTransferButtonClick = () => {
+
+    }
 
     return (
         <div className={styles.card}>
             <span className={styles.name}>{name}</span>
             <div className={styles.actions}>
-                { /* TODO: иконки действий */ }
+                <img onClick={handleExpelButtonClick} src={ExpelIcon} alt="Отчислить"/>
+                <img onClick={handleEditButtonClick} src={EditIcon} alt="Редактировать"/>
+                <img onClick={handleTransferButtonClick} src={TransferIcon} alt="Перевести"/>
             </div>
         </div>
     )
