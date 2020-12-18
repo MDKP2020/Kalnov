@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Group extends Model
 {
@@ -37,5 +38,9 @@ class Group extends Model
 
     public function setLastExamDate($date) {
         $this->setAttribute('last_exam_date', $date);
+    }
+
+    public function getStudents() {
+        return DB::table('students_to_groups')->where('group_id', $this->getAttribute('id'))->get();
     }
 }
