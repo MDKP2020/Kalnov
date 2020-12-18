@@ -89,3 +89,9 @@ Route::post('/groups/lastExamDate', function(Request $request) {
     $group = getGroup($request);
     $group->setLastExamDate($request->input('lastExamDate'));
 });
+
+Route::get('/groups/{id}/students', function(Request $request, $id) {
+    $group = Group::find($id);
+
+    return $group->getStudents();
+});
