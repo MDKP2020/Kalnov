@@ -21,11 +21,13 @@ class Group extends Model
     }
 
     private static function findAllByYearAndStudyYear($year, $studyYear, $studyYearType) {
-        return Group::where('year_range', $year)->where('study_year', $studyYear)->where('study_year_type', $studyYearType);
+        return Group::
+            join('majors', 'groups.major_id', '=', 'majors.id')
+            ->where('year_range', $year)->where('study_year', $studyYear)->where('study_year_type', $studyYearType);
     }
 
     public static function getAllByYearAndStudyYear($year, $studyYear, $studyYearType) {
-        return Group::findAllByYearAndStudyYear($year, $studyYear, $studyYearType)->get();
+        return Group::findAllByYearAndStudyYear($year, $studyYear, $studyYearType)->get()->groupBy('name');
     }
 
     public static function get($year, $studyYearType, $studyYear, $number) {
