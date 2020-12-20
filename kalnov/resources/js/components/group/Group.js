@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
 import axios from '../../axios'
-import {useParams} from "react-router";
+import {useLocation, useParams} from "react-router";
 import { KeyboardDatePicker } from '@material-ui/pickers'
 import {StudentCard} from "./student/StudentCard";
 import {useTheme, makeStyles} from "@material-ui/core";
@@ -20,23 +20,21 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export const Group = (props) => {
+export const Group = () => {
     const styles = useStyles(useTheme())
 
-    const { year, studyYear, studyYearType } = useParams()
+    const { year, studyYear, studyYearType, number } = useParams()
     const [students, setStudents] = useState([])
     const [lastExamDate, setLastExamDate] = useState('')
+
+    const id = useLocation().state.groupId
 
     const handleLastExamDateChange = (date) => {
         setLastExamDate(date)
     }
 
     useEffect(() => {
-        axios.get('', {
-            params: {
-                year, studyYear, studyYearType
-            }
-        })
+        axios.get(`/groups/${id}/students`).then(students => { console.log(students) })
     }, [year, studyYear, studyYearType])
 
     return (
@@ -52,16 +50,7 @@ export const Group = (props) => {
             </div>
 
             <div className={styles.lastExamDateInputContainer}>
-                <KeyboardDatePicker
-                    disableToolbar
-                    variant='inline'
-                    format='dd.MM.yyyy'
-                    margin="normal"
-                    id="last-exam-date-picker"
-                    label="Дата последнего экзамена"
-                    value={lastExamDate}
-                    onChange={handleLastExamDateChange()}
-                />
+
             </div>
             <DeanButton>Перевести студентов на следующий курс</DeanButton>
         </div>
