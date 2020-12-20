@@ -23,7 +23,7 @@ class Group extends Model
     private static function findAllByYearAndStudyYear($year, $studyYear, $studyYearType) {
         return Group::
             join('majors', 'groups.major_id', '=', 'majors.id')
-            ->where('year_range', $year)->where('study_year', $studyYear)->where('study_year_type', $studyYearType);
+            ->whereRaw('date_part(\'year\', year_range) = ?', [$year])->where('study_year', $studyYear)->where('study_year_type', $studyYearType);
     }
 
     public static function getAllByYearAndStudyYear($year, $studyYear, $studyYearType) {
