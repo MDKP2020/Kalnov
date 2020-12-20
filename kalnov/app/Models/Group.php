@@ -43,6 +43,8 @@ class Group extends Model
     }
 
     public function getStudents() {
-        return DB::table('students_to_groups')->where('group_id', $this->getAttribute('id'))->get();
+        return DB::
+            table('students_to_groups')->join('students', 'students_to_groups.student_id', '=', 'students.id')
+            ->where('group_id', $this->getAttribute('id'))->get();
     }
 }
