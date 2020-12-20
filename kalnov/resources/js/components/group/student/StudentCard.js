@@ -1,5 +1,5 @@
 import React from 'react'
-import {useTheme} from "@material-ui/core";
+import {useTheme, makeStyles} from "@material-ui/core";
 import ExpelIcon from '../../../../img/icons/close-icon.svg'
 import EditIcon from '../../../../img/icons/edit-icon.svg'
 import TransferIcon from '../../../../img/icons/transfer-icon.svg'
