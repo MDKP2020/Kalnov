@@ -6,6 +6,7 @@ import {Route, Switch, useLocation} from "react-router";
 import {YearPicker} from "./YearPicker";
 import {StudyYearPicker} from "./StudyYearPicker";
 import {Group} from "./Group";
+import {GroupList} from "./GroupList";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -27,8 +28,12 @@ export const GroupPicker = (props) => {
                     <YearPicker/>
                 </Route>
 
-                <Route path='/groups/:year/:studyYearType/:studyYear'>
+                <Route path='/groups/:year/:studyYearType/:studyYear/:number'>
                     <Group/>
+                </Route>
+
+                <Route path='/groups/:year/:studyYearType/:studyYear'>
+                    <GroupList/>
                 </Route>
 
                 <Route path='/groups/:year'>
