@@ -35,7 +35,20 @@ class Group extends Model
     }
 
     public function moveToNextYear() {
-        // TODO создать и вернуть новую группу
+        // Невозможно осуществить перевести с последнего курса
+        $studyYear = $this->getAttribute('study_year');
+        if($studyYear < 4) {
+            $nextYearGroup = new Group();
+
+            $nextYearGroup->previousGroupId = $this->id;
+            $nextYearGroup->number = $this->number;
+            $nextYearGroup->setAttribute('study_year', $studyYear + 1);
+            $nextYearGroup->setAttribute('study_year_type', $this->getAttribute('study_year_type'));
+            $nextYearGroup->setAttribute('major_id', $this->getAttribute('major_id'));
+
+            $currentYear = YearRange::find($this->getAttribute('year_range'));
+            $nextYearGroup->setAttribute('year_range', $currentYear->next());
+        }
     }
 
     public function setLastExamDate($date) {
