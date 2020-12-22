@@ -33,6 +33,11 @@ Route::get('/years/{id}', function($id) {
     return YearRange::find($id);
 });
 
+Route::get('/years/{id}/next', function($id) {
+    $yearRange = YearRange::find($id);
+    return $yearRange->next();
+});
+
 Route::post('/years', function(Request $request) {
     return YearRange::store($request);
 });
