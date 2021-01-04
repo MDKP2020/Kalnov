@@ -1,6 +1,8 @@
 import React from "react";
 import {makeStyles, useTheme} from "@material-ui/core";
 import {Breadcrumb} from "./Breadcrumb";
+import { withBreadcrumbs } from "../../../breadcrumbs/withBreadcrumbs";
+import {routes} from "../../../breadcrumbs/routes";
 
 const useStyles = makeStyles(theme => ({
     breadcrumbsContainer: {
@@ -8,7 +10,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export const Breadcrumbs = (props) => {
+const BreadcrumbsPanel = (props) => {
     const styles = useStyles(useTheme())
 
     const { breadcrumbs } = props
@@ -28,3 +30,5 @@ export const Breadcrumbs = (props) => {
         </div>
     )
 }
+
+export const Breadcrumbs = withBreadcrumbs(routes)(BreadcrumbsPanel)
