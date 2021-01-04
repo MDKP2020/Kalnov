@@ -3,6 +3,7 @@ import React from 'react';
 import { makeStyles, useTheme } from "@material-ui/core";
 import { useHistory } from "react-router";
 import {ChevronRight} from "@material-ui/icons";
+import {NavLink} from "react-router-dom";
 
 const useStyles = makeStyles(theme => ({
     breadcrumb: {
@@ -21,21 +22,15 @@ const useStyles = makeStyles(theme => ({
 export const Breadcrumb = ({ label, link, isCurrent }) => {
     const styles = useStyles(useTheme())
 
-    const history = useHistory()
-
-    const handleBreadcrumbClick = () => {
-        history.push(link)
-    }
-
     const BreadcrumbText = <span className={styles.breadcrumb}>{ label }</span>
 
     const ClickableBreadcrumb = (
         <div>
-            <span className={styles.clickable} onClick={handleBreadcrumbClick}>{ BreadcrumbText }</span>
+            <NavLink to={link}>{ BreadcrumbText }</NavLink>
             <ChevronRight className={styles.breadcrumbDivider}/>
         </div>
     )
 
-    return isCurrent ? <BreadcrumbText/> : <ClickableBreadcrumb/>
+    return isCurrent ? BreadcrumbText : ClickableBreadcrumb
 
 }
