@@ -11,7 +11,8 @@ const useStyles = makeStyles(theme => ({
         borderRadius: 10,
         width: '100%',
         padding: '16px 20px',
-        justifyContent: 'space-between'
+        justifyContent: 'space-between',
+        alignItems: 'center'
     },
     name: {
         color: theme.palette.text.light
