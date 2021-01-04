@@ -8,10 +8,7 @@ import {NavLink} from "react-router-dom";
 const useStyles = makeStyles(theme => ({
     breadcrumb: {
         color: theme.palette.text.light,
-        fontSize: '12px'
-    },
-    clickable: {
-        cursor: 'pointer',
+        fontSize: '12px',
         fontWeight: 700,
     },
     breadcrumbDivider: {
