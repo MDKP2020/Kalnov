@@ -22,10 +22,10 @@ export const Breadcrumb = ({ label, link, isCurrent }) => {
     const BreadcrumbText = <span className={styles.breadcrumb}>{ label }</span>
 
     const ClickableBreadcrumb = (
-        <div>
+        <>
             <NavLink to={link}>{ BreadcrumbText }</NavLink>
             <ChevronRight className={styles.breadcrumbDivider}/>
-        </div>
+        </>
     )
 
     return isCurrent ? BreadcrumbText : ClickableBreadcrumb
