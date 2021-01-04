@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
         flexDirection: 'column'
     },
     studentList: {
-        overflow: 'scroll',
+        overflowY: 'auto',
         maxHeight: '300px'
     },
     lastExamDateInputContainer: {
