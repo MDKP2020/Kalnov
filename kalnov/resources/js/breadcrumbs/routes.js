@@ -4,5 +4,9 @@ export const routes = [
         breadcrumb: (match) => {
             return `${match.params.year} - ${Number.parseInt(match.params.year) + 1}`
         }
+    },
+    {
+        path: '/groups',
+        breadcrumb: 'Группы'
     }
 ]
