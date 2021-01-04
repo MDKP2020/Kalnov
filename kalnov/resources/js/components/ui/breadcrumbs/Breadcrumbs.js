@@ -6,7 +6,8 @@ import {routes} from "../../../breadcrumbs/routes";
 
 const useStyles = makeStyles(theme => ({
     breadcrumbsContainer: {
-
+        display: 'flex',
+        alignItems: 'center'
     }
 }))
 
