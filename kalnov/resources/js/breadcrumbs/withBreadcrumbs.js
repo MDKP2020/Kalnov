@@ -44,7 +44,7 @@ export const withBreadcrumbs = routes => Component => {
         return <Component
             {...props}
             breadcrumbs={
-                getBreadcrumbsForCurrentPath({ routes, location: props.location})
+                getBreadcrumbsForCurrentPath({ routes, currentPath: props.location.pathname})
             }
         />
     }
