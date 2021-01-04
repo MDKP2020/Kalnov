@@ -11,12 +11,16 @@ const renderBreadcrumb = (breadcrumb, match) => {
 const getBreadcrumbsForCurrentPath = ({ routes, currentPath }) => {
     const pathSections = currentPath
         .replace(/\/$/, '') // удаление последнего слэша
+        .replace(/^\//, '') // удаление лидирующего слэша
         .split('/'); // части пути
 
     const matches = [];
+    console.log(pathSections)
 
     pathSections.reduce((url, section) => {
         const path = url + '/' + section;
+        console.log(path)
+
         routes.some(route => {
             const match = matchPath(path, { path: route.path, exact: true })
             if(match !== null) {
