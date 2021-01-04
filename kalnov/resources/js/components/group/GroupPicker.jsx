@@ -7,6 +7,7 @@ import {YearPicker} from "./YearPicker";
 import {StudyYearPicker} from "./StudyYearPicker";
 import {Group} from "./Group";
 import {GroupList} from "./GroupList";
+import {Breadcrumbs} from "../ui/breadcrumbs/Breadcrumbs";
 
 const useStyles = makeStyles((theme) => ({
     container: {
@@ -22,6 +23,8 @@ export const GroupPicker = (props) => {
 
     return (
         <div className={styles.container}>
+            <Breadcrumbs/>
+
             <h1>Работа со студентами</h1>
             <Switch>
                 <Route path='/groups' exact>
