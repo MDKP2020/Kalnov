@@ -35,7 +35,7 @@ const getBreadcrumbsForCurrentPath = ({ routes, currentPath }) => {
         return path;
     }, '')
 
-    return matches;
+    return matches; // [ { breadcrumb, path, match }, ... ]
 }
 
 // routes - массив объектов, обозначающих страницу на сайте, тип: { path, breadcrumb }, path - URL страницы, breadcrumb - название страницы
