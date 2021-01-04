@@ -34,7 +34,7 @@ export const Group = () => {
     }
 
     useEffect(() => {
-        axios.get(`/groups/${id}/students`).then(students => { console.log(students) })
+        axios.get(`/groups/${id}/students`).then(students => { setStudents(students.data) })
     }, [year, studyYear, studyYearType])
 
     return (
