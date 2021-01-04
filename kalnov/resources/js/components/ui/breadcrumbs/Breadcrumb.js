@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { makeStyles, useTheme } from "@material-ui/core";
+import {makeStyles, Typography, useTheme} from "@material-ui/core";
 import { useHistory } from "react-router";
 import {ChevronRight} from "@material-ui/icons";
 import {NavLink} from "react-router-dom";
@@ -13,13 +13,17 @@ const useStyles = makeStyles(theme => ({
     },
     breadcrumbDivider: {
         color: theme.palette.text.light
+    },
+    breadcrumbContainer: {
+        display: 'flex',
+        alignItems: 'center'
     }
 }))
 
 export const Breadcrumb = ({ label, link, isCurrent }) => {
     const styles = useStyles(useTheme())
 
-    const BreadcrumbText = <span className={styles.breadcrumb}>{ label }</span>
+    const BreadcrumbText = <Typography color='textSecondary' className={styles.breadcrumb}>{ label }</Typography>
 
     const ClickableBreadcrumb = (
         <>
