@@ -34,7 +34,7 @@ export const Group = () => {
     }
 
     useEffect(() => {
-        axios.get(`/groups/${id}/students`).then(students => { setStudents(students.data) })
+        axios.get(`/groups/${id}/students`).then(students => { setStudents(students.data); console.log(students) })
     }, [year, studyYear, studyYearType])
 
     return (
@@ -45,6 +45,7 @@ export const Group = () => {
 
             <div className={styles.studentList}>
                 {students.map(student => {
+                    const fullName = `${student['last_name']} ${student.name} ${student['middle_name']}`
                     return <StudentCard key={student.id} name={student.name} id={student.id} />
                 })}
             </div>
