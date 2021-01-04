@@ -9,7 +9,7 @@ const renderBreadcrumb = (breadcrumb, match) => {
 }
 
 const getBreadcrumbsForCurrentPath = ({ routes, currentPath }) => {
-    const pathSections = routes
+    const pathSections = currentPath
         .replace(/\/$/, '') // удаление последнего слэша
         .split('/'); // части пути
 
