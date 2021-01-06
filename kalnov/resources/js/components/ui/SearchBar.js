@@ -6,9 +6,7 @@ const styles = makeStyles(theme => ({
 
 }))
 
-export const SearchBar = (props) => {
-    const { queryParamName, queryFunction } = props
-
+export const SearchBar = ({ queryParamName, queryFunction }) => {
     const theme = useTheme()
     const styles = useStyles(theme)
 
