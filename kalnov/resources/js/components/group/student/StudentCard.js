@@ -3,6 +3,7 @@ import {useTheme, makeStyles} from "@material-ui/core";
 import ExpelIcon from '../../../../img/icons/close-icon.svg'
 import EditIcon from '../../../../img/icons/edit-icon.svg'
 import TransferIcon from '../../../../img/icons/transfer-icon.svg'
+import {ArrowForward, Cancel, Edit} from "@material-ui/icons";
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -19,11 +20,20 @@ const useStyles = makeStyles(theme => ({
     },
     actions: {
         display: 'flex'
+    },
+    actionIcon: {
+        cursor: 'pointer',
+        '&:not(:first-of-type)': {
+            marginLeft: '0.4rem'
+        }
     }
 }))
 
 export const StudentCard = ({ name, id }) => {
-    const styles = useStyles(useTheme())
+    const theme = useTheme()
+    const styles = useStyles(theme)
+
+    const EDIT_BUTTON_COLOR = '#e6b710'
 
     const handleExpelButtonClick = () => {
 
@@ -37,13 +47,15 @@ export const StudentCard = ({ name, id }) => {
 
     }
 
+    const actionIconClasses = { root: styles.actionIcon }
+
     return (
         <div className={styles.card}>
             <span className={styles.name}>{name}</span>
             <div className={styles.actions}>
-                <img onClick={handleExpelButtonClick} src={ExpelIcon} alt="Отчислить"/>
-                <img onClick={handleEditButtonClick} src={EditIcon} alt="Редактировать"/>
-                <img onClick={handleTransferButtonClick} src={TransferIcon} alt="Перевести"/>
+                <Cancel htmlColor={theme.palette.error.main} classes={actionIconClasses} />
+                <Edit htmlColor={EDIT_BUTTON_COLOR} classes={actionIconClasses}/>
+                <ArrowForward htmlColor={theme.palette.primary.main} classes={actionIconClasses}/>
             </div>
         </div>
     )
