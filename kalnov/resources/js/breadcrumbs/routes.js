@@ -8,5 +8,17 @@ export const routes = [
     {
         path: '/groups',
         breadcrumb: 'Группы'
+    },
+    {
+        path: '/groups/:year/:studyType/:studyYear',
+        breadcrumb: match => {
+            let studyType;
+            if(match.params.studyType === 'bachelor')
+                studyType = 'Бакалавриат'
+            else if(match.params.studyType === 'master')
+                studyType = 'Магистратура'
+
+            return `${studyType}, ${match.params.studyYear} курс`
+        }
     }
 ]
