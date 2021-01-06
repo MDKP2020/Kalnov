@@ -49,6 +49,10 @@ class Group extends Model
 
             $currentYear = YearRange::find($this->getAttribute('year_range'));
             $nextYearGroup->setAttribute('year_range', $currentYear->next());
+
+            foreach($this->getStudents(null) as $student) {
+                $this->enroll($student->getAttribute('student_id'));
+            }
         }
     }
 
@@ -66,5 +70,12 @@ class Group extends Model
             ->where('group_id', $this->getAttribute('id'))
             ->whereRaw('concat(last_name, \' \', "name", \' \', middle_name) ~* ?', [$searchName])
             ->get();
+    }
+
+    private function enroll($studentId) {
+        DB::table('students_to_groups')->insert([
+            'group_id' => $this->id,
+            'student_id' => $studentId
+        ]);
     }
 }
