@@ -14,7 +14,8 @@ const useStyles = makeStyles(theme => ({
     },
     studentList: {
         overflowY: 'auto',
-        maxHeight: '300px'
+        maxHeight: '300px',
+        marginTop: '1.5rem'
     },
     lastExamDateInputContainer: {
         display: 'flex',
