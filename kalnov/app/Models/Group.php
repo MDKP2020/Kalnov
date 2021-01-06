@@ -35,13 +35,14 @@ class Group extends Model
     }
 
     public function moveToNextYear() {
-        // Невозможно осуществить перевести с последнего курса
         $studyYear = $this->getAttribute('study_year');
+
+        // Невозможно осуществить перевести с последнего курса
         if($studyYear < 4) {
             $nextYearGroup = new Group();
 
-            $nextYearGroup->previousGroupId = $this->id;
-            $nextYearGroup->number = $this->number;
+            $nextYearGroup->setAttribute('previous_group_id', $this->id);
+            $nextYearGroup->setAttribute('number', $this->number);
             $nextYearGroup->setAttribute('study_year', $studyYear + 1);
             $nextYearGroup->setAttribute('study_year_type', $this->getAttribute('study_year_type'));
             $nextYearGroup->setAttribute('major_id', $this->getAttribute('major_id'));
