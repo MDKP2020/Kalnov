@@ -5,6 +5,7 @@ import { KeyboardDatePicker } from '@material-ui/pickers'
 import {StudentCard} from "./student/StudentCard";
 import {useTheme, makeStyles} from "@material-ui/core";
 import {DeanButton} from "../ui/DeanButton";
+import {SearchBar} from "../ui/SearchBar";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -32,19 +33,28 @@ export const Group = () => {
 
     const id = useLocation().state.groupId
 
+    const getStudents = (query) => {
+        axios.get(
+            `/groups/${id}/students`,
+            {
+                params: {
+                    name: query ? query : ''
+                }
+            }
+        ).then(students => { setStudents(students.data); console.log(students) })
+    }
+
     const handleLastExamDateChange = (date) => {
         setLastExamDate(date)
     }
 
-    useEffect(() => {
-        axios.get(`/groups/${id}/students`).then(students => { setStudents(students.data); console.log(students) })
-    }, [year, studyYear, studyYearType])
+    useEffect(getStudents, [year, studyYear, studyYearType])
 
     return (
         <div className={styles.container}>
             <h2>Список группы</h2>
 
-            { /* TODO: search bar */ }
+            <SearchBar queryFunction={getStudents} queryParamName='name'/>
 
             <div className={styles.studentList}>
                 {students.map(student => {
