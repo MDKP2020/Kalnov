@@ -46,7 +46,7 @@ export const Group = () => {
             <div className={styles.studentList}>
                 {students.map(student => {
                     const fullName = `${student['last_name']} ${student.name} ${student['middle_name']}`
-                    return <StudentCard key={student.id} name={student.name} id={student.id} />
+                    return <StudentCard key={student.id} name={fullName} id={student.id} />
                 })}
             </div>
 
