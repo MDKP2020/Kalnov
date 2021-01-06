@@ -1,8 +1,5 @@
 import React from 'react'
 import {useTheme, makeStyles} from "@material-ui/core";
-import ExpelIcon from '../../../../img/icons/close-icon.svg'
-import EditIcon from '../../../../img/icons/edit-icon.svg'
-import TransferIcon from '../../../../img/icons/transfer-icon.svg'
 import {ArrowForward, Cancel, Edit} from "@material-ui/icons";
 import {DeanTooltip} from "../../ui/DeanTooltip";
 
