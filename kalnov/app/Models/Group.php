@@ -55,9 +55,15 @@ class Group extends Model
         $this->setAttribute('last_exam_date', $date);
     }
 
-    public function getStudents() {
+    public function getStudents(?string $name) {
+        $searchName = '';
+        if($name != null)
+            $searchName = $name;
+
         return DB::
             table('students_to_groups')->join('students', 'students_to_groups.student_id', '=', 'students.id')
-            ->where('group_id', $this->getAttribute('id'))->get();
+            ->where('group_id', $this->getAttribute('id'))
+            ->whereRaw('concat(last_name, "name", middle_name) ~* ?', [$searchName])
+            ->get();
     }
 }
