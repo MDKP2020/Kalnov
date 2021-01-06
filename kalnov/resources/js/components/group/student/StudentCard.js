@@ -13,7 +13,10 @@ const useStyles = makeStyles(theme => ({
         width: '100%',
         padding: '14px 16px',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        '&:not(:first-of-type)': {
+            marginTop: '0.8rem'
+        }
     },
     name: {
         color: theme.palette.text.main
