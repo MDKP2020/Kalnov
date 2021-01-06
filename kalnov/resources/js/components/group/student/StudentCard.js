@@ -60,10 +60,10 @@ export const StudentCard = ({ name, id }) => {
                 <DeanTooltip title="Отчислить студента">
                     <Cancel htmlColor={theme.palette.error.main} classes={actionIconClasses} />
                 </DeanTooltip>
-                <DeanTooltip>
+                <DeanTooltip title="Редактировать информацию">
                     <Edit htmlColor={EDIT_BUTTON_COLOR} classes={actionIconClasses}/>
                 </DeanTooltip>
-                <DeanTooltip>
+                <DeanTooltip title="Перевести в другую группу">
                     <ArrowForward htmlColor={theme.palette.primary.main} classes={actionIconClasses}/>
                 </DeanTooltip>
             </div>
