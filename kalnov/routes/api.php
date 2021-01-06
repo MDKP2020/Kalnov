@@ -30,6 +30,12 @@ Route::get('/years', function() {
 });
 
 Route::get('/years/{id}', function($id) {
+    $response = YearRange::find($id);
+
+    if ($response == null) {
+        abort(404);
+    }
+
     return YearRange::find($id);
 });
 
