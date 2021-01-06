@@ -5,5 +5,11 @@ export const useDefaultStyles = makeStyles(theme => ({
         fontSize: '1.4rem',
         marginBottom: '1rem',
         display: 'block'
+    },
+    tooltip: {
+        arrow: {
+            backgroundColor: theme.palette.primary.main,
+            color: 'white'
+        }
     }
 }))
