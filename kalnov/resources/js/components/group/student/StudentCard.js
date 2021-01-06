@@ -16,7 +16,7 @@ const useStyles = makeStyles(theme => ({
         alignItems: 'center'
     },
     name: {
-        color: theme.palette.text.light
+        color: theme.palette.text.main
     },
     actions: {
         display: 'flex'
