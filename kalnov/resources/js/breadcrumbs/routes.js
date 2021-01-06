@@ -22,7 +22,7 @@ export const routes = [
         }
     },
     {
-        path: '/groups/:year/:studyType/:studyYear',
+        path: '/groups/:year/:studyType/:studyYear/:number',
         breadcrumb: match => match.params.number
     }
 ]
