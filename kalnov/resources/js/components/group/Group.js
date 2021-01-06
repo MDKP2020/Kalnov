@@ -17,6 +17,9 @@ const useStyles = makeStyles(theme => ({
     },
     lastExamDateInputContainer: {
         display: 'flex',
+    },
+    transferButton: {
+        marginTop: '3rem'
     }
 }))
 
@@ -54,7 +57,7 @@ export const Group = () => {
 
             </div>
 
-            <DeanButton primary>Перевести студентов на следующий курс</DeanButton>
+            <DeanButton primary className={styles.transferButton}>Перевести студентов на следующий курс</DeanButton>
         </div>
     )
 
