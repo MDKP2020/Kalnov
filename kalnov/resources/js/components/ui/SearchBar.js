@@ -2,8 +2,11 @@ import React, {useEffect, useState} from 'react'
 import {useTheme, Input, InputLabel, makeStyles, FormControl, InputAdornment} from "@material-ui/core";
 import {Search} from "@material-ui/icons";
 
-const styles = makeStyles(theme => ({
-
+const useStyles = makeStyles(theme => ({
+    searchField: {
+        width: '100%',
+        marginBottom: '1rem'
+    }
 }))
 
 export const SearchBar = ({ queryParamName, queryFunction }) => {
@@ -24,7 +27,7 @@ export const SearchBar = ({ queryParamName, queryFunction }) => {
 
     return (
         <div>
-            <FormControl variant="standard" size="small">
+            <FormControl variant="standard" size="small" className={styles.searchField}>
                 <InputLabel htmlFor={SEARCH_NAME}>Поиск</InputLabel>
                 <Input
                     id={SEARCH_NAME}
