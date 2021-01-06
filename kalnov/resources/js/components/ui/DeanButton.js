@@ -5,7 +5,8 @@ const useStyles = makeStyles(theme => ({
     root: {
         padding: '4px 16px', // change default padding for the button
         fontWeight: 500, // default font-weight
-        letterSpacing: '0.04em', // default letter-spacing
+        maxWidth: '50%',
+        textTransform: 'none'
     },
     primary: {
         backgroundColor: theme.palette.primary.main,
