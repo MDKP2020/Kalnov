@@ -4,6 +4,7 @@ import ExpelIcon from '../../../../img/icons/close-icon.svg'
 import EditIcon from '../../../../img/icons/edit-icon.svg'
 import TransferIcon from '../../../../img/icons/transfer-icon.svg'
 import {ArrowForward, Cancel, Edit} from "@material-ui/icons";
+import {DeanTooltip} from "../../ui/DeanTooltip";
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -29,7 +30,7 @@ const useStyles = makeStyles(theme => ({
         '&:not(:first-of-type)': {
             marginLeft: '0.4rem'
         }
-    }
+    },
 }))
 
 export const StudentCard = ({ name, id }) => {
@@ -56,9 +57,15 @@ export const StudentCard = ({ name, id }) => {
         <div className={styles.card}>
             <span className={styles.name}>{name}</span>
             <div className={styles.actions}>
-                <Cancel htmlColor={theme.palette.error.main} classes={actionIconClasses} />
-                <Edit htmlColor={EDIT_BUTTON_COLOR} classes={actionIconClasses}/>
-                <ArrowForward htmlColor={theme.palette.primary.main} classes={actionIconClasses}/>
+                <DeanTooltip title="Отчислить студента">
+                    <Cancel htmlColor={theme.palette.error.main} classes={actionIconClasses} />
+                </DeanTooltip>
+                <DeanTooltip>
+                    <Edit htmlColor={EDIT_BUTTON_COLOR} classes={actionIconClasses}/>
+                </DeanTooltip>
+                <DeanTooltip>
+                    <ArrowForward htmlColor={theme.palette.primary.main} classes={actionIconClasses}/>
+                </DeanTooltip>
             </div>
         </div>
     )
