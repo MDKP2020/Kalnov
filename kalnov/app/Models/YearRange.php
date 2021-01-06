@@ -8,10 +8,12 @@ use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Notifications\Notifiable;
 
 class YearRange extends Model
 {
+    use HasFactory, Notifiable;
+
     protected $table = 'year_ranges';
 
     public static function store(Request $request) {
