@@ -53,7 +53,8 @@ export const Group = () => {
             <div className={styles.lastExamDateInputContainer}>
 
             </div>
-            <DeanButton>Перевести студентов на следующий курс</DeanButton>
+
+            <DeanButton primary>Перевести студентов на следующий курс</DeanButton>
         </div>
     )
 
