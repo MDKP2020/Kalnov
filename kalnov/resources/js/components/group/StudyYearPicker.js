@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import axios from '../../axios'
 import {useHistory, useParams} from "react-router";
-import { makeStyles } from '@material-ui/core'
+import {makeStyles, useTheme} from '@material-ui/core'
+import {useDefaultStyles} from "../../hooks/useDefaultStyles";
 
 const useStyles = makeStyles({
     studyTypeContainer: {
@@ -18,6 +19,9 @@ const useStyles = makeStyles({
             marginLeft: '0.4rem'
         },
         cursor: 'pointer'
+    },
+    studyYearContainer: {
+        paddingLeft: '15px'
     }
 })
 
@@ -27,6 +31,7 @@ const MASTER_TYPE = 'master'
 export const StudyYearPicker = (props) => {
     const history = useHistory()
     const styles = useStyles()
+    const defaultStyles = useDefaultStyles(useTheme())
 
     const handleStudyYearClick = (year) => {
         history.push(`${history.location.pathname}/${year.type}/${year.year}`)
@@ -57,13 +62,17 @@ export const StudyYearPicker = (props) => {
 
     return (
         <div>
-            <div className={styles.studyTypeContainer}>
-                <span className={styles.studyType}>Бакалавриат</span>
-                {years.filter(year => year.type === BACHELOR_TYPE).map(yearMapper)}
-            </div>
-            <div className={styles.studyTypeContainer}>
-                <span className={styles.studyType}>Магистратура</span>
-                {years.filter(year => year.type === MASTER_TYPE).map(yearMapper)}
+            <span className={defaultStyles.chooseLabel}>Выберите курс обучения:</span>
+
+            <div className={styles.studyYearContainer}>
+                <div className={styles.studyTypeContainer}>
+                    <span className={styles.studyType}>Бакалавриат</span>
+                    {years.filter(year => year.type === BACHELOR_TYPE).map(yearMapper)}
+                </div>
+                <div className={styles.studyTypeContainer}>
+                    <span className={styles.studyType}>Магистратура</span>
+                    {years.filter(year => year.type === MASTER_TYPE).map(yearMapper)}
+                </div>
             </div>
         </div>
     )
