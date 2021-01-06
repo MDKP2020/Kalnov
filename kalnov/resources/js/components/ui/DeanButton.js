@@ -24,7 +24,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export const DeanButton = ({ primary, secondary, error, children }) => {
+export const DeanButton = ({ primary, secondary, error, children, className }) => {
 
     const styles = useStyles(useTheme())
     const classes = { root: styles.root }
@@ -34,6 +34,8 @@ export const DeanButton = ({ primary, secondary, error, children }) => {
         buttonClasses.push(styles.primary)
     else if(secondary)
         buttonClasses.push(styles.secondary)
+
+    buttonClasses.push(className)
 
     return (<Button
         variant='contained'
