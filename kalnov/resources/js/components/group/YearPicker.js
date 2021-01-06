@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react'
 import axios from '../../axios'
 import {useHistory} from "react-router";
-import {makeStyles} from "@material-ui/core";
+import {makeStyles, useTheme} from "@material-ui/core";
+import {useDefaultStyles} from "../../hooks/useDefaultStyles";
 
 const useStyles = makeStyles({
     container: {
@@ -14,11 +15,6 @@ const useStyles = makeStyles({
         display: 'block',
         padding: '0.5rem 0',
         cursor: 'pointer'
-    },
-    chooseYearLabel: {
-        fontSize: '1.5rem',
-        marginBottom: '1rem',
-        display: 'block'
     }
 })
 
@@ -26,6 +22,7 @@ export const YearPicker = (props) => {
 
     const [ years, setYears ] = useState([])
     const styles = useStyles()
+    const defaultStyles = useDefaultStyles(useTheme())
 
     useEffect(() => {
         axios.get('/years').then(yearsList => {
@@ -41,7 +38,7 @@ export const YearPicker = (props) => {
 
     return (
         <div className={styles.container}>
-            <span className={styles.chooseYearLabel}>Выберите год обучения: </span>
+            <span className={defaultStyles.chooseLabel}>Выберите год обучения: </span>
             <div className={styles.yearContainer}>
                 { years.map(year => {
                     const date = new Date(year.start)
