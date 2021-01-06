@@ -20,5 +20,9 @@ export const routes = [
 
             return `${studyType}, ${match.params.studyYear} курс`
         }
+    },
+    {
+        path: '/groups/:year/:studyType/:studyYear',
+        breadcrumb: match => match.params.number
     }
 ]
