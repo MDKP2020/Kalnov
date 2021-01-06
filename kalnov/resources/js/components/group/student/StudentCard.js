@@ -11,7 +11,7 @@ const useStyles = makeStyles(theme => ({
         border: `1px solid ${theme.palette.background.main}`,
         borderRadius: 10,
         width: '100%',
-        padding: '16px 20px',
+        padding: '14px 16px',
         justifyContent: 'space-between',
         alignItems: 'center'
     },
