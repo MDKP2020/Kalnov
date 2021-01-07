@@ -24,10 +24,12 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export const DeanButton = ({ primary, secondary, error, children, className }) => {
+export const DeanButton = (props) => {
 
     const styles = useStyles(useTheme())
     const classes = { root: styles.root }
+
+    const { primary, secondary, error, children, className, ...restProps } = props
 
     const buttonClasses = []
     if(primary)
@@ -42,5 +44,6 @@ export const DeanButton = ({ primary, secondary, error, children, className }) =
         disableElevation
         classes={classes}
         className={buttonClasses.join(' ')}
+        {...restProps}
     >{ children }</Button>)
 }
