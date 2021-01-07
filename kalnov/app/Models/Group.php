@@ -62,9 +62,7 @@ class Group extends Model
             $currentYear = YearRange::find($this->getAttribute('year_range'));
             $nextYearGroup->setAttribute('year_range', $currentYear->next());
 
-            foreach($this->getStudents(null) as $student) {
-                $this->enroll($student->getAttribute('student_id'));
-            }
+            $this->enrollAll($this->getStudents(null));
         }
     }
 
@@ -89,5 +87,14 @@ class Group extends Model
             'group_id' => $this->id,
             'student_id' => $studentId
         ]);
+    }
+
+    // Зачисление списка студентов
+    private function enrollAll($students) {
+        DB::table('students_to_groups')->insert(
+            $students->map(function($student) {
+                return ['group_id' => $this->id, 'student_id' => $student->getAttribute('id')];
+            })->toArray()
+        );
     }
 }
