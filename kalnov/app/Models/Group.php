@@ -108,10 +108,7 @@ class Group extends Model
 
     public function expelAtStudyEnd() {
         $expelReason = "Отчислен в связи с окончанием обучения";
-        if(
-            $this->getAttribute('study_year') == 4 && $this->isBachelor()
-            || $this->getAttribute('study_year') == 2 && $this->isMaster()
-        ) {
+        if($this->canBeExpelled()) {
             $this->expel($expelReason);
         }
     }
@@ -122,5 +119,11 @@ class Group extends Model
 
     public function isMaster() {
         return $this->getAttribute('study_year_type') == 'master';
+    }
+
+    public function canBeExpelled() {
+        return
+            $this->isBachelor() && $this->getAttribute('study_year') == 4
+            || $this->isMaster() && $this->getAttribute('study_year') == 2;
     }
 }
