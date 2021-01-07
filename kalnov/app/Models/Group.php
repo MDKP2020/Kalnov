@@ -101,4 +101,12 @@ class Group extends Model
     public function expel() {
         return DB::table('students_to_groups')->where('group_id', $this->getAttribute('id'))->delete();
     }
+
+    public function isBachelor() {
+        return $this->getAttribute('study_year_type') == 'bachelor';
+    }
+
+    public function isMaster() {
+        return $this->getAttribute('study_year_type') == 'master';
+    }
 }
