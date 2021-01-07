@@ -98,8 +98,10 @@ class Group extends Model
         );
     }
 
-    public function expel() {
-        return DB::table('students_to_groups')->where('group_id', $this->getAttribute('id'))->delete();
+    public function expel(string $expelReason) {
+        DB::table('students_to_groups')->where('group_id', '=', $this->getAttribute('id'))->update([
+            'expel_reason' => $expelReason
+        ]);
     }
 
     public function isBachelor() {
