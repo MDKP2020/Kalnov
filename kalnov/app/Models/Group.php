@@ -97,4 +97,8 @@ class Group extends Model
             })->toArray()
         );
     }
+
+    public function expel() {
+        return DB::table('students_to_groups')->where('group_id', $this->getAttribute('id'))->delete();
+    }
 }
