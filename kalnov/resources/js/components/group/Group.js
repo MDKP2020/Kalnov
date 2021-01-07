@@ -89,7 +89,7 @@ export const Group = () => {
 
             </div>
 
-            <DeanButton primary className={styles.transferButton}>Перевести студентов на следующий курс</DeanButton>
+            <DeanButton disabled={studentsAreLoaded && students.length === 0} primary className={styles.transferButton}>Перевести студентов на следующий курс</DeanButton>
         </div>
     )
 
