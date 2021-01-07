@@ -101,6 +101,14 @@ Route::get('/groups/{id}/students', function(Request $request, $id) {
     return $group->getStudents($request->input('name'));
 });
 
+Route::patch('/groups/{id}/expel/studyEnd', function(Request $request, $id) {
+    $group = Group::find($id);
+
+    // TODO: возможно ли отчисление не с последнего курса?
+    $group->expelAtStudyEnd();
+
+});
+
 // API студентов
 
 Route::get('/students/{id}', function($id) {
