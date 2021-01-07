@@ -98,10 +98,20 @@ class Group extends Model
         );
     }
 
-    public function expel(string $expelReason) {
+    private function expel(string $expelReason) {
         DB::table('students_to_groups')->where('group_id', '=', $this->getAttribute('id'))->update([
             'expel_reason' => $expelReason
         ]);
+    }
+
+    public function expelAtStudyEnd() {
+        $expelReason = "Отчислен в связи с окончанием обучения";
+        if(
+            $this->getAttribute('study_year') == 4 && $this->isBachelor()
+            || $this->getAttribute('study_year') == 2 && $this->isMaster()
+        ) {
+            $this->expel($expelReason);
+        }
     }
 
     public function isBachelor() {
