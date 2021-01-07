@@ -22,6 +22,11 @@ const useStyles = makeStyles(theme => ({
     },
     transferButton: {
         marginTop: '3rem'
+    },
+    noStudentsMessage: {
+        color: theme.palette.error.main,
+        fontSize: '1.2rem',
+        display: 'block'
     }
 }))
 
@@ -30,6 +35,7 @@ export const Group = () => {
 
     const { year, studyYear, studyYearType, number } = useParams()
     const [students, setStudents] = useState([])
+    const [studentsAreLoaded, setStudentsAreLoaded] = useState(false)
     const [lastExamDate, setLastExamDate] = useState('')
 
     const id = useLocation().state.groupId
@@ -42,7 +48,7 @@ export const Group = () => {
                     name: query ? query : ''
                 }
             }
-        ).then(students => { setStudents(students.data); console.log(students) })
+        ).then(students => { setStudents(students.data); setStudentsAreLoaded(true) })
     }
 
     const handleLastExamDateChange = (date) => {
@@ -51,10 +57,8 @@ export const Group = () => {
 
     useEffect(getStudents, [year, studyYear, studyYearType])
 
-    return (
-        <div className={styles.container}>
-            <h2>Список группы</h2>
-
+    const StudentList = (
+        <>
             <SearchBar queryFunction={getStudents} queryParamName='name'/>
 
             <div className={styles.studentList}>
@@ -63,6 +67,23 @@ export const Group = () => {
                     return <StudentCard key={student.id} name={fullName} id={student.id} />
                 })}
             </div>
+        </>
+    )
+
+    const NoStudentsMessage = <span className={styles.noStudentsMessage}>В группе ещё нет студентов</span>
+
+    let studentsContent;
+    if(!studentsAreLoaded)
+        studentsContent = null
+    else {
+        studentsContent = students.length > 0  ? StudentList : NoStudentsMessage
+    }
+
+    return (
+        <div className={styles.container}>
+            <h2>Список группы</h2>
+
+            { studentsContent }
 
             <div className={styles.lastExamDateInputContainer}>
 
