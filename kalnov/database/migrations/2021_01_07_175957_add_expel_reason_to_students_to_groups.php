@@ -14,7 +14,7 @@ class AddExpelReasonToStudentsToGroups extends Migration
     public function up()
     {
         Schema::table('students_to_groups', function (Blueprint $table) {
-            $table->string('expel_reason', 150);
+            $table->string('expel_reason', 150)->nullable();
         });
     }
 
