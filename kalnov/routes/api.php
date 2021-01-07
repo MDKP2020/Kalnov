@@ -83,11 +83,7 @@ Route::post('/groups/nextYear', function(Request $request) {
     // TODO валидация корректности времени перевода группы
 
     $group = getGroup($request);
-
-    if(time() < $group->getAttribute('last_exam_date')->getTimestamp())
-        return $group->moveToNextYear();
-    else
-        throw new InvalidNextYearTransfer();
+    $group->moveToNextYear();
 });
 
 Route::post('/groups/lastExamDate', function(Request $request) {

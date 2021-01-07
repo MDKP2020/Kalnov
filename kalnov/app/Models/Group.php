@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Exceptions\InvalidNextYearTransfer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -48,9 +49,8 @@ class Group extends Model
 
     public function moveToNextYear() {
         $studyYear = $this->getAttribute('study_year');
-
         // Невозможно осуществить перевести с последнего курса
-        if($studyYear < 4) {
+        if($studyYear < 4 && time() < $this->getAttribute('last_exam_date')->getTimestamp()) {
             $nextYearGroup = new Group();
 
             $nextYearGroup->setAttribute('previous_group_id', $this->id);
@@ -64,6 +64,8 @@ class Group extends Model
 
             $this->enrollAll($this->getStudents(null));
         }
+        else
+            throw new InvalidNextYearTransfer();
     }
 
     public function setLastExamDate($date) {
