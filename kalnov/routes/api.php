@@ -100,3 +100,9 @@ Route::get('/groups/{id}/students', function(Request $request, $id) {
 
     return $group->getStudents($request->input('name'));
 });
+
+// API студентов
+
+Route::get('/students/{id}', function($id) {
+    return Student::find($id);
+});
