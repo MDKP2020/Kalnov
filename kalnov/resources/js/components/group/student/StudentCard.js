@@ -1,9 +1,7 @@
 import React from 'react'
 import {useTheme, makeStyles} from "@material-ui/core";
-import ExpelIcon from '../../../../img/icons/close-icon.svg'
-import EditIcon from '../../../../img/icons/edit-icon.svg'
-import TransferIcon from '../../../../img/icons/transfer-icon.svg'
 import {ArrowForward, Cancel, Edit} from "@material-ui/icons";
+import {DeanTooltip} from "../../ui/DeanTooltip";
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -13,7 +11,10 @@ const useStyles = makeStyles(theme => ({
         width: '100%',
         padding: '14px 16px',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        '&:not(:first-of-type)': {
+            marginTop: '0.8rem'
+        }
     },
     name: {
         color: theme.palette.text.main
@@ -26,7 +27,7 @@ const useStyles = makeStyles(theme => ({
         '&:not(:first-of-type)': {
             marginLeft: '0.4rem'
         }
-    }
+    },
 }))
 
 export const StudentCard = ({ name, id }) => {
@@ -53,9 +54,15 @@ export const StudentCard = ({ name, id }) => {
         <div className={styles.card}>
             <span className={styles.name}>{name}</span>
             <div className={styles.actions}>
-                <Cancel htmlColor={theme.palette.error.main} classes={actionIconClasses} />
-                <Edit htmlColor={EDIT_BUTTON_COLOR} classes={actionIconClasses}/>
-                <ArrowForward htmlColor={theme.palette.primary.main} classes={actionIconClasses}/>
+                <DeanTooltip title="Отчислить студента">
+                    <Cancel htmlColor={theme.palette.error.main} classes={actionIconClasses} />
+                </DeanTooltip>
+                <DeanTooltip title="Редактировать информацию">
+                    <Edit htmlColor={EDIT_BUTTON_COLOR} classes={actionIconClasses}/>
+                </DeanTooltip>
+                <DeanTooltip title="Перевести в другую группу">
+                    <ArrowForward htmlColor={theme.palette.primary.main} classes={actionIconClasses}/>
+                </DeanTooltip>
             </div>
         </div>
     )

@@ -4,6 +4,7 @@
 namespace App\Models;
 
 
+use App\Exceptions\InvalidYearStart;
 use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,7 +19,12 @@ class YearRange extends Model
 
     public static function store(Request $request) {
         $yearRange = new YearRange;
-        $yearRange->start = $request->input('start');
+        $start = $request->input('start');
+
+        if(start != null)
+            $yearRange->start = $start;
+        else
+            throw new InvalidYearStart();
 
         $yearRange->saveOrFail();
     }

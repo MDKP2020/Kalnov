@@ -89,11 +89,7 @@ Route::post('/groups/nextYear', function(Request $request) {
     // TODO валидация корректности времени перевода группы
 
     $group = getGroup($request);
-
-    if(time() < $group->getAttribute('last_exam_date')->getTimestamp())
-        return $group->moveToNextYear();
-    else
-        throw new InvalidNextYearTransfer();
+    $group->moveToNextYear();
 });
 
 Route::post('/groups/lastExamDate', function(Request $request) {
@@ -104,5 +100,19 @@ Route::post('/groups/lastExamDate', function(Request $request) {
 Route::get('/groups/{id}/students', function(Request $request, $id) {
     $group = Group::find($id);
 
-    return $group->getStudents();
+    return $group->getStudents($request->input('name'));
+});
+
+Route::patch('/groups/{id}/expel/studyEnd', function(Request $request, $id) {
+    $group = Group::find($id);
+
+    // TODO: возможно ли отчисление не с последнего курса?
+    $group->expelAtStudyEnd();
+
+});
+
+// API студентов
+
+Route::get('/students/{id}', function($id) {
+    return Student::find($id);
 });

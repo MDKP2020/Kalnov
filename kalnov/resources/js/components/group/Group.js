@@ -5,6 +5,7 @@ import { KeyboardDatePicker } from '@material-ui/pickers'
 import {StudentCard} from "./student/StudentCard";
 import {useTheme, makeStyles} from "@material-ui/core";
 import {DeanButton} from "../ui/DeanButton";
+import {SearchBar} from "../ui/SearchBar";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -13,13 +14,19 @@ const useStyles = makeStyles(theme => ({
     },
     studentList: {
         overflowY: 'auto',
-        maxHeight: '300px'
+        maxHeight: '300px',
+        marginTop: '1.5rem'
     },
     lastExamDateInputContainer: {
         display: 'flex',
     },
     transferButton: {
         marginTop: '3rem'
+    },
+    noStudentsMessage: {
+        color: theme.palette.error.main,
+        fontSize: '1.2rem',
+        display: 'block'
     }
 }))
 
@@ -28,23 +35,31 @@ export const Group = () => {
 
     const { year, studyYear, studyYearType, number } = useParams()
     const [students, setStudents] = useState([])
+    const [studentsAreLoaded, setStudentsAreLoaded] = useState(false)
     const [lastExamDate, setLastExamDate] = useState('')
 
     const id = useLocation().state.groupId
+
+    const getStudents = (query) => {
+        axios.get(
+            `/groups/${id}/students`,
+            {
+                params: {
+                    name: query ? query : ''
+                }
+            }
+        ).then(students => { setStudents(students.data); setStudentsAreLoaded(true) })
+    }
 
     const handleLastExamDateChange = (date) => {
         setLastExamDate(date)
     }
 
-    useEffect(() => {
-        axios.get(`/groups/${id}/students`).then(students => { setStudents(students.data); console.log(students) })
-    }, [year, studyYear, studyYearType])
+    useEffect(getStudents, [year, studyYear, studyYearType])
 
-    return (
-        <div className={styles.container}>
-            <h2>Список группы</h2>
-
-            { /* TODO: search bar */ }
+    const StudentList = (
+        <>
+            <SearchBar queryFunction={getStudents} queryParamName='name'/>
 
             <div className={styles.studentList}>
                 {students.map(student => {
@@ -52,12 +67,29 @@ export const Group = () => {
                     return <StudentCard key={student.id} name={fullName} id={student.id} />
                 })}
             </div>
+        </>
+    )
+
+    const NoStudentsMessage = <span className={styles.noStudentsMessage}>В группе ещё нет студентов</span>
+
+    let studentsContent;
+    if(!studentsAreLoaded)
+        studentsContent = null
+    else {
+        studentsContent = students.length > 0  ? StudentList : NoStudentsMessage
+    }
+
+    return (
+        <div className={styles.container}>
+            <h2>Список группы</h2>
+
+            { studentsContent }
 
             <div className={styles.lastExamDateInputContainer}>
 
             </div>
 
-            <DeanButton primary className={styles.transferButton}>Перевести студентов на следующий курс</DeanButton>
+            <DeanButton disabled={studentsAreLoaded && students.length === 0} primary className={styles.transferButton}>Перевести студентов на следующий курс</DeanButton>
         </div>
     )
 
