@@ -94,5 +94,12 @@ class YearApiTest extends TestCase
            'start' => $startYear
         ]);
     }
+
+    // POST: /years
+    public function testShouldNotCreateYearRangeWithNullableStart() {
+        $response = $this->post('api/years', ['start' => null]);
+
+        $response->assertSessionHasErrors(['start']);
+    }
 }
 
