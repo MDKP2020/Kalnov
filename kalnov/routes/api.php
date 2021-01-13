@@ -46,7 +46,7 @@ Route::get('/years/{id}/next', function($id) {
 
 Route::post('/years', function(Request $request) {
     $request->validate([
-       'start'=> 'required'
+       'start'=> ['required', 'date']
     ]);
 
     return YearRange::store($request);
@@ -54,6 +54,11 @@ Route::post('/years', function(Request $request) {
 
 // API курсов обучения
 Route::post('/study_years', function(Request $request) {
+    $request->validate([
+        'year' => ['required', 'integer', 'min:1900'],
+        'type' => ['required', 'in:bachelor,master']
+    ]);
+
     return StudyYear::store($request);
 });
 
