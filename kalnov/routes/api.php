@@ -102,6 +102,12 @@ Route::patch('/groups/{id}/expel/studyEnd', function(Request $request, $id) {
 
 });
 
+Route::get('/groups/{id}', function(Request $request, $id) {
+    $group = Group::find($id);
+
+    return \App\Models\Dto\GroupDto::fromGroup($group);
+});
+
 // API студентов
 
 Route::get('/students/{id}', function($id) {
