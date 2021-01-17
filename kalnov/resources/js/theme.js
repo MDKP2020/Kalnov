@@ -15,11 +15,12 @@ export const theme = createMuiTheme({
             main: '#D31F1F'
         },
         warning: {
-            main: 'FFC52F'
+            main: '#FFC52F'
         },
         text: {
             main: '#202020',
-            light: '#888888'
+            light: '#888888',
+            gray: '#9E9E9E'
         }
     }
 })
