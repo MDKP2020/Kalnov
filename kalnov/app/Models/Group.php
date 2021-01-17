@@ -12,7 +12,7 @@ class Group extends Model
 {
     use HasFactory;
 
-    public static function newGroup($number, $year, $studyYearType, $majorId) {
+    public static function newGroup($number, $studyYearType, $majorId) {
         $group = new Group();
 
         // Расчёт учебного года
