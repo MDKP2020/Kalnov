@@ -1,6 +1,7 @@
 <?php
 
 use App\Exceptions\InvalidNextYearTransfer;
+use App\Exceptions\ResourceNotFound;
 use App\Models\Group;
 use App\Models\StudyYear;
 use Illuminate\Http\Request;
@@ -118,6 +119,23 @@ Route::patch('/groups/{id}/expel/studyEnd', function(Request $request, $id) {
     // TODO: возможно ли отчисление не с последнего курса?
     $group->expelAtStudyEnd();
 
+});
+
+Route::post('/groups/{id}/enrollment', function (Request $request, $id) {
+    $request->validate([
+        'students.*.name' => ['required', 'string'],
+        'students.*.middle_name' => ['required', 'string'],
+        'students.*.last_name' => ['required', 'string']
+    ]);
+
+    $group = Group::find($id);
+
+    if ($group === null)
+        throw new ResouceNotFound(new ResourceNotFound("Group with id = $id not found"));
+
+    $students = $request['students'];
+
+    $group->enrollmentStudents($students);
 });
 
 // API студентов
