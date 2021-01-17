@@ -15,15 +15,16 @@ class YearRange extends Model
 {
     protected $table = 'year_ranges';
 
-    public function __construct(string $startDate)
-    {
-        parent::__construct([]);
-        $this->setAttribute('start', $startDate);
+    public static function create(string $startDate) {
+        $yearRange = new YearRange();
+        $yearRange->setAttribute('start', $startDate);
+
+        return $yearRange;
     }
 
     public static function store(string $startDate) {
         if($startDate != null) {
-            $yearRange = new YearRange($startDate);
+            $yearRange = YearRange::create($startDate);
             $yearRange->saveOrFail();
         }
         else

@@ -19,7 +19,7 @@ class Group extends Model
         $currentYear = Carbon::now()->format('YYYY-MM-dd');
 
         $group->setAttribute('number', $number);
-        $group->setAttribute('year_range', new YearRange($currentYear));
+        $group->setAttribute('year_range', YearRange::create($currentYear));
         $group->setAttribute('study_year', 1);
         $group->setAttribute('major_id', $majorId);
         $group->setAttribute('study_year_type', $studyYearType);
