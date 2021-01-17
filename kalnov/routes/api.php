@@ -39,7 +39,7 @@ Route::get('/years/{id}/next', function($id) {
 });
 
 Route::post('/years', function(Request $request) {
-    return YearRange::store($request);
+    return YearRange::store($request->input('start'));
 });
 
 // API курсов обучения

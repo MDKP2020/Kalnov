@@ -15,12 +15,11 @@ class YearRange extends Model
 {
     protected $table = 'year_ranges';
 
-    public static function store(Request $request) {
+    public static function store(string $startDate) {
         $yearRange = new YearRange;
-        $start = $request->input('start');
 
-        if(start != null)
-            $yearRange->start = $start;
+        if($startDate != null)
+            $yearRange->setAttribute('start', $startDate);
         else
             throw new InvalidYearStart();
 
