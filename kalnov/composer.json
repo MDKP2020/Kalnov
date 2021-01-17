@@ -15,7 +15,8 @@
         "laravel/framework": "^8.0",
         "laravel/tinker": "^2.0",
         "laravel/ui": "^3.1",
-        "nesbot/carbon": "^2.43"
+        "nesbot/carbon": "^2.43",
+        "spatie/data-transfer-object": "^2.6"
     },
     "require-dev": {
         "facade/ignition": "^2.3.6",
