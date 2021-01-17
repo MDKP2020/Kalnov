@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\StudyYear;
 use DateTime;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -83,5 +84,76 @@ class StudyYearApiTest extends TestCase
             'year' => $year,
             'type' => $type
         ]);
+    }
+
+    // GET: /study_years
+    public function testShouldReturnAll() {
+        $count = 10;
+
+        StudyYear::factory()->count($count)->create();
+
+        $response = $this->get('api/study_years');
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonCount($count);
+    }
+
+    // GET: /study_years
+    // todo pass input type (test not work)
+    public function testShouldReturnMasterType() {
+        $count = 10;
+
+        $studyYears = StudyYear::factory()->count($count)->create();
+        $expectedMasterCount = $studyYears->filter(function ($value) {
+           return $value['type'] === 'master';
+        })->count();
+
+        $response = $this->get('api/study_years', [
+            'type' => 'master'
+        ]);
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonCount($expectedMasterCount);
+    }
+
+    // GET: /study_years
+    // todo pass input type (test not work)
+    public function testShouldValidateInvalidType() {
+        $count = 10;
+
+        $studyYears = StudyYear::factory()->count($count)->create();
+        $expectedMasterCount = $studyYears->filter(function ($value) {
+            return $value['type'] === 'master';
+        })->count();
+
+        $response = $this->get('api/study_years', [
+            'type' => 'invalid'
+        ]);
+
+        $response->assertSessionHasErrors(['type']);
+    }
+
+    // GET: /study_years/types
+    public function testShouldReturnTypesOrderByAsc() {
+        StudyYear::factory()->create([
+           'type' => 'master'
+        ]);
+        StudyYear::factory()->create([
+            'type' => 'bachelor'
+        ]);
+        StudyYear::factory()->create([
+            'type' => 'bachelor'
+        ]);
+
+        $response = $this->get('api/study_years/types');
+
+        $response
+            ->assertStatus(200)
+            ->assertExactJson([
+                'bachelor',
+                'master'
+            ]);
     }
 }
