@@ -17,7 +17,7 @@ class YearRange extends Model
 
     public function __construct(string $startDate)
     {
-        parent::__construct();
+        parent::__construct([]);
         $this->setAttribute('start', $startDate);
     }
 
