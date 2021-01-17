@@ -132,4 +132,8 @@ class Group extends Model
             $this->isBachelor() && $this->getAttribute('study_year') == 4
             || $this->isMaster() && $this->getAttribute('study_year') == 2;
     }
+
+    public function getMajorName() : string {
+        return DB::table('majors')->get('acronym')->where('id', $this->getAttribute('major_id'));
+    }
 }
