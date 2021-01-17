@@ -50,7 +50,7 @@ Route::post('/years', function(Request $request) {
        'start'=> 'required'
     ]);
 
-    return YearRange::store($request);
+    return YearRange::store($request->input('start'));
 });
 
 // API курсов обучения
@@ -114,6 +114,12 @@ Route::patch('/groups/{id}/expel/studyEnd', function(Request $request, $id) {
     // TODO: возможно ли отчисление не с последнего курса?
     $group->expelAtStudyEnd();
 
+});
+
+Route::get('/groups/{id}', function(Request $request, $id) {
+    $group = Group::find($id);
+
+    return \App\Models\Dto\GroupDto::fromGroup($group);
 });
 
 // API студентов

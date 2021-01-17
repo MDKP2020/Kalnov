@@ -6,17 +6,23 @@ use App\Exceptions\InvalidNextYearTransfer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class Group extends Model
 {
     use HasFactory;
 
-    public static function newGroup($number, $year, $studyYear, $studyYearType, $previousGroupId, $majorId) {
+    public static function newGroup($number, $studyYearType, $majorId) {
         $group = new Group();
 
-        $group->number = $number;
-        $group->year = $year;
-        $group->majorId = $majorId;
+        // Расчёт учебного года
+        $currentYear = Carbon::now()->format('YYYY-MM-dd');
+
+        $group->setAttribute('number', $number);
+        $group->setAttribute('year_range', YearRange::create($currentYear));
+        $group->setAttribute('study_year', 1);
+        $group->setAttribute('major_id', $majorId);
+        $group->setAttribute('study_year_type', $studyYearType);
         // TODO провалидировать создание группы
         $group->saveOrFail();
     }
@@ -125,5 +131,9 @@ class Group extends Model
         return
             $this->isBachelor() && $this->getAttribute('study_year') == 4
             || $this->isMaster() && $this->getAttribute('study_year') == 2;
+    }
+
+    public function getMajorName() : string {
+        return DB::table('majors')->get('acronym')->where('id', $this->getAttribute('major_id'));
     }
 }
