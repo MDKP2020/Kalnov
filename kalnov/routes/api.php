@@ -6,6 +6,7 @@ use App\Models\StudyYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\YearRange;
+use App\Models\Major;
 use function App\Helpers\Api\getGroup;
 
 /*
@@ -119,4 +120,10 @@ Route::patch('/groups/{id}/expel/studyEnd', function(Request $request, $id) {
 
 Route::get('/students/{id}', function($id) {
     return Student::find($id);
+});
+
+// API специальностей
+
+Route::get('/majors', function() {
+    return Major::getAll();
 });
