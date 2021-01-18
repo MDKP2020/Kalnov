@@ -3,6 +3,7 @@ import { Warning } from '@material-ui/icons'
 import { InputLabel, makeStyles, MenuItem, Select, TextField, FormControl } from "@material-ui/core";
 import { DeanButton } from "../ui/DeanButton";
 import { StudyTypesNames } from "../../types/studyTypes";
+import { CircularProgress } from "@material-ui/core";
 import axios from "../../axios";
 
 const useStyles = makeStyles(theme => ({
@@ -16,20 +17,19 @@ const useStyles = makeStyles(theme => ({
         marginTop: '80px',
     },
     warningIcon: {
-        color: theme.warning.main,
+        color: theme.palette.warning.main,
         width: '40px',
         height: '40px',
     },
     warningText: {
         fontSize: '1rem',
         color: theme.palette.text.gray,
+        marginLeft: '1rem',
     },
     warningBlock: {
         display: 'flex',
-        alignItems: 'center'
-    },
-    createButton: {
-        marginRight: '3rem',
+        alignItems: 'center',
+        marginLeft: '3rem',
     },
     formControl: {
         '&:not(:first-of-type)': {
@@ -38,23 +38,33 @@ const useStyles = makeStyles(theme => ({
         '&:first-of-type': {
             marginTop: '30px',
         },
-        width: '40%',
+        width: '37%',
+    },
+    selectComponent: {
+        '&:focus': {
+            backgroundColor: 'inherit',
+        },
+    },
+    majorNameLoadingProgress: {
+        color: theme.palette.primary.main,
     }
 }))
 
-const NewGroup = () => {
-
-    useEffect(() => {
+export const NewGroup = () => {
+    const fetchMajors = async () => {
         axios.get('/majors')
             .then(response => {
                 setMajors(response.data)
             })
             .catch(error => console.log(error))
-    })
+    }
+    useEffect(() => {
+        fetchMajors()
+    }, [])
 
     const [groupNumber, setGroupNumber] = useState('')
     const [major, setMajor] = useState('ПрИн')
-    const [studyType, setStudyType] = useState('')
+    const [studyType, setStudyType] = useState('bachelor')
     const [majors, setMajors] = useState([])
 
     const styles = useStyles()
@@ -72,11 +82,21 @@ const NewGroup = () => {
     }
 
     const groupCreationHandler = async () => {
+        const newGroupData = {}
         axios.post('/groups', {
             number: groupNumber,
             studyYearType: studyType,
             majorId: major,
         }).then(response => console.log(response))
+    }
+
+    const renderMajorSelectValue = (value) => {
+        if (majors.length !== 0) {
+            const major = majors.find(major => major.acronym === value)
+            return major.name
+        } else {
+            return <CircularProgress size="1.2em" classes={{ root: styles.majorNameLoadingProgress }} />
+        }
     }
 
     return (
@@ -87,7 +107,7 @@ const NewGroup = () => {
                     autoFocus
                     value={groupNumber}
                     type="text"
-                    onChange={groupNumberHandler()}
+                    onChange={groupNumberHandler}
                 />
             </FormControl>
             <FormControl className={styles.formControl}>
@@ -96,6 +116,8 @@ const NewGroup = () => {
                     inputProps={{ id: 'selectMajor' }}
                     value={major}
                     onChange={majorHandler}
+                    classes={{ select: styles.selectComponent }}
+                    renderValue={renderMajorSelectValue}
                 >
                     {majors.map(major => (
                         <MenuItem key={major.acronym} value={major.acronym}>
@@ -110,6 +132,7 @@ const NewGroup = () => {
                     inputProps={{ id: 'studyTypeSelect' }}
                     value={studyType}
                     onChange={studyTypeHandler}
+                    classes={{ select: styles.selectComponent }}
                 >
                     {StudyTypesNames.map(studyType => (
                         <MenuItem key={studyType.value} value={studyType.value}>
@@ -119,7 +142,7 @@ const NewGroup = () => {
                 </Select>
             </FormControl>
             <div className={styles.groupCreationBlock}>
-                <DeanButton onClick={groupCreationHandler}>Создать группу</DeanButton>
+                <DeanButton primary onClick={groupCreationHandler}>Создать группу</DeanButton>
                 <div className={styles.warningBlock}>
                     <Warning classes={{ root: styles.warningIcon }} />
                     <p className={styles.warningText}>Группа будет создана на первом курсе в текущем учебном году</p>
