@@ -2,7 +2,7 @@ import React from 'react'
 import {Dialog, DialogActions, DialogTitle, DialogContent, DialogContentText} from "@material-ui/core";
 import {DeanButton} from "./DeanButton";
 
-export const DialogModal = ({ id, open, title, text, children, onClose, buttonText, ...dialogProps }) => {
+export const DialogModal = ({ id, open, title, text, children, onClose, onConfirm, closeButtonText, confirmButtonText, ...dialogProps }) => {
     return (
         <Dialog aria-labelledby={id} open={open} onClose={onClose} {...dialogProps}>
             <DialogTitle id={id}>{ title }</DialogTitle>
@@ -11,7 +11,8 @@ export const DialogModal = ({ id, open, title, text, children, onClose, buttonTe
                 { children }
             </DialogContent>
             <DialogActions>
-                <DeanButton primary onClick={onClose}>{buttonText}</DeanButton>
+                <DeanButton onClick={onClose}>{closeButtonText}</DeanButton>
+                <DeanButton onClick={onConfirm}>{confirmButtonText}</DeanButton>
             </DialogActions>
         </Dialog>
     )
