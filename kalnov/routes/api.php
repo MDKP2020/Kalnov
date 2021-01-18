@@ -6,6 +6,7 @@ use App\Models\StudyYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\YearRange;
+use App\Models\Major;
 use function App\Helpers\Api\getGroup;
 
 /*
@@ -30,6 +31,12 @@ Route::get('/years', function() {
 });
 
 Route::get('/years/{id}', function($id) {
+    $response = YearRange::find($id);
+
+    if ($response == null) {
+        abort(404);
+    }
+
     return YearRange::find($id);
 });
 
@@ -39,6 +46,10 @@ Route::get('/years/{id}/next', function($id) {
 });
 
 Route::post('/years', function(Request $request) {
+    $request->validate([
+       'start'=> 'required'
+    ]);
+
     return YearRange::store($request->input('start'));
 });
 
@@ -71,7 +82,10 @@ Route::get('/groups', function(Request $request) {
 Route::post('/groups', function(Request $request) {
     return Group::newGroup(
         $request->input('number'),
+        $request->input('year'),
+        $request->input('studyYear'),
         $request->input('studyYearType'),
+        $request->input('previousGroupId'),
         $request->input('majorId')
     );
 });
@@ -112,4 +126,10 @@ Route::get('/groups/{id}', function(Request $request, $id) {
 
 Route::get('/students/{id}', function($id) {
     return Student::find($id);
+});
+
+// API специальностей
+
+Route::get('/majors', function() {
+    return Major::getAll();
 });

@@ -31,7 +31,7 @@ class StudyYear extends Model
             $studyYear->type = $studyType;
         else throw new InvalidStudyYearTypeException();
 
-        $studyYear->saveOrFail();
+        return $studyYear->saveOrFail();
     }
 
     public static function getAllByType(string $type) {
