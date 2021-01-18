@@ -62,6 +62,7 @@ export const NewGroup = () => {
         axios.get('/majors')
             .then(response => {
                 setMajors(response.data)
+                setMajorsLoaded(true)
             })
             .catch(error => console.log(error))
     }
@@ -73,6 +74,7 @@ export const NewGroup = () => {
     const [major, setMajor] = useState('ПрИн')
     const [studyType, setStudyType] = useState('bachelor')
     const [majors, setMajors] = useState([])
+    const [majorsAreLoaded, setMajorsLoaded] = useState(false)
 
     const styles = useStyles()
 
@@ -98,9 +100,12 @@ export const NewGroup = () => {
     }
 
     const renderMajorSelectValue = (value) => {
-        if (majors.length !== 0) {
+        if (majorsAreLoaded !== false) {
             const major = majors.find(major => major.acronym === value)
-            return major.name
+            if(major)
+                return major.name
+            else
+                return 'Нет специальностей'
         } else {
             return <CircularProgress size="1.2em" classes={{ root: styles.majorNameLoadingProgress }} />
         }
