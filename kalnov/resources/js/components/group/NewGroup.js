@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { Warning } from '@material-ui/icons'
-import { InputLabel, makeStyles, MenuItem, Select, TextField, FormControl } from "@material-ui/core";
+import {
+    InputLabel,
+    makeStyles,
+    MenuItem,
+    Select,
+    TextField,
+    FormControl,
+    CircularProgress,
+} from "@material-ui/core";
 import { DeanButton } from "../ui/DeanButton";
 import { StudyTypesNames } from "../../types/studyTypes";
-import { CircularProgress } from "@material-ui/core";
 import axios from "../../axios";
 
 const useStyles = makeStyles(theme => ({
@@ -148,6 +155,7 @@ export const NewGroup = () => {
                     <p className={styles.warningText}>Группа будет создана на первом курсе в текущем учебном году</p>
                 </div>
             </div>
+            <DeanButton primary onClick={() => setSnackbarOpen(true)}>Показать снекбар</DeanButton>
         </div>
     )
 }
