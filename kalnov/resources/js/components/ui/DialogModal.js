@@ -12,7 +12,7 @@ export const DialogModal = ({ id, open, title, text, children, onClose, onConfir
             </DialogContent>
             <DialogActions>
                 <DeanButton onClick={onClose}>{closeButtonText}</DeanButton>
-                <DeanButton onClick={onConfirm}>{confirmButtonText}</DeanButton>
+                <DeanButton onClick={onConfirm} primary>{confirmButtonText}</DeanButton>
             </DialogActions>
         </Dialog>
     )
