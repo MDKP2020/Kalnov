@@ -155,7 +155,6 @@ export const NewGroup = () => {
                     <p className={styles.warningText}>Группа будет создана на первом курсе в текущем учебном году</p>
                 </div>
             </div>
-            <DeanButton primary onClick={() => setSnackbarOpen(true)}>Показать снекбар</DeanButton>
         </div>
     )
 }
