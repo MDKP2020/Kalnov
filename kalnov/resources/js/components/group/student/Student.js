@@ -2,6 +2,7 @@ import React from 'react'
 import {useTheme, makeStyles} from "@material-ui/core";
 import {ArrowForward, Cancel, Edit} from "@material-ui/icons";
 import {DeanTooltip} from "../../ui/DeanTooltip";
+import {StudentCard} from "./StudentCard";
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -50,20 +51,22 @@ export const Student = ({ name, id }) => {
 
     const actionIconClasses = { root: styles.actionIcon }
 
+    const actions = [
+        <DeanTooltip title="Отчислить студента">
+            <Cancel htmlColor={theme.palette.error.main} classes={actionIconClasses} />
+        </DeanTooltip>,
+        <DeanTooltip title="Редактировать информацию">
+            <Edit htmlColor={EDIT_BUTTON_COLOR} classes={actionIconClasses}/>
+        </DeanTooltip>,
+        <DeanTooltip title="Перевести в другую группу">
+            <ArrowForward htmlColor={theme.palette.primary.main} classes={actionIconClasses}/>
+        </DeanTooltip>
+    ]
+
     return (
-        <div className={styles.card}>
-            <span className={styles.name}>{name}</span>
-            <div className={styles.actions}>
-                <DeanTooltip title="Отчислить студента">
-                    <Cancel htmlColor={theme.palette.error.main} classes={actionIconClasses} />
-                </DeanTooltip>
-                <DeanTooltip title="Редактировать информацию">
-                    <Edit htmlColor={EDIT_BUTTON_COLOR} classes={actionIconClasses}/>
-                </DeanTooltip>
-                <DeanTooltip title="Перевести в другую группу">
-                    <ArrowForward htmlColor={theme.palette.primary.main} classes={actionIconClasses}/>
-                </DeanTooltip>
-            </div>
-        </div>
+        <StudentCard
+            text={name}
+            actions={actions}
+        />
     )
 }
