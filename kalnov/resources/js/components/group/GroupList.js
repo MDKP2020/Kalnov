@@ -18,6 +18,10 @@ const useStyles = makeStyles(theme => ({
     createNewGroupButton: {
       marginTop: '3rem',
     },
+    noGroupsText: {
+        color: theme.palette.text.light,
+        fontSize: '1rem'
+    },
 }))
 
 export const GroupList = () => {
@@ -59,7 +63,7 @@ export const GroupList = () => {
             <span className={defaultStyles.chooseLabel}>Выберите группу:</span>
             <div className={styles.groupContainer}>
                 {
-                    majors.map(major => {
+                    groups.length !== 0 ? majors.map(major => {
                         return (
                             <div className={styles.majorContainer} key={major}>
                                 {groups[major].map(group => {
@@ -77,7 +81,7 @@ export const GroupList = () => {
                                 })}
                             </div>
                         )
-                    })
+                    }) : <span className={styles.noGroupsText}>Не создано ни одной группы</span>
                 }
             </div>
             <DeanButton
