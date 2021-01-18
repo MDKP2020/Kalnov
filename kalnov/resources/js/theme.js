@@ -12,7 +12,8 @@ export const theme = createMuiTheme({
             dark: '#a1a1a1'
         },
         error: {
-            main: '#D31F1F'
+            main: '#D31F1F',
+            dark: '#B51414',
         },
         warning: {
             main: '#FFC52F'
