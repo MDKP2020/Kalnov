@@ -3,9 +3,10 @@ import axios from '../../axios'
 import {useLocation, useParams} from "react-router";
 import { KeyboardDatePicker } from '@material-ui/pickers'
 import {Student} from "./student/Student";
-import {useTheme, makeStyles} from "@material-ui/core";
+import {useTheme, makeStyles, Snackbar, SnackbarContent} from "@material-ui/core";
 import {DeanButton} from "../ui/DeanButton";
 import {SearchBar} from "../ui/SearchBar";
+import {StudyTypes} from "../../types/studyTypes";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -27,7 +28,14 @@ const useStyles = makeStyles(theme => ({
         color: theme.palette.error.main,
         fontSize: '1.2rem',
         display: 'block'
-    }
+    },
+    actionsWithGroup: {
+        display: 'flex',
+        flexDirection: 'column',
+        '& > button:not(:first-of-type)': {
+            marginTop: '2.5rem',
+        },
+    },
 }))
 
 export const Group = () => {
@@ -37,6 +45,8 @@ export const Group = () => {
     const [students, setStudents] = useState([])
     const [studentsAreLoaded, setStudentsAreLoaded] = useState(false)
     const [lastExamDate, setLastExamDate] = useState('')
+    const [successExpelSnackbarOpen, setSuccessExpelSnackbarOpen] = useState(false)
+    const [failureExpelSnackbarOpen, setFailureExpelSnackbarOpen] = useState(false)
 
     const id = useLocation().state.groupId
 
@@ -79,6 +89,18 @@ export const Group = () => {
         studentsContent = students.length > 0  ? StudentList : NoStudentsMessage
     }
 
+    const expelStudentsHandler = async () => {
+        try {
+            const response = await axios.patch(`/groups/${id}/expel/studyEnd`)
+            if (response.status === 200) {
+                setSuccessExpelSnackbarOpen(true)
+                await getStudents()
+            }
+        } catch (e) {
+            setFailureExpelSnackbarOpen(true)
+        }
+    }
+
     return (
         <div className={styles.container}>
             <h2>Список группы</h2>
@@ -88,8 +110,30 @@ export const Group = () => {
             <div className={styles.lastExamDateInputContainer}>
 
             </div>
-
-            <DeanButton disabled={studentsAreLoaded && students.length === 0} primary className={styles.transferButton}>Перевести студентов на следующий курс</DeanButton>
+            <div className={styles.actionsWithGroup}>
+                <DeanButton disabled={studentsAreLoaded && students.length === 0} primary className={styles.transferButton}>Перевести студентов на следующий курс</DeanButton>
+                <DeanButton
+                    error
+                    disabled={(studyYearType === StudyTypes.bachelor && studyYear !== 4) || (studyYearType === StudyTypes.master && studyYear !== 2)}
+                    onClick={expelStudentsHandler}
+                >
+                    Отчислить студентов в связи с окончанием обучения
+                </DeanButton>
+            </div>
+            <Snackbar
+                open={successExpelSnackbarOpen}
+                autoHideDuration={2500}
+                onClose={() => setSuccessExpelSnackbarOpen(false)}
+            >
+                <SnackbarContent message={'Студенты успешно отчислены'} />
+            </Snackbar>
+            <Snackbar
+                open={failureExpelSnackbarOpen}
+                autoHideDuration={2500}
+                onClose={() => setFailureExpelSnackbarOpen(false)}
+            >
+                <SnackbarContent message={'При отчислении студентов возникла ошибка'} />
+            </Snackbar>
         </div>
     )
 

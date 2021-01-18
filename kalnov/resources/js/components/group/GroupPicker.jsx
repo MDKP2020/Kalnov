@@ -14,7 +14,7 @@ import {StudentsEnrollment} from "./StudentsEnrollment";
 const useStyles = makeStyles((theme) => ({
     container: {
         padding: "20px 60px 0"
-    }
+    },
 }))
 
 export const GroupPicker = (props) => {

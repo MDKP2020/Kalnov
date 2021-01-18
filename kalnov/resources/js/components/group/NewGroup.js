@@ -1,9 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import { Warning } from '@material-ui/icons'
-import { InputLabel, makeStyles, MenuItem, Select, TextField, FormControl } from "@material-ui/core";
+import {
+    InputLabel,
+    makeStyles,
+    MenuItem,
+    Select,
+    TextField,
+    FormControl,
+    CircularProgress,
+} from "@material-ui/core";
 import { DeanButton } from "../ui/DeanButton";
 import { StudyTypesNames } from "../../types/studyTypes";
-import { CircularProgress } from "@material-ui/core";
 import axios from "../../axios";
 
 const useStyles = makeStyles(theme => ({
