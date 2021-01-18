@@ -20,15 +20,22 @@ const useStyles = makeStyles(theme => ({
     actions: {
         display: 'flex'
     },
+    disabled: {
+        backgroundColor: theme.palette.background.light
+    }
 }))
 
-export const StudentCard = ({ actions, text }) => {
+export const StudentCard = ({ actions, text, disabled }) => {
 
     const theme = useTheme()
     const styles = useStyles()
 
+    const cardStyles = [styles.card]
+    if(disabled)
+        cardStyles.push(styles.disabled)
+
     return (
-        <div className={styles.card}>
+        <div className={cardStyles.join(' ')}>
             <span className={styles.cardText}>{text}</span>
             <div className={styles.actions}>
                 {actions}
