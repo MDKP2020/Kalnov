@@ -31,7 +31,7 @@ class Group extends Model
             throw new GroupAlreadyExists();
 
         $group->setAttribute('number', $number);
-        $group->setAttribute('year_range', YearRange::create($currentYear));
+        $group->setAttribute('year_range', YearRange::build($currentYear));
         $group->setAttribute('study_year', 1);
         $group->setAttribute('major_id', $majorId);
         $group->setAttribute('study_year_type', $studyYearType);
