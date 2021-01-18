@@ -3,6 +3,7 @@ import { Warning } from '@material-ui/icons'
 import { InputLabel, makeStyles, MenuItem, Select, TextField, FormControl } from "@material-ui/core";
 import { DeanButton } from "../ui/DeanButton";
 import { StudyTypesNames } from "../../types/studyTypes";
+import { CircularProgress } from "@material-ui/core";
 import axios from "../../axios";
 
 const useStyles = makeStyles(theme => ({
@@ -41,23 +42,29 @@ const useStyles = makeStyles(theme => ({
     },
     selectComponent: {
         '&:focus': {
-            backgroundColor: 'white',
-        }
+            backgroundColor: 'inherit',
+        },
+    },
+    majorNameLoadingProgress: {
+        color: theme.palette.primary.main,
     }
 }))
 
 export const NewGroup = () => {
-    useEffect(() => {
+    const fetchMajors = async () => {
         axios.get('/majors')
             .then(response => {
                 setMajors(response.data)
             })
             .catch(error => console.log(error))
-    })
+    }
+    useEffect(() => {
+        fetchMajors()
+    }, [])
 
     const [groupNumber, setGroupNumber] = useState('')
     const [major, setMajor] = useState('ПрИн')
-    const [studyType, setStudyType] = useState('')
+    const [studyType, setStudyType] = useState('bachelor')
     const [majors, setMajors] = useState([])
 
     const styles = useStyles()
@@ -83,6 +90,15 @@ export const NewGroup = () => {
         }).then(response => console.log(response))
     }
 
+    const renderMajorSelectValue = (value) => {
+        if (majors.length !== 0) {
+            const major = majors.find(major => major.acronym === value)
+            return major.name
+        } else {
+            return <CircularProgress size="1.2em" classes={{ root: styles.majorNameLoadingProgress }} />
+        }
+    }
+
     return (
         <div className={styles.container}>
             <h2>Новая группа</h2>
@@ -101,6 +117,7 @@ export const NewGroup = () => {
                     value={major}
                     onChange={majorHandler}
                     classes={{ select: styles.selectComponent }}
+                    renderValue={renderMajorSelectValue}
                 >
                     {majors.map(major => (
                         <MenuItem key={major.acronym} value={major.acronym}>
