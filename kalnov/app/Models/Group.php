@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Exceptions\GroupAlreadyExists;
 use App\Exceptions\InvalidNextYearTransfer;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -18,12 +19,20 @@ class Group extends Model
         // Расчёт учебного года
         $currentYear = Carbon::now()->format('YYYY-MM-dd');
 
+        $suchGroupExists = DB::table('groups')
+                ->where('number', '=', $number)
+                ->where('major_id', '=', $majorId)
+                ->where('study_year_type', '=', $studyYearType)
+                ->exists();
+
+        if($suchGroupExists)
+            throw new GroupAlreadyExists();
+
         $group->setAttribute('number', $number);
         $group->setAttribute('year_range', YearRange::create($currentYear));
         $group->setAttribute('study_year', 1);
         $group->setAttribute('major_id', $majorId);
         $group->setAttribute('study_year_type', $studyYearType);
-        // TODO провалидировать создание группы
         $group->saveOrFail();
     }
 
