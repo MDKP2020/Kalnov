@@ -147,7 +147,7 @@ Route::post('/groups/{id}/enrollment', function (Request $request, $id) {
     $group = Group::find($id);
 
     if ($group === null)
-        throw new ResouceNotFound(new ResourceNotFound("Group with id = $id not found"));
+        throw new ResourceNotFound("Group with id = $id not found");
 
     $students = $request['students'];
 
