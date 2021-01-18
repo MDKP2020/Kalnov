@@ -10,5 +10,10 @@ export const useDefaultStyles = makeStyles(theme => ({
         color: theme.palette.error.main,
         fontSize: '1.2rem',
         display: 'block'
+    },
+    centeredContentContainer: {
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
     }
 }))
