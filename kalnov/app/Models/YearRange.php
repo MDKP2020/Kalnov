@@ -17,7 +17,7 @@ class YearRange extends Model
 
     protected $table = 'year_ranges';
 
-    public static function create(string $startDate) {
+    public static function build(string $startDate) {
         $yearRange = new YearRange();
         $yearRange->setAttribute('start', $startDate);
 
@@ -26,7 +26,7 @@ class YearRange extends Model
 
     public static function store(string $startDate) {
         if($startDate != null) {
-            $yearRange = YearRange::create($startDate);
+            $yearRange = YearRange::build($startDate);
             return $yearRange->saveOrFail();
         }
         else

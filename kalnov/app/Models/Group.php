@@ -18,9 +18,6 @@ class Group extends Model
     public static function newGroup($number, $studyYearType, $majorId) {
         $group = new Group();
 
-        // Расчёт учебного года
-        $currentYear = Carbon::now()->format('YYYY-MM-dd');
-
         $suchGroupExists = DB::table('groups')
                 ->where('number', '=', $number)
                 ->where('major_id', '=', $majorId)
@@ -30,8 +27,18 @@ class Group extends Model
         if($suchGroupExists)
             throw new GroupAlreadyExists();
 
+        // Расчёт учебного года
+        $currentTime = Carbon::now();
+        $currentTime->day = 1;
+        $currentTime->month = 9;
+        $currentDate = $currentTime->format('Y-m-d');
+
+        $yearRangeExists = YearRange::where('start', $currentDate)->exists();
+        if(!$yearRangeExists)
+            $currentYearRange = YearRange::store($currentDate);
+
         $group->setAttribute('number', $number);
-        $group->setAttribute('year_range', YearRange::create($currentYear));
+        $group->setAttribute('year_range', $currentDate);
         $group->setAttribute('study_year', 1);
         $group->setAttribute('major_id', $majorId);
         $group->setAttribute('study_year_type', $studyYearType);
@@ -154,8 +161,8 @@ class Group extends Model
             foreach ($students as $student) {
                 $studentId = Student::insertGetId([
                     'name' => $student['name'],
-                    'middle_name' => $student['middle_name'],
-                    'last_name' => $student['last_name']
+                    'middle_name' => $student['middleName'],
+                    'last_name' => $student['lastName']
                 ]);
 
                 $studentsIds->add($studentId);
