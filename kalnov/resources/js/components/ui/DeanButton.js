@@ -3,8 +3,8 @@ import {Button, makeStyles, useTheme} from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({
     root: {
-        padding: '4px 16px', // change default padding for the button
-        fontWeight: 500, // default font-weight
+        padding: '12px 34px', // change default padding for the button
+        fontWeight: 700, // default font-weight
         maxWidth: '50%',
         textTransform: 'none'
     },
