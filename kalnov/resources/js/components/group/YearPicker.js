@@ -21,9 +21,6 @@ const useStyles = makeStyles({
         cursor: 'pointer'
     },
     loaderContainer: {
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
         marginTop: '4rem'
     }
 })
@@ -95,7 +92,7 @@ export const YearPicker = (props) => {
 
     let pickerContent;
     if(!yearsAreLoaded)
-        pickerContent = <div className={styles.loaderContainer}><CircularProgress/></div>
+        pickerContent = <div className={`${defaultStyles.centeredContentContainer} ${styles.loaderContainer}`}><CircularProgress/></div>
     else
         pickerContent = years.length > 0 ? YearsList: <span className={defaultStyles.errorMessage}>Годов обучения ещё нет</span>
 
