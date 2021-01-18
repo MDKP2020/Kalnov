@@ -17,16 +17,20 @@ class YearRange extends Model
 
     protected $table = 'year_ranges';
 
-    public static function store(Request $request) {
-        $yearRange = new YearRange;
-        $start = $request->input('start');
+    public static function create(string $startDate) {
+        $yearRange = new YearRange();
+        $yearRange->setAttribute('start', $startDate);
 
-        if(start != null)
-            $yearRange->start = $start;
+        return $yearRange;
+    }
+
+    public static function store(string $startDate) {
+        if($startDate != null) {
+            $yearRange = YearRange::create($startDate);
+            $yearRange->saveOrFail();
+        }
         else
             throw new InvalidYearStart();
-
-        $yearRange->saveOrFail();
     }
 
     public function next() {

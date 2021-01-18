@@ -31,6 +31,7 @@ Route::get('/years', function() {
 });
 
 Route::get('/years/{id}', function($id) {
+
     $response = YearRange::find($id);
 
     if ($response == null) {
@@ -46,11 +47,7 @@ Route::get('/years/{id}/next', function($id) {
 });
 
 Route::post('/years', function(Request $request) {
-    $request->validate([
-       'start'=> ['required', 'date']
-    ]);
-
-    return YearRange::store($request);
+    return YearRange::store($request->input('start'));
 });
 
 // API курсов обучения
@@ -87,10 +84,7 @@ Route::get('/groups', function(Request $request) {
 Route::post('/groups', function(Request $request) {
     return Group::newGroup(
         $request->input('number'),
-        $request->input('year'),
-        $request->input('studyYear'),
         $request->input('studyYearType'),
-        $request->input('previousGroupId'),
         $request->input('majorId')
     );
 });
@@ -119,6 +113,19 @@ Route::patch('/groups/{id}/expel/studyEnd', function(Request $request, $id) {
     // TODO: возможно ли отчисление не с последнего курса?
     $group->expelAtStudyEnd();
 
+});
+
+Route::get('/groups/{id}', function(Request $request, $id) {
+    $group = Group::find($id);
+
+    return \App\Models\Dto\GroupDto::fromGroup($group);
+});
+
+
+Route::get('/groups/{id}', function(Request $request, $id) {
+    $group = Group::find($id);
+
+    return \App\Models\Dto\GroupDto::fromGroup($group);
 });
 
 Route::post('/groups/{id}/enrollment', function (Request $request, $id) {
