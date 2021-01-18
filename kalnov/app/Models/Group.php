@@ -154,8 +154,8 @@ class Group extends Model
             foreach ($students as $student) {
                 $studentId = Student::insertGetId([
                     'name' => $student['name'],
-                    'middle_name' => $student['middle_name'],
-                    'last_name' => $student['last_name']
+                    'middle_name' => $student['middleName'],
+                    'last_name' => $student['lastName']
                 ]);
 
                 $studentsIds->add($studentId);
