@@ -72,9 +72,10 @@ const NewGroup = () => {
     }
 
     const groupCreationHandler = async () => {
-        /* TODO: отправка всех полей (уточнить) */
         axios.post('/groups', {
             number: groupNumber,
+            studyYearType: studyType,
+            majorId: major,
         }).then(response => console.log(response))
     }
 

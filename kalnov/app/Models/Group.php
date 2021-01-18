@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Exceptions\GroupAlreadyExists;
 use App\Exceptions\InvalidNextYearTransfer;
+use App\Exceptions\ResourceNotFound;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
@@ -140,6 +141,23 @@ class Group extends Model
         return
             $this->isBachelor() && $this->getAttribute('study_year') == 4
             || $this->isMaster() && $this->getAttribute('study_year') == 2;
+    }
+
+    public function enrollmentStudents($students) {
+        $groupExists = Group::where('id', $this->id)->exists();
+        throw_unless($groupExists, new ResourceNotFound("Group with id = $this->id not found"));
+
+        DB::transaction(function () use (&$students) {
+            foreach ($students as $student) {
+                $studentId = Student::insertGetId([
+                    'name' => $student['name'],
+                    'middle_name' => $student['middle_name'],
+                    'last_name' => $student['last_name']
+                ]);
+
+                $this->enroll($studentId);
+            }
+        });
     }
 
     public function getMajorName() : string {

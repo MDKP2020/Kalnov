@@ -1,6 +1,7 @@
 <?php
 
 use App\Exceptions\InvalidNextYearTransfer;
+use App\Exceptions\ResourceNotFound;
 use App\Models\Group;
 use App\Models\StudyYear;
 use Illuminate\Http\Request;
@@ -55,6 +56,11 @@ Route::post('/years', function(Request $request) {
 
 // API курсов обучения
 Route::post('/study_years', function(Request $request) {
+    $request->validate([
+        'year' => ['required', 'integer', 'min:1900'],
+        'type' => ['required', 'in:bachelor,master']
+    ]);
+
     return StudyYear::store($request);
 });
 
@@ -117,6 +123,30 @@ Route::get('/groups/{id}', function(Request $request, $id) {
     $group = Group::find($id);
 
     return \App\Models\Dto\GroupDto::fromGroup($group);
+});
+
+
+Route::get('/groups/{id}', function(Request $request, $id) {
+    $group = Group::find($id);
+
+    return \App\Models\Dto\GroupDto::fromGroup($group);
+});
+
+Route::post('/groups/{id}/enrollment', function (Request $request, $id) {
+    $request->validate([
+        'students.*.name' => ['required', 'string'],
+        'students.*.middle_name' => ['required', 'string'],
+        'students.*.last_name' => ['required', 'string']
+    ]);
+
+    $group = Group::find($id);
+
+    if ($group === null)
+        throw new ResouceNotFound(new ResourceNotFound("Group with id = $id not found"));
+
+    $students = $request['students'];
+
+    $group->enrollmentStudents($students);
 });
 
 // API студентов
