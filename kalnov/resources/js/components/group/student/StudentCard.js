@@ -1,7 +1,5 @@
 import React from 'react'
-import {useTheme, makeStyles} from "@material-ui/core";
-import {ArrowForward, Cancel, Edit} from "@material-ui/icons";
-import {DeanTooltip} from "../../ui/DeanTooltip";
+import {makeStyles, useTheme} from "@material-ui/core";
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -16,53 +14,31 @@ const useStyles = makeStyles(theme => ({
             marginTop: '0.8rem'
         }
     },
-    name: {
+    cardText: {
         color: theme.palette.text.main
     },
     actions: {
         display: 'flex'
     },
-    actionIcon: {
-        cursor: 'pointer',
-        '&:not(:first-of-type)': {
-            marginLeft: '0.4rem'
-        }
-    },
+    disabled: {
+        backgroundColor: theme.palette.background.light
+    }
 }))
 
-export const StudentCard = ({ name, id }) => {
+export const StudentCard = ({ actions, text, disabled }) => {
+
     const theme = useTheme()
-    const styles = useStyles(theme)
+    const styles = useStyles()
 
-    const EDIT_BUTTON_COLOR = '#e6b710'
-
-    const handleExpelButtonClick = () => {
-
-    }
-
-    const handleEditButtonClick = () => {
-
-    }
-
-    const handleTransferButtonClick = () => {
-
-    }
-
-    const actionIconClasses = { root: styles.actionIcon }
+    const cardStyles = [styles.card]
+    if(disabled)
+        cardStyles.push(styles.disabled)
 
     return (
-        <div className={styles.card}>
-            <span className={styles.name}>{name}</span>
+        <div className={cardStyles.join(' ')}>
+            <span className={styles.cardText}>{text}</span>
             <div className={styles.actions}>
-                <DeanTooltip title="Отчислить студента">
-                    <Cancel htmlColor={theme.palette.error.main} classes={actionIconClasses} />
-                </DeanTooltip>
-                <DeanTooltip title="Редактировать информацию">
-                    <Edit htmlColor={EDIT_BUTTON_COLOR} classes={actionIconClasses}/>
-                </DeanTooltip>
-                <DeanTooltip title="Перевести в другую группу">
-                    <ArrowForward htmlColor={theme.palette.primary.main} classes={actionIconClasses}/>
-                </DeanTooltip>
+                {actions}
             </div>
         </div>
     )

@@ -2,7 +2,7 @@ import React, {useEffect, useState} from 'react'
 import axios from '../../axios'
 import {useLocation, useParams} from "react-router";
 import { KeyboardDatePicker } from '@material-ui/pickers'
-import {StudentCard} from "./student/StudentCard";
+import {Student} from "./student/Student";
 import {useTheme, makeStyles} from "@material-ui/core";
 import {DeanButton} from "../ui/DeanButton";
 import {SearchBar} from "../ui/SearchBar";
@@ -64,7 +64,7 @@ export const Group = () => {
             <div className={styles.studentList}>
                 {students.map(student => {
                     const fullName = `${student['last_name']} ${student.name} ${student['middle_name']}`
-                    return <StudentCard key={student.id} name={fullName} id={student.id} />
+                    return <Student key={student.id} name={fullName} id={student.id} />
                 })}
             </div>
         </>

@@ -1,8 +1,9 @@
-import React, {useEffect, useState} from 'react'
-import {makeStyles, useTheme} from "@material-ui/core"
+import React, {useEffect, useState} from 'react';
+import {makeStyles, useTheme} from "@material-ui/core";
 import axios from "../../axios";
 import {useHistory, useParams} from "react-router";
 import {useDefaultStyles} from "../../hooks/useDefaultStyles";
+import {DeanButton} from "../ui/DeanButton";
 
 const useStyles = makeStyles(theme => ({
     groupContainer: {
@@ -13,7 +14,10 @@ const useStyles = makeStyles(theme => ({
     },
     group: {
         cursor: 'pointer'
-    }
+    },
+    createNewGroupButton: {
+      marginTop: '3rem',
+    },
 }))
 
 export const GroupList = () => {
@@ -33,6 +37,9 @@ export const GroupList = () => {
         console.log(history)
     }
 
+    const openNewGroupPage = () => {
+        history.push(`${history.location.pathname}/newGroup`)
+    }
 
     useEffect(() => {
         axios.get('/groups', {
@@ -49,7 +56,7 @@ export const GroupList = () => {
 
     return (
         <div>
-            <span className={defaultStyles.chooseLabel}>Выберите группу</span>
+            <span className={defaultStyles.chooseLabel}>Выберите группу:</span>
             <div className={styles.groupContainer}>
                 {
                     majors.map(major => {
@@ -73,6 +80,13 @@ export const GroupList = () => {
                     })
                 }
             </div>
+            <DeanButton
+                className={styles.createNewGroupButton}
+                disabled={studyYear !== 1}
+                onClick={openNewGroupPage}
+            >
+                Добавить новую группу
+            </DeanButton>
         </div>
     )
 }

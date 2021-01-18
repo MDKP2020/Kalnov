@@ -1,6 +1,7 @@
 <?php
 
 use App\Exceptions\InvalidNextYearTransfer;
+use App\Exceptions\InvalidStudentsEnrollmentData;
 use App\Exceptions\ResourceNotFound;
 use App\Models\Group;
 use App\Models\StudyYear;
@@ -9,6 +10,7 @@ use Illuminate\Support\Facades\Route;
 use App\Models\YearRange;
 use App\Models\Major;
 use function App\Helpers\Api\getGroup;
+use Illuminate\Support\Facades\Validator;
 
 /*
 |--------------------------------------------------------------------------
@@ -133,16 +135,19 @@ Route::get('/groups/{id}', function(Request $request, $id) {
 });
 
 Route::post('/groups/{id}/enrollment', function (Request $request, $id) {
-    $request->validate([
+    $studentsValidator = Validator::make($request->all(), [
         'students.*.name' => ['required', 'string'],
-        'students.*.middle_name' => ['required', 'string'],
-        'students.*.last_name' => ['required', 'string']
+        'students.*.middleName' => ['required', 'string'],
+        'students.*.lastName' => ['required', 'string']
     ]);
+
+    if($studentsValidator->fails())
+        throw new InvalidStudentsEnrollmentData($studentsValidator->errors());
 
     $group = Group::find($id);
 
     if ($group === null)
-        throw new ResouceNotFound(new ResourceNotFound("Group with id = $id not found"));
+        throw new ResourceNotFound("Group with id = $id not found");
 
     $students = $request['students'];
 
