@@ -5,5 +5,10 @@ export const useDefaultStyles = makeStyles(theme => ({
         fontSize: '1.4rem',
         marginBottom: '1rem',
         display: 'block'
+    },
+    errorMessage: {
+        color: theme.palette.error.main,
+        fontSize: '1.2rem',
+        display: 'block'
     }
 }))
