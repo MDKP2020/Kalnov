@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Exceptions\GroupAlreadyExists;
 use App\Exceptions\InvalidNextYearTransfer;
 use App\Exceptions\ResourceNotFound;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
@@ -19,12 +21,20 @@ class Group extends Model
         // Расчёт учебного года
         $currentYear = Carbon::now()->format('YYYY-MM-dd');
 
+        $suchGroupExists = DB::table('groups')
+                ->where('number', '=', $number)
+                ->where('major_id', '=', $majorId)
+                ->where('study_year_type', '=', $studyYearType)
+                ->exists();
+
+        if($suchGroupExists)
+            throw new GroupAlreadyExists();
+
         $group->setAttribute('number', $number);
         $group->setAttribute('year_range', YearRange::create($currentYear));
         $group->setAttribute('study_year', 1);
         $group->setAttribute('major_id', $majorId);
         $group->setAttribute('study_year_type', $studyYearType);
-        // TODO провалидировать создание группы
         $group->saveOrFail();
     }
 
@@ -99,10 +109,10 @@ class Group extends Model
     }
 
     // Зачисление списка студентов
-    private function enrollAll($students) {
+    private function enrollAll($studentsIds) {
         DB::table('students_to_groups')->insert(
-            $students->map(function($student) {
-                return ['group_id' => $this->id, 'student_id' => $student->getAttribute('id')];
+            $studentsIds->map(function($studentId) {
+                return ['group_id' => $this->id, 'student_id' => $studentId];
             })->toArray()
         );
     }
@@ -134,11 +144,13 @@ class Group extends Model
             || $this->isMaster() && $this->getAttribute('study_year') == 2;
     }
 
-    public function enrollmentStudents($students) {
-        $groupExists = Group::where('id', $this->id)->exists();
+    public function enrollStudents($students) {
+        $groupExists = Group::where('id', '=', $this->id)->exists();
         throw_unless($groupExists, new ResourceNotFound("Group with id = $this->id not found"));
 
-        DB::transaction(function () use (&$students) {
+        DB::transaction(function($students) {
+            $studentsIds = new Collection();
+
             foreach ($students as $student) {
                 $studentId = Student::insertGetId([
                     'name' => $student['name'],
@@ -146,8 +158,10 @@ class Group extends Model
                     'last_name' => $student['last_name']
                 ]);
 
-                $this->enroll($studentId);
+                $studentsIds->add($studentId);
             }
+
+            $this->enrollAll($studentsIds);
         });
     }
 

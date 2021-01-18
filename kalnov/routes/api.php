@@ -88,10 +88,7 @@ Route::get('/groups', function(Request $request) {
 Route::post('/groups', function(Request $request) {
     return Group::newGroup(
         $request->input('number'),
-        $request->input('year'),
-        $request->input('studyYear'),
         $request->input('studyYearType'),
-        $request->input('previousGroupId'),
         $request->input('majorId')
     );
 });
