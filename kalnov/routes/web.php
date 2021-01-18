@@ -13,11 +13,6 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
-
-Route::get('/db', function () {
-    $results = DB::select(DB::raw('SELECT NOW() AS end_time'));
-    return $results[0]->end_time;
-});
+Route::get('/{any}', function() {
+    return view('app');
+})->where('any', '^(?!api(?:\/.*|$)).*');
