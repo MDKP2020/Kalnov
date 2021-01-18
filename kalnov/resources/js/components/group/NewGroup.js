@@ -16,20 +16,19 @@ const useStyles = makeStyles(theme => ({
         marginTop: '80px',
     },
     warningIcon: {
-        color: theme.warning.main,
+        color: theme.palette.warning.main,
         width: '40px',
         height: '40px',
     },
     warningText: {
         fontSize: '1rem',
         color: theme.palette.text.gray,
+        marginLeft: '1rem',
     },
     warningBlock: {
         display: 'flex',
-        alignItems: 'center'
-    },
-    createButton: {
-        marginRight: '3rem',
+        alignItems: 'center',
+        marginLeft: '3rem',
     },
     formControl: {
         '&:not(:first-of-type)': {
@@ -38,7 +37,12 @@ const useStyles = makeStyles(theme => ({
         '&:first-of-type': {
             marginTop: '30px',
         },
-        width: '40%',
+        width: '37%',
+    },
+    selectComponent: {
+        '&:focus': {
+            backgroundColor: 'white',
+        }
     }
 }))
 
@@ -87,7 +91,7 @@ export const NewGroup = () => {
                     autoFocus
                     value={groupNumber}
                     type="text"
-                    onChange={groupNumberHandler()}
+                    onChange={groupNumberHandler}
                 />
             </FormControl>
             <FormControl className={styles.formControl}>
@@ -96,6 +100,7 @@ export const NewGroup = () => {
                     inputProps={{ id: 'selectMajor' }}
                     value={major}
                     onChange={majorHandler}
+                    classes={{ select: styles.selectComponent }}
                 >
                     {majors.map(major => (
                         <MenuItem key={major.acronym} value={major.acronym}>
@@ -110,6 +115,7 @@ export const NewGroup = () => {
                     inputProps={{ id: 'studyTypeSelect' }}
                     value={studyType}
                     onChange={studyTypeHandler}
+                    classes={{ select: styles.selectComponent }}
                 >
                     {StudyTypesNames.map(studyType => (
                         <MenuItem key={studyType.value} value={studyType.value}>
@@ -119,7 +125,7 @@ export const NewGroup = () => {
                 </Select>
             </FormControl>
             <div className={styles.groupCreationBlock}>
-                <DeanButton onClick={groupCreationHandler}>Создать группу</DeanButton>
+                <DeanButton primary onClick={groupCreationHandler}>Создать группу</DeanButton>
                 <div className={styles.warningBlock}>
                     <Warning classes={{ root: styles.warningIcon }} />
                     <p className={styles.warningText}>Группа будет создана на первом курсе в текущем учебном году</p>
