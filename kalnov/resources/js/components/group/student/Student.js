@@ -30,7 +30,7 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-export const StudentCard = ({ name, id }) => {
+export const Student = ({ name, id }) => {
     const theme = useTheme()
     const styles = useStyles(theme)
 
