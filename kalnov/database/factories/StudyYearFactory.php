@@ -23,7 +23,7 @@ class StudyYearFactory extends Factory
     public function definition()
     {
         return [
-            'year' => $this->faker->numberBetween(1900, 2100),
+            'year' => $this->faker->unique()->numberBetween(1900, 2100),
             'type' => $this->faker->randomElement(['master', 'bachelor'])
         ];
     }

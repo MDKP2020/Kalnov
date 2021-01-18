@@ -24,12 +24,17 @@ class StudyYear extends Model
         return strcasecmp('bachelor', $type) == 0 || strcasecmp('master', $type) == 0;
     }
 
-    public static function store (Request $request) {
+    public static function store(Request $request) {
+        return self::validateAndSave($request->input('year'), $request->input('type'));
+    }
+
+    public static function validateAndSave($year, $type) {
         $studyYear = new StudyYear();
-        $studyYear->year = $request->input('year');
-        $studyType = $request->input('type');
+        $studyYear->year = $year;
+        $studyType = $type;
+
         if(self::isTypeValid($studyType))
-            $studyYear->type = $studyType;
+            $studyYear->type = $type;
         else throw new InvalidStudyYearTypeException();
 
         return $studyYear->saveOrFail();

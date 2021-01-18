@@ -37,12 +37,26 @@ class Group extends Model
         if(!$yearRangeExists)
             $currentYearRange = YearRange::store($currentDate);
 
+        $studyYear = 1;
+        self::createStudyYearIfNotExists($studyYear, $studyYearType);
+
         $group->setAttribute('number', $number);
         $group->setAttribute('year_range', $currentDate);
-        $group->setAttribute('study_year', 1);
+        $group->setAttribute('study_year', $studyYear);
         $group->setAttribute('major_id', $majorId);
         $group->setAttribute('study_year_type', $studyYearType);
         $group->saveOrFail();
+    }
+
+    private static function createStudyYearIfNotExists($studyYear, $studyYearType) {
+        $exists = DB::table('study_years')
+            ->where('year', $studyYear)
+            ->where('type', $studyYearType)
+            ->exists();
+
+        if (!$exists) {
+            StudyYear::validateAndSave($studyYear, $studyYearType);
+        }
     }
 
     private static function findAllByYearAndStudyYear($year, $studyYear, $studyYearType) {
