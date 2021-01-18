@@ -101,5 +101,12 @@ class YearApiTest extends TestCase
 
         $response->assertSessionHasErrors(['start']);
     }
+  
+    // POST: /years
+    public function testShouldNotCreateYearRangeWithInvalidStartDateFormat() {
+        $response = $this->post('api/years', ['start' => 'invalid']);
+
+        $response->assertSessionHasErrors(['start']);
+    }
 }
 
