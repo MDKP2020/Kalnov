@@ -11,7 +11,7 @@ export const DialogModal = ({ id, open, title, text, children, onClose, buttonTe
                 { children }
             </DialogContent>
             <DialogActions>
-                <DeanButton onClick={onClose}>{buttonText}</DeanButton>
+                <DeanButton primary onClick={onClose}>{buttonText}</DeanButton>
             </DialogActions>
         </Dialog>
     )
