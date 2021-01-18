@@ -108,10 +108,10 @@ class Group extends Model
     }
 
     // Зачисление списка студентов
-    private function enrollAll($students) {
+    private function enrollAll($studentsIds) {
         DB::table('students_to_groups')->insert(
-            $students->map(function($student) {
-                return ['group_id' => $this->id, 'student_id' => $student->getAttribute('id')];
+            $studentsIds->map(function($studentId) {
+                return ['group_id' => $this->id, 'student_id' => $studentId];
             })->toArray()
         );
     }
