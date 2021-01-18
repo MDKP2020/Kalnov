@@ -2,22 +2,39 @@
 
 namespace App\Models;
 
+use App\Exceptions\GroupAlreadyExists;
 use App\Exceptions\InvalidNextYearTransfer;
+use App\Exceptions\ResourceNotFound;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class Group extends Model
 {
     use HasFactory;
 
-    public static function newGroup($number, $year, $studyYear, $studyYearType, $previousGroupId, $majorId) {
+    public static function newGroup($number, $studyYearType, $majorId) {
         $group = new Group();
 
-        $group->number = $number;
-        $group->year = $year;
-        $group->majorId = $majorId;
-        // TODO провалидировать создание группы
+        // Расчёт учебного года
+        $currentYear = Carbon::now()->format('YYYY-MM-dd');
+
+        $suchGroupExists = DB::table('groups')
+                ->where('number', '=', $number)
+                ->where('major_id', '=', $majorId)
+                ->where('study_year_type', '=', $studyYearType)
+                ->exists();
+
+        if($suchGroupExists)
+            throw new GroupAlreadyExists();
+
+        $group->setAttribute('number', $number);
+        $group->setAttribute('year_range', YearRange::create($currentYear));
+        $group->setAttribute('study_year', 1);
+        $group->setAttribute('major_id', $majorId);
+        $group->setAttribute('study_year_type', $studyYearType);
         $group->saveOrFail();
     }
 
@@ -92,10 +109,10 @@ class Group extends Model
     }
 
     // Зачисление списка студентов
-    private function enrollAll($students) {
+    private function enrollAll($studentsIds) {
         DB::table('students_to_groups')->insert(
-            $students->map(function($student) {
-                return ['group_id' => $this->id, 'student_id' => $student->getAttribute('id')];
+            $studentsIds->map(function($studentId) {
+                return ['group_id' => $this->id, 'student_id' => $studentId];
             })->toArray()
         );
     }
@@ -125,5 +142,30 @@ class Group extends Model
         return
             $this->isBachelor() && $this->getAttribute('study_year') == 4
             || $this->isMaster() && $this->getAttribute('study_year') == 2;
+    }
+
+    public function enrollStudents($students) {
+        $groupExists = Group::where('id', '=', $this->id)->exists();
+        throw_unless($groupExists, new ResourceNotFound("Group with id = $this->id not found"));
+
+        DB::transaction(function($students) {
+            $studentsIds = new Collection();
+
+            foreach ($students as $student) {
+                $studentId = Student::insertGetId([
+                    'name' => $student['name'],
+                    'middle_name' => $student['middle_name'],
+                    'last_name' => $student['last_name']
+                ]);
+
+                $studentsIds->add($studentId);
+            }
+
+            $this->enrollAll($studentsIds);
+        });
+    }
+
+    public function getMajorName() : string {
+        return DB::table('majors')->get('acronym')->where('id', $this->getAttribute('major_id'));
     }
 }

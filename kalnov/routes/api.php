@@ -1,11 +1,13 @@
 <?php
 
 use App\Exceptions\InvalidNextYearTransfer;
+use App\Exceptions\ResourceNotFound;
 use App\Models\Group;
 use App\Models\StudyYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\YearRange;
+use App\Models\Major;
 use function App\Helpers\Api\getGroup;
 
 /*
@@ -46,10 +48,10 @@ Route::get('/years/{id}/next', function($id) {
 
 Route::post('/years', function(Request $request) {
     $request->validate([
-       'start'=> ['required', 'date']
+       'start'=> 'required'
     ]);
 
-    return YearRange::store($request);
+    return YearRange::store($request->input('start'));
 });
 
 // API курсов обучения
@@ -86,10 +88,7 @@ Route::get('/groups', function(Request $request) {
 Route::post('/groups', function(Request $request) {
     return Group::newGroup(
         $request->input('number'),
-        $request->input('year'),
-        $request->input('studyYear'),
         $request->input('studyYearType'),
-        $request->input('previousGroupId'),
         $request->input('majorId')
     );
 });
@@ -120,8 +119,44 @@ Route::patch('/groups/{id}/expel/studyEnd', function(Request $request, $id) {
 
 });
 
+Route::get('/groups/{id}', function(Request $request, $id) {
+    $group = Group::find($id);
+
+    return \App\Models\Dto\GroupDto::fromGroup($group);
+});
+
+
+Route::get('/groups/{id}', function(Request $request, $id) {
+    $group = Group::find($id);
+
+    return \App\Models\Dto\GroupDto::fromGroup($group);
+});
+
+Route::post('/groups/{id}/enrollment', function (Request $request, $id) {
+    $request->validate([
+        'students.*.name' => ['required', 'string'],
+        'students.*.middle_name' => ['required', 'string'],
+        'students.*.last_name' => ['required', 'string']
+    ]);
+
+    $group = Group::find($id);
+
+    if ($group === null)
+        throw new ResouceNotFound(new ResourceNotFound("Group with id = $id not found"));
+
+    $students = $request['students'];
+
+    $group->enrollmentStudents($students);
+});
+
 // API студентов
 
 Route::get('/students/{id}', function($id) {
     return Student::find($id);
+});
+
+// API специальностей
+
+Route::get('/majors', function() {
+    return Major::getAll();
 });
