@@ -4,6 +4,7 @@ use App\Exceptions\InvalidNextYearTransfer;
 use App\Exceptions\InvalidStudentsEnrollmentData;
 use App\Exceptions\ResourceNotFound;
 use App\Models\Group;
+use App\Models\Student;
 use App\Models\StudyYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;

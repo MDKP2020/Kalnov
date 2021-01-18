@@ -9,11 +9,6 @@ use Tests\TestCase;
 
 class MajorApiTest extends TestCase
 {
-    /**
-     * A basic feature test example.
-     *
-     * @return void
-     */
     public function testShouldReturnAllMajors()
     {
         Major::factory()->count(10)->create();
