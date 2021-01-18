@@ -108,9 +108,11 @@ export const YearPicker = (props) => {
                 open={createYearModalIsOpen}
                 title='Добавить новый год обучения'
                 text='Введите дату начала года обучения в формате ГГГГ-ММ-дд'
-                buttonText='Создать'
+                confirmButtonText='Создать'
+                closeButtonText='Отмена'
                 id='create-year-modal'
-                onClose={handleYearCreate}
+                onClose={() => setCreateYearModalOpen(false)}
+                onConfirm={handleYearCreate}
             >{ YearStartInput }</DialogModal>
         </div>
     )
