@@ -27,7 +27,7 @@ class YearRange extends Model
     public static function store(string $startDate) {
         if($startDate != null) {
             $yearRange = YearRange::create($startDate);
-            $yearRange->saveOrFail();
+            return $yearRange->saveOrFail();
         }
         else
             throw new InvalidYearStart();

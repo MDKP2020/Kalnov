@@ -2,7 +2,8 @@ import React, { useEffect, useState } from 'react'
 import axios from '../../axios'
 import {useHistory, useParams} from "react-router";
 import {makeStyles, useTheme} from '@material-ui/core'
-import {useDefaultStyles} from "../../hooks/useDefaultStyles";
+import {useDefaultStyles} from "../../hooks/useDefaultStyles"
+import { StudyTypes } from '../../types/studyTypes'
 
 const useStyles = makeStyles({
     studyTypeContainer: {
@@ -24,9 +25,6 @@ const useStyles = makeStyles({
         paddingLeft: '15px'
     }
 })
-
-const BACHELOR_TYPE = 'bachelor'
-const MASTER_TYPE = 'master'
 
 export const StudyYearPicker = (props) => {
     const history = useHistory()
@@ -67,11 +65,11 @@ export const StudyYearPicker = (props) => {
             <div className={styles.studyYearContainer}>
                 <div className={styles.studyTypeContainer}>
                     <span className={styles.studyType}>Бакалавриат</span>
-                    {years.filter(year => year.type === BACHELOR_TYPE).map(yearMapper)}
+                    {years.filter(year => year.type === StudyTypes.bachelor).map(yearMapper)}
                 </div>
                 <div className={styles.studyTypeContainer}>
                     <span className={styles.studyType}>Магистратура</span>
-                    {years.filter(year => year.type === MASTER_TYPE).map(yearMapper)}
+                    {years.filter(year => year.type === StudyTypes.master).map(yearMapper)}
                 </div>
             </div>
         </div>
