@@ -82,8 +82,9 @@ export const GroupList = () => {
             </div>
             <DeanButton
                 className={styles.createNewGroupButton}
-                disabled={studyYear !== 1}
+                disabled={studyYear != 1}
                 onClick={openNewGroupPage}
+                primary
             >
                 Добавить новую группу
             </DeanButton>
