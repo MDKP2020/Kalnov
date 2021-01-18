@@ -42,8 +42,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-const NewGroup = () => {
-
+export const NewGroup = () => {
     useEffect(() => {
         axios.get('/majors')
             .then(response => {
@@ -72,6 +71,7 @@ const NewGroup = () => {
     }
 
     const groupCreationHandler = async () => {
+        const newGroupData = {}
         axios.post('/groups', {
             number: groupNumber,
             studyYearType: studyType,
