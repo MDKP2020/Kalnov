@@ -176,7 +176,7 @@ class Group extends Model
         );
     }
 
-    private function expel(string $expelReason) {
+    public function expel(string $expelReason) {
         DB::table('students_to_groups')->where('group_id', '=', $this->getAttribute('id'))->update([
             'expel_reason' => $expelReason
         ]);

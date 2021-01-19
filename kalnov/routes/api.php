@@ -131,6 +131,12 @@ Route::get('/groups/{id}/students', function(Request $request, $id) {
     return $group->getStudents($request->input('name'));
 });
 
+Route::patch('/groups/{id}/expel', function(Request $request, $id) {
+    $group = Group::find($id);
+
+    $group->expel($request->input('reason'));
+});
+
 Route::patch('/groups/{id}/expel/studyEnd', function(Request $request, $id) {
     $group = Group::find($id);
 
