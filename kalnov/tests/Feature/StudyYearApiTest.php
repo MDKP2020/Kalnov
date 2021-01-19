@@ -3,9 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\StudyYear;
-use DateTime;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class StudyYearApiTest extends TestCase
@@ -20,7 +18,7 @@ class StudyYearApiTest extends TestCase
             'type' => 'master'
         ]);
 
-        $response->assertSessionHasErrors(['year']);
+        $response->assertStatus(400);
     }
 
     // POST: /study_years
@@ -31,7 +29,7 @@ class StudyYearApiTest extends TestCase
             'type' => null
         ]);
 
-        $response->assertSessionHasErrors(['type']);
+        $response->assertStatus(400);
     }
 
     // POST: /study_years
@@ -42,7 +40,7 @@ class StudyYearApiTest extends TestCase
             'type' => 'invalid'
         ]);
 
-        $response->assertSessionHasErrors(['type']);
+        $response->assertStatus(400);
     }
 
     // POST: /study_years
@@ -53,7 +51,7 @@ class StudyYearApiTest extends TestCase
             'type' => 'master'
         ]);
 
-        $response->assertSessionHasErrors(['year']);
+        $response->assertStatus(400);
     }
 
     // POST: /study_years
@@ -64,13 +62,13 @@ class StudyYearApiTest extends TestCase
             'type' => 'master'
         ]);
 
-        $response->assertSessionHasErrors(['year']);
+        $response->assertStatus(400);
     }
 
     // POST: /study_years
     public function testShouldCreateStudyYear()
     {
-        $year = 2021;
+        $year = 1;
         $type = 'bachelor';
 
         $response = $this->post('api/study_years', [
@@ -100,7 +98,6 @@ class StudyYearApiTest extends TestCase
     }
 
     // GET: /study_years
-    // todo pass input type (test not work)
     public function testShouldReturnMasterType() {
         $count = 10;
 
@@ -109,7 +106,7 @@ class StudyYearApiTest extends TestCase
            return $value['type'] === 'master';
         })->count();
 
-        $response = $this->get('api/study_years', [
+        $response = $this->json('GET', 'api/study_years', [
             'type' => 'master'
         ]);
 
@@ -119,7 +116,6 @@ class StudyYearApiTest extends TestCase
     }
 
     // GET: /study_years
-    // todo pass input type (test not work)
     public function testShouldValidateInvalidType() {
         $count = 10;
 
@@ -128,11 +124,11 @@ class StudyYearApiTest extends TestCase
             return $value['type'] === 'master';
         })->count();
 
-        $response = $this->get('api/study_years', [
+        $response = $this->json('GET', 'api/study_years', [
             'type' => 'invalid'
         ]);
 
-        $response->assertSessionHasErrors(['type']);
+        $response->assertStatus(422);
     }
 
     // GET: /study_years/types

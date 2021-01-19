@@ -67,8 +67,11 @@ Route::get('/study_years', function(Request $request) {
     $type = $request->input('type');
     if($type == null)
         return StudyYear::all();
-    else
+    else {
+        $request->validate(['type' => 'in:bachelor,master']);
+
         return StudyYear::getAllByType($type);
+    }
 });
 
 Route::get('/study_years/types', function() {
