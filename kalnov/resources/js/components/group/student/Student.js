@@ -52,13 +52,13 @@ export const Student = ({ name, id }) => {
     const actionIconClasses = { root: styles.actionIcon }
 
     const actions = [
-        <DeanTooltip title="Отчислить студента">
+        <DeanTooltip title="Отчислить студента" key='expel'>
             <Cancel htmlColor={theme.palette.error.main} classes={actionIconClasses} />
         </DeanTooltip>,
-        <DeanTooltip title="Редактировать информацию">
+        <DeanTooltip title="Редактировать информацию" key='edit'>
             <Edit htmlColor={EDIT_BUTTON_COLOR} classes={actionIconClasses}/>
         </DeanTooltip>,
-        <DeanTooltip title="Перевести в другую группу">
+        <DeanTooltip title="Перевести в другую группу" key='transfer'>
             <ArrowForward htmlColor={theme.palette.primary.main} classes={actionIconClasses}/>
         </DeanTooltip>
     ]
