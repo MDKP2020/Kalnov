@@ -4,7 +4,7 @@ export const STUDENT_NAME_VALIDATION_MESSAGES = {
     invalidName: 'Укажите фамилию, имя и отчество студента'
 }
 
-const NAME_PATTERN = /[а-яА-Я] [а-яА-Я] [а-яА-Я]/i
+const NAME_PATTERN = /^[а-яА-Я]+ [а-яА-Я]+ [а-яА-Я]+$/i
 const EMPTY_STRING_PATTERN = /^\s*$/
 
 export const validateStudentName = (name) => {
