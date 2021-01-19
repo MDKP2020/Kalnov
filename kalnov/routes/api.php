@@ -104,6 +104,7 @@ Route::post('/groups/{id}/nextYear', function(Request $request, $id) {
 Route::post('/groups/{id}/lastExamDate', function(Request $request, $id) {
     $group = Group::where('id', $id)->first();
     $group->setLastExamDate($request->input('lastExamDate'));
+    $group->saveOrFail();
 });
 
 Route::get('/groups/{id}/students', function(Request $request, $id) {
