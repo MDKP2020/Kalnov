@@ -57,6 +57,9 @@ const useStyles = makeStyles(theme => ({
     setLastExamDateButton: {
         marginLeft: '2rem',
     },
+    toNewGroupButton: {
+        width: '100%',
+    },
 }))
 
 export const Group = () => {
@@ -148,7 +151,7 @@ export const Group = () => {
     }
 
     const ToNewGroupButton = (
-        <DeanButton onClick={openNewGroupPage}>Перейти к новой группе</DeanButton>
+        <DeanButton primary className={styles.toNewGroupButton} onClick={openNewGroupPage}>Перейти к новой группе</DeanButton>
     )
 
     const handleSetLastExamDate = () => {
