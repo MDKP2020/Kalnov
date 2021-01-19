@@ -139,7 +139,7 @@ export const Group = () => {
 
     const handleMoveToNextYear = () => {
         axios.post(`/groups/${id}/nextYear`).then(response => {
-            setNewGroupId(response.data.id)
+            setNewGroupId(response.data)
         })
     }
 
