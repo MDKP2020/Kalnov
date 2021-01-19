@@ -120,6 +120,17 @@ class Group extends Model
             $nextYearGroup->setAttribute('study_year_type', $this->getAttribute('study_year_type'));
             $nextYearGroup->setAttribute('major_id', $this->getAttribute('major_id'));
 
+            $nextStudyYear = StudyYear::
+                where('study_year_type', $this->getAttribute('study_year_type'))
+                ->where('study_year', $studyYear + 1);
+
+            if(!$nextStudyYear->exists()) {
+                StudyYear::store(
+                    $this->getAttribute('study_year_type'),
+                    $studyYear + 1
+                );
+            }
+
             $currentYear = YearRange::where('start', $this->getAttribute('year_range'))->first();
             $nextYearGroup->setAttribute('year_range', $currentYear->next());
             $nextYearGroup->save();
