@@ -101,8 +101,8 @@ Route::post('/groups/{id}/nextYear', function(Request $request, $id) {
     return $group->first()->moveToNextYear();
 });
 
-Route::post('/groups/lastExamDate', function(Request $request) {
-    $group = getGroup($request);
+Route::post('/groups/{id}/lastExamDate', function(Request $request, $id) {
+    $group = Group::where('id', $id)->first();
     $group->setLastExamDate($request->input('lastExamDate'));
 });
 
