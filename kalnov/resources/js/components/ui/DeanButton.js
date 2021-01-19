@@ -16,6 +16,13 @@ const useStyles = makeStyles(theme => ({
             backgroundColor: theme.palette.primary.dark
         }
     },
+    error: {
+        backgroundColor: theme.palette.error.main,
+        color: 'white',
+        '&:hover': {
+            backgroundColor: theme.palette.error.dark,
+        }
+    },
     secondary: {
         backgroundColor: theme.palette.background.main,
         color: 'black',
@@ -37,6 +44,9 @@ export const DeanButton = (props) => {
         buttonClasses.push(styles.primary)
     else if(secondary)
         buttonClasses.push(styles.secondary)
+    else if(error) {
+        buttonClasses.push(styles.error)
+    }
 
     buttonClasses.push(className)
 

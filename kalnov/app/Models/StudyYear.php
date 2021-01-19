@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Exceptions\InvalidStudyYearData;
 use App\Exceptions\InvalidStudyYearTypeException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -9,6 +10,7 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 /**
  * Class StudyYear
@@ -24,18 +26,18 @@ class StudyYear extends Model
         return strcasecmp('bachelor', $type) == 0 || strcasecmp('master', $type) == 0;
     }
 
-    public static function store(Request $request) {
-        return self::validateAndSave($request->input('year'), $request->input('type'));
-    }
+    public static function store ($type, $year) {
+        $validator = Validator::make(['type' => $type, 'year' => $year], [
+            'type' => [ 'required', 'in:bachelor,master' ],
+            'year' => [ 'required', 'integer', 'min:1', 'max:4' ]
+        ]);
 
-    public static function validateAndSave($year, $type) {
+        if($validator->fails())
+            throw new InvalidStudyYearData($validator->errors());
+
         $studyYear = new StudyYear();
-        $studyYear->year = $year;
-        $studyType = $type;
-
-        if(self::isTypeValid($studyType))
-            $studyYear->type = $type;
-        else throw new InvalidStudyYearTypeException();
+        $studyYear->setAttribute('year', $year);
+        $studyYear->setAttribute('type', $type);
 
         return $studyYear->saveOrFail();
     }

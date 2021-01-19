@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Exceptions\GroupAlreadyExists;
+use App\Exceptions\InvalidNewGroupData;
 use App\Exceptions\InvalidNextYearTransfer;
 use App\Exceptions\ResourceNotFound;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,6 +11,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
 
 class Group extends Model
 {
@@ -17,6 +20,15 @@ class Group extends Model
 
     public static function newGroup($number, $studyYearType, $majorId) {
         $group = new Group();
+
+        $validator = Validator::make([ 'number' => $number, 'studyYearType' => $studyYearType, 'majorId' => $majorId ], [
+            'number' => ['required', 'integer'],
+            'studyYearType' => ['required', 'in:bachelor,master'],
+            'majorId' => ['required', 'exists:majors,id']
+        ]);
+
+        if($validator->fails())
+            throw new InvalidNewGroupData($validator->errors());
 
         $suchGroupExists = DB::table('groups')
                 ->where('number', '=', $number)
@@ -28,10 +40,19 @@ class Group extends Model
             throw new GroupAlreadyExists();
 
         // Расчёт учебного года
+        $currentStudyYear = Carbon::now();
+        $currentStudyYear->month = 9;
+        $currentStudyYear->day = 1;
+
         $currentTime = Carbon::now();
-        $currentTime->day = 1;
-        $currentTime->month = 9;
-        $currentDate = $currentTime->format('Y-m-d');
+        $currentStudyYearEnd = Carbon::now();
+        $currentStudyYearEnd->day = 1;
+        $currentStudyYearEnd->month = 8;
+
+        if($currentTime->lt($currentStudyYearEnd))
+            $currentStudyYear->year -=1;
+
+        $currentDate = $currentStudyYear->format('Y-m-d');
 
         $yearRangeExists = YearRange::where('start', $currentDate)->exists();
         if(!$yearRangeExists)
@@ -68,6 +89,7 @@ class Group extends Model
                 'groups.updated_at',
                 'number',
                 'majors.name',
+                'majors.acronym',
                 'year_range',
                 'previous_group_id',
                 'last_exam_date',
@@ -78,7 +100,7 @@ class Group extends Model
     }
 
     public static function getAllByYearAndStudyYear($year, $studyYear, $studyYearType) {
-        return Group::findAllByYearAndStudyYear($year, $studyYear, $studyYearType)->get()->groupBy('name');
+        return Group::findAllByYearAndStudyYear($year, $studyYear, $studyYearType)->get()->groupBy('acronym');
     }
 
     public static function get($year, $studyYearType, $studyYear, $number) {

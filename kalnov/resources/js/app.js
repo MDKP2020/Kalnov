@@ -14,10 +14,10 @@ import '../css/app.css';
 const useStyles = makeStyles({
     root: {
         fontFamily: 'Roboto'
-    }
+    },
 })
 
-export const App = (props) => {
+export const App = () => {
     const styles = useStyles()
 
     return (
