@@ -7,14 +7,28 @@ import {validateStudentName} from "../../utils/students/validateStudentName";
 import {DeanButton} from "../ui/DeanButton";
 import {StudentCard} from "./student/StudentCard";
 import {Cancel, Warning} from "@material-ui/icons";
+import {DeanWarning} from "../ui/DeanWarning";
 
 const useStyles = makeStyles(theme => ({
-
+    studentNameField: {
+        minWidth: '40%'
+    },
+    addStudentButton: {
+        marginLeft: '1.5rem'
+    },
+    removeStudentIcon: {
+        cursor: 'pointer'
+    },
+    studentsList: {
+        marginTop: '2rem',
+        marginBottom: '2.5rem'
+    }
 }))
 
 export const StudentsEnrollment = (props) => {
 
     const theme = useTheme()
+    const styles = useStyles()
 
     const groupId = new URLSearchParams(useLocation().search).get('groupId')
 
@@ -80,6 +94,7 @@ export const StudentsEnrollment = (props) => {
         <div>
             <div>
                 <TextField
+                    classes={{ root:  styles.studentNameField}}
                     label='ФИО студента'
                     value={newStudent}
                     placeholder='Петров Иван Фёдорович'
@@ -87,15 +102,22 @@ export const StudentsEnrollment = (props) => {
                     helperText={studentNameErrorMessage}
                     error={studentNameErrorMessage !== ''}
                 />
-                <DeanButton primary onClick={handleStudentAdd}>Добавить</DeanButton>
+                <DeanButton primary onClick={handleStudentAdd} className={styles.addStudentButton} >Добавить</DeanButton>
             </div>
-            <div>
+            <div className={styles.studentsList}>
                 {newStudents.map(
                     student => (
                         <StudentCard
-                            key={student}
+                            key={student.fullName}
                             text={student.fullName}
-                            actions={[<Cancel htmlColor={theme.palette.error.main} onClick={() => handleStudentRemove(student.fullName)}/>]}
+                            actions={[
+                                <Cancel
+                                    key='remove-student'
+                                    htmlColor={theme.palette.error.main}
+                                    onClick={() => handleStudentRemove(student.fullName)}
+                                    className={styles.removeStudentIcon}
+                                />
+                            ]}
                         />
                     )
                 )}
@@ -103,11 +125,8 @@ export const StudentsEnrollment = (props) => {
             </div>
 
             <div>
-                <DeanButton onClick={handleStudentsEnroll()}>Зачислить студентов</DeanButton>
-                <div>
-                    <Warning htmlColor={theme.palette.warning.main}/>
-                    <span>Студенты будут зачислены в выбранную группу</span>
-                </div>
+                <DeanButton primary onClick={handleStudentsEnroll}>Зачислить студентов</DeanButton>
+                <DeanWarning text="Студенты будут зачислены в выбранную группу" />
             </div>
         </div>
     )
