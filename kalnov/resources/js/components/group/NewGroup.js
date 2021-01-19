@@ -128,7 +128,7 @@ export const NewGroup = () => {
             </FormControl>
             <div className={styles.groupCreationBlock}>
                 <DeanButton primary onClick={groupCreationHandler}>Создать группу</DeanButton>
-                <DeanWarning text="Группа будет создана на первом курсе в текущем учебном году" />
+                <DeanWarning inline text="Группа будет создана на первом курсе в текущем учебном году" />
             </div>
         </div>
     )
