@@ -98,7 +98,7 @@ Route::post('/groups/{id}/nextYear', function(Request $request, $id) {
     if(!$group->exists())
         throw new ResourceNotFound('Группа не найдена');
 
-    return $group->moveToNextYear();
+    return $group->first()->moveToNextYear();
 });
 
 Route::post('/groups/lastExamDate', function(Request $request) {
