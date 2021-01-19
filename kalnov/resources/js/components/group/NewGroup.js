@@ -104,6 +104,7 @@ export const NewGroup = () => {
             <h2>Новая группа</h2>
             <FormControl className={styles.formControl}>
                 <TextField
+                    label='Номер группы'
                     autoFocus
                     value={groupNumber}
                     type="text"
