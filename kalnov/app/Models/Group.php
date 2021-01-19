@@ -184,7 +184,8 @@ class Group extends Model
                 $studentId = Student::insertGetId([
                     'name' => $student['name'],
                     'middle_name' => $student['middleName'],
-                    'last_name' => $student['lastName']
+                    'last_name' => $student['lastName'],
+                    'gradebook_number' => $student['gradebookNumber']
                 ]);
 
                 $studentsIds->add($studentId);

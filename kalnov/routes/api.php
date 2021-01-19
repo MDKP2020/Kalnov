@@ -133,7 +133,8 @@ Route::post('/groups/{id}/enrollment', function (Request $request, $id) {
     $studentsValidator = Validator::make($request->all(), [
         'students.*.name' => ['required', 'string'],
         'students.*.middleName' => ['required', 'string'],
-        'students.*.lastName' => ['required', 'string']
+        'students.*.lastName' => ['required', 'string'],
+        'students.*.gradebookNumber' => ['required', 'digits:8']
     ]);
 
     if($studentsValidator->fails())
