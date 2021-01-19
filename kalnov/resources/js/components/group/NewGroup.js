@@ -10,8 +10,8 @@ import {
     CircularProgress,
 } from "@material-ui/core";
 import { DeanButton } from "../ui/DeanButton";
-import { StudyTypesNames } from "../../types/studyTypes";
 import axios from "../../axios";
+import {useHistory, useParams} from "react-router";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -72,11 +72,16 @@ export const NewGroup = () => {
 
     const [groupNumber, setGroupNumber] = useState('')
     const [major, setMajor] = useState('ПрИн')
-    const [studyType, setStudyType] = useState('bachelor')
     const [majors, setMajors] = useState([])
     const [majorsAreLoaded, setMajorsLoaded] = useState(false)
 
     const styles = useStyles()
+
+    const params = useParams()
+    const history = useHistory()
+    const studyType = params.studyYearType
+
+    console.log(studyType)
 
     const groupNumberHandler = (event) => {
         setGroupNumber(event.target.value)
@@ -86,17 +91,14 @@ export const NewGroup = () => {
         setMajor(event.target.value)
     }
 
-    const studyTypeHandler = (event) => {
-        setStudyType(event.target.value)
-    }
-
     const groupCreationHandler = async () => {
-        const newGroupData = {}
         axios.post('/groups', {
             number: groupNumber,
             studyYearType: studyType,
-            majorId: major,
-        }).then(response => console.log(response))
+            majorId: majors.find(maj => maj.acronym === major).id,
+        }).then(() => {
+            history.goBack()
+        })
     }
 
     const renderMajorSelectValue = (value) => {
@@ -134,21 +136,6 @@ export const NewGroup = () => {
                     {majors.map(major => (
                         <MenuItem key={major.acronym} value={major.acronym}>
                             {major.name}
-                        </MenuItem>
-                    ))}
-                </Select>
-            </FormControl>
-            <FormControl className={styles.formControl}>
-                <InputLabel htmlFor="studyTypeSelect">Тип обучения</InputLabel>
-                <Select
-                    inputProps={{ id: 'studyTypeSelect' }}
-                    value={studyType}
-                    onChange={studyTypeHandler}
-                    classes={{ select: styles.selectComponent }}
-                >
-                    {StudyTypesNames.map(studyType => (
-                        <MenuItem key={studyType.value} value={studyType.value}>
-                            {studyType.name}
                         </MenuItem>
                     ))}
                 </Select>
