@@ -64,6 +64,7 @@ export const Group = () => {
     const [lastExamDate, setLastExamDate] = useState('')
     const [successExpelSnackbarOpen, setSuccessExpelSnackbarOpen] = useState(false)
     const [failureExpelSnackbarOpen, setFailureExpelSnackbarOpen] = useState(false)
+    const [newGroupId, setNewGroupId] = useState(null)
 
     const id = new URLSearchParams(useLocation().search).get('groupId')
 
@@ -129,6 +130,20 @@ export const Group = () => {
         }
     }
 
+    const handleMoveToNextYear = () => {
+        axios.post(`/groups/${id}/nextYear`).then(response => {
+            setNewGroupId(response.data.id)
+        })
+    }
+
+    const openNewGroupPage = () => {
+        history.push(`/groups/${Number.parseInt(year) + 1}/${studyYearType}/${Number.parseInt(studyYear) + 1}/${number}?groupId=${newGroupId}`)
+    }
+
+    const ToNewGroupButton = (
+        <DeanButton onClick={openNewGroupPage}>Перейти к новой группе</DeanButton>
+    )
+
     return (
         <div className={styles.container}>
             <h2>Список группы</h2>
@@ -139,7 +154,7 @@ export const Group = () => {
 
             </div>
             <div className={styles.actionsWithGroup}>
-                <DeanButton disabled={studentsAreLoaded && students.length === 0} primary className={styles.transferButton}>Перевести студентов на следующий курс</DeanButton>
+                <DeanButton onClick={handleMoveToNextYear} disabled={studentsAreLoaded && students.length === 0} primary className={styles.transferButton}>Перевести студентов на следующий курс</DeanButton>
                 <DeanButton
                     error
                     disabled={(studyYearType === StudyTypes.bachelor && studyYear !== 4) || (studyYearType === StudyTypes.master && studyYear !== 2)}
@@ -161,6 +176,10 @@ export const Group = () => {
                 onClose={() => setFailureExpelSnackbarOpen(false)}
             >
                 <SnackbarContent message={'При отчислении студентов возникла ошибка'} />
+            </Snackbar>
+
+            <Snackbar open={newGroupId !== null} autoHideDuration={10000} onClose={() => setNewGroupId(null)}>
+                <SnackbarContent message='Группа успешно переведена на следующий курс' action={ToNewGroupButton} />
             </Snackbar>
         </div>
     )
