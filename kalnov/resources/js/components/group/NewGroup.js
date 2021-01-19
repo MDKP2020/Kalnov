@@ -12,6 +12,7 @@ import {
 import { DeanButton } from "../ui/DeanButton";
 import axios from "../../axios";
 import {useHistory, useParams} from "react-router";
+import {DeanWarning} from "../ui/DeanWarning";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -22,21 +23,6 @@ const useStyles = makeStyles(theme => ({
         display: 'flex',
         alignItems: 'center',
         marginTop: '80px',
-    },
-    warningIcon: {
-        color: theme.palette.warning.main,
-        width: '40px',
-        height: '40px',
-    },
-    warningText: {
-        fontSize: '1rem',
-        color: theme.palette.text.gray,
-        marginLeft: '1rem',
-    },
-    warningBlock: {
-        display: 'flex',
-        alignItems: 'center',
-        marginLeft: '3rem',
     },
     formControl: {
         '&:not(:first-of-type)': {
@@ -142,10 +128,7 @@ export const NewGroup = () => {
             </FormControl>
             <div className={styles.groupCreationBlock}>
                 <DeanButton primary onClick={groupCreationHandler}>Создать группу</DeanButton>
-                <div className={styles.warningBlock}>
-                    <Warning classes={{ root: styles.warningIcon }} />
-                    <p className={styles.warningText}>Группа будет создана на первом курсе в текущем учебном году</p>
-                </div>
+                <DeanWarning text="Группа будет создана на первом курсе в текущем учебном году" />
             </div>
         </div>
     )
