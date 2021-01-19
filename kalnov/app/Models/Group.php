@@ -96,7 +96,8 @@ class Group extends Model
     public function moveToNextYear() {
         $studyYear = $this->getAttribute('study_year');
         // Невозможно осуществить перевести с последнего курса
-        if($studyYear < 4 && time() < $this->getAttribute('last_exam_date')->getTimestamp()) {
+        $lastExamDate = Carbon::createFromFormat('Y-m-d', $this->getAttribute('last_exam_date'));
+        if($studyYear < 4 && time() < $lastExamDate->timestamp) {
             $nextYearGroup = new Group();
 
             $nextYearGroup->setAttribute('previous_group_id', $this->id);
@@ -105,10 +106,13 @@ class Group extends Model
             $nextYearGroup->setAttribute('study_year_type', $this->getAttribute('study_year_type'));
             $nextYearGroup->setAttribute('major_id', $this->getAttribute('major_id'));
 
-            $currentYear = YearRange::find($this->getAttribute('year_range'));
+            $currentYear = YearRange::where('start', $this->getAttribute('year_range'))->first();
             $nextYearGroup->setAttribute('year_range', $currentYear->next());
+            $nextYearGroup->save();
 
-            $this->enrollAll($this->getStudents(null));
+            $nextYearGroup->enrollAll($this->getStudents(null)->map(function($student) {
+                return $student->getAttribute('id');
+            }));
 
             return $nextYearGroup->getAttribute('id');
         }
@@ -125,8 +129,7 @@ class Group extends Model
         if($name != null)
             $searchName = $name;
 
-        return DB::
-            table('students_to_groups')->join('students', 'students_to_groups.student_id', '=', 'students.id')
+        return StudentRecord::join('students', 'students_to_groups.student_id', '=', 'students.id')
             ->where('group_id', $this->getAttribute('id'))
             ->whereRaw('concat(last_name, \' \', "name", \' \', middle_name) ~* ?', [$searchName])
             ->get();
