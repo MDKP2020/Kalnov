@@ -1,13 +1,15 @@
 import React, {useEffect, useState} from 'react'
 import axios from '../../axios'
 import {useHistory, useLocation, useParams} from "react-router";
-import { KeyboardDatePicker } from '@material-ui/pickers'
+import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import {Student} from "./student/Student";
 import {useTheme, makeStyles, Snackbar, SnackbarContent} from "@material-ui/core";
 import {DeanButton} from "../ui/DeanButton";
 import {SearchBar} from "../ui/SearchBar";
 import {StudyTypes} from "../../types/studyTypes";
 import {ArrowUpward} from "@material-ui/icons";
+import DateFnsUtils from '@date-io/date-fns'
+import { format } from 'date-fns'
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -20,7 +22,9 @@ const useStyles = makeStyles(theme => ({
         marginTop: '1.5rem'
     },
     lastExamDateInputContainer: {
+        marginTop: '1.5rem',
         display: 'flex',
+        alignItems: 'center'
     },
     transferButton: {
         marginTop: '3rem'
@@ -49,7 +53,10 @@ const useStyles = makeStyles(theme => ({
     },
     enrollStudentsLabel: {
         fontSize: '1.1rem'
-    }
+    },
+    setLastExamDateButton: {
+        marginLeft: '2rem',
+    },
 }))
 
 export const Group = () => {
@@ -61,7 +68,7 @@ export const Group = () => {
     const { year, studyYear, studyYearType, number } = useParams()
     const [students, setStudents] = useState([])
     const [studentsAreLoaded, setStudentsAreLoaded] = useState(false)
-    const [lastExamDate, setLastExamDate] = useState('')
+    const [lastExamDate, setLastExamDate] = useState(`01.01.${Number.parseInt(year) + 1}`)
     const [successExpelSnackbarOpen, setSuccessExpelSnackbarOpen] = useState(false)
     const [failureExpelSnackbarOpen, setFailureExpelSnackbarOpen] = useState(false)
     const [newGroupId, setNewGroupId] = useState(null)
@@ -144,6 +151,12 @@ export const Group = () => {
         <DeanButton onClick={openNewGroupPage}>Перейти к новой группе</DeanButton>
     )
 
+    const handleSetLastExamDate = () => {
+        axios.post(`/groups/${id}/lastExamDate`, {
+            lastExamDate: format(lastExamDate, 'yyyy-MM-dd')
+        }).then(response => console.log(response))
+    }
+
     return (
         <div className={styles.container}>
             <h2>Список группы</h2>
@@ -151,7 +164,19 @@ export const Group = () => {
             { studentsContent }
 
             <div className={styles.lastExamDateInputContainer}>
-
+                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                    <KeyboardDatePicker
+                        disableToolbar
+                        variant='inline'
+                        format="dd.MM.yyyy"
+                        margin="normal"
+                        id="last-exam-date"
+                        label="Дата последнего экзамена во втором семестре"
+                        value={lastExamDate}
+                        onChange={handleLastExamDateChange}
+                    />
+                </MuiPickersUtilsProvider>
+                <DeanButton primary onClick={handleSetLastExamDate} className={styles.setLastExamDateButton}>Установить</DeanButton>
             </div>
             <div className={styles.actionsWithGroup}>
                 <DeanButton onClick={handleMoveToNextYear} disabled={studentsAreLoaded && students.length === 0} primary className={styles.transferButton}>Перевести студентов на следующий курс</DeanButton>
