@@ -75,6 +75,7 @@ class Group extends Model
                 'groups.updated_at',
                 'number',
                 'majors.name',
+                'majors.acronym',
                 'year_range',
                 'previous_group_id',
                 'last_exam_date',
@@ -85,7 +86,7 @@ class Group extends Model
     }
 
     public static function getAllByYearAndStudyYear($year, $studyYear, $studyYearType) {
-        return Group::findAllByYearAndStudyYear($year, $studyYear, $studyYearType)->get()->groupBy('name');
+        return Group::findAllByYearAndStudyYear($year, $studyYear, $studyYearType)->get()->groupBy('acronym');
     }
 
     public static function get($year, $studyYearType, $studyYear, $number) {
