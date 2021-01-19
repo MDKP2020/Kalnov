@@ -76,7 +76,7 @@ class Group extends Model
             ->exists();
 
         if (!$exists) {
-            StudyYear::validateAndSave($studyYear, $studyYearType);
+            StudyYear::store($studyYearType, $studyYear);
         }
     }
 
