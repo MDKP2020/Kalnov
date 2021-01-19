@@ -146,7 +146,7 @@ Route::post('/groups/{id}/enrollment', function (Request $request, $id) {
 
     $students = $request['students'];
 
-    $group->enrollmentStudents($students);
+    $group->enrollStudents($students);
 });
 
 // API студентов

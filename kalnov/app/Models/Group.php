@@ -177,7 +177,7 @@ class Group extends Model
         $groupExists = Group::where('id', '=', $this->id)->exists();
         throw_unless($groupExists, new ResourceNotFound("Group with id = $this->id not found"));
 
-        DB::transaction(function($students) {
+        DB::transaction(function() use ($students) {
             $studentsIds = new Collection();
 
             foreach ($students as $student) {
