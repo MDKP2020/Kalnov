@@ -90,10 +90,10 @@ Route::post('/groups', function(Request $request) {
     );
 });
 
-Route::post('/groups/nextYear', function(Request $request) {
+Route::post('/groups/{id}/nextYear', function(Request $request, $id) {
     // TODO валидация корректности времени перевода группы
 
-    $group = getGroup($request);
+    $group = Group::where('id', $id);
     $group->moveToNextYear();
 });
 
