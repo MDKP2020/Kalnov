@@ -58,7 +58,7 @@ export const StudentsEnrollment = (props) => {
     const [showSuccessEnrollmentSnackbar, setShowSuccessEnrollmentSnackbar] = useState(false)
 
     const [gradebookNumber, setGradebookNumber] = useState('')
-    const [isGradebookNumberValid, setGradebookNumberValid] = useState(false)
+    const [isGradebookNumberValid, setGradebookNumberValid] = useState(true)
 
     const handleGradebookNumberChange = (event) => {
         const number = event.target.value
