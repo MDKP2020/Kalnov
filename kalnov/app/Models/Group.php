@@ -176,7 +176,13 @@ class Group extends Model
         );
     }
 
-    public function expel(string $expelReason) {
+    public function expelStudent(string $reason, $studentId) {
+        StudentRecord::where('group_id', $this->getAttribute('id'))::where('student_id', $studentId)->update([
+            'expel_reason' => $reason
+        ]);
+    }
+
+    private function expel(string $expelReason) {
         DB::table('students_to_groups')->where('group_id', '=', $this->getAttribute('id'))->update([
             'expel_reason' => $expelReason
         ]);

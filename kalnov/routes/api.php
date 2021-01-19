@@ -134,7 +134,7 @@ Route::get('/groups/{id}/students', function(Request $request, $id) {
 Route::patch('/groups/{id}/expel', function(Request $request, $id) {
     $group = Group::find($id);
 
-    $group->expel($request->input('reason'));
+    $group->expelStudent($request->input('reason'), $request->input('studentId'));
 });
 
 Route::patch('/groups/{id}/expel/studyEnd', function(Request $request, $id) {
