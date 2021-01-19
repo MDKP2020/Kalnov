@@ -34,9 +34,16 @@ const useStyles = makeStyles(theme => ({
             marginLeft: '0.4rem'
         }
     },
+    nameInputs: {
+        display: 'flex',
+        flexDirection: 'column',
+        '& > div:not(:first-of-type)': {
+            marginTop: '1.5rem',
+        },
+    },
 }))
 
-export const Student = ({ fullName, id, gradebookNumber, groupId, expelReason: studentExpelReason, lastName, middleName, name, onUpdate }) => {
+export const Student = ({ id, gradebookNumber, groupId, expelReason: studentExpelReason, lastName, middleName, name, onUpdate }) => {
     const theme = useTheme()
     const styles = useStyles({ isExpel: studentExpelReason !== null })
 
@@ -50,6 +57,8 @@ export const Student = ({ fullName, id, gradebookNumber, groupId, expelReason: s
     const [newStudentLastName, setNewStudentLastName] = useState(lastName)
 
     const EDIT_BUTTON_COLOR = '#e6b710'
+
+    const fullName = `${lastName} ${name} ${middleName}`
 
     const handleNewNameChange = (event) => {
         setNewStudentName(event.target.value)
@@ -188,9 +197,11 @@ export const Student = ({ fullName, id, gradebookNumber, groupId, expelReason: s
                 onClose={() => setOpenEditStudentModal(false)}
                 onConfirm={handleStudentEdit}
             >
-                {createInputForName('first', newStudentName, handleNewNameChange)}
-                {createInputForName('last', newStudentLastName, handleNewLastNameChange)}
-                {createInputForName('middle', newStudentMiddleName, handleNewMiddleNameChange)}
+                <div className={styles.nameInputs}>
+                    {createInputForName('first', newStudentName, handleNewNameChange)}
+                    {createInputForName('last', newStudentLastName, handleNewLastNameChange)}
+                    {createInputForName('middle', newStudentMiddleName, handleNewMiddleNameChange)}
+                </div>
             </DialogModal>
             <Snackbar
                 open={showSuccessStudentExpelSnackbar}
