@@ -25,10 +25,15 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export const StudentCard = ({ actions, text, disabled }) => {
+export const StudentCard = ({ actions, text, disabled, textClass }) => {
 
     const theme = useTheme()
     const styles = useStyles()
+
+    const textClasses = [styles.cardText]
+    if (textClass) {
+        textClasses.push(textClass)
+    }
 
     const cardStyles = [styles.card]
     if(disabled)
@@ -36,7 +41,7 @@ export const StudentCard = ({ actions, text, disabled }) => {
 
     return (
         <div className={cardStyles.join(' ')}>
-            <span className={styles.cardText}>{text}</span>
+            <span className={textClasses.join(' ')}>{text}</span>
             <div className={styles.actions}>
                 {actions}
             </div>

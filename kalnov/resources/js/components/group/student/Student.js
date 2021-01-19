@@ -20,7 +20,10 @@ const useStyles = makeStyles(theme => ({
         }
     },
     name: {
-        color: theme.palette.text.main
+        color: theme.palette.text.main,
+    },
+    studentName: {
+        color: props => props.isExpel ? theme.palette.error.main : 'black',
     },
     actions: {
         display: 'flex'
@@ -33,9 +36,9 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-export const Student = ({ name, id, gradebookNumber, groupId }) => {
+export const Student = ({ name, id, gradebookNumber, groupId, expelReason: studentExpelReason }) => {
     const theme = useTheme()
-    const styles = useStyles(theme)
+    const styles = useStyles({ isExpel: studentExpelReason !== null })
 
     const [openExpelStudentModal, setOpenExpelStudentModal] = useState(false)
     const [expelReason, setExpelReason] = useState('')
@@ -61,9 +64,10 @@ export const Student = ({ name, id, gradebookNumber, groupId }) => {
         axios.patch(`/groups/${groupId}/expel`, {
             reason: expelReason,
             studentId: id
-        }).then(
-
-        )
+        }).then(response => {
+            setOpenExpelStudentModal(false)
+            setShowSuccessStudentExpelSnackbar(true)
+        })
     }
 
     const handleExpelButtonClick = () => {
@@ -92,12 +96,24 @@ export const Student = ({ name, id, gradebookNumber, groupId }) => {
         </DeanTooltip>
     ]
 
+    const StudentCardContent = (
+        <StudentCard
+            text={`${name}, №${gradebookNumber}`}
+            actions={actions}
+            textClass={styles.studentName}
+        />
+    )
+
     return (
         <>
-            <StudentCard
-                text={`${name}, №${gradebookNumber}`}
-                actions={actions}
-            />
+            {studentExpelReason ? (
+                <DeanTooltip title={expelReason}>
+                    {StudentCardContent}
+                </DeanTooltip>
+            ) : (
+                StudentCardContent
+            )}
+
             <DialogModal
                 open={openExpelStudentModal}
                 title={`Отчислить студента ${name}`}

@@ -102,7 +102,7 @@ export const Group = () => {
             <div className={styles.studentList}>
                 {students.map(student => {
                     const fullName = `${student['last_name']} ${student.name} ${student['middle_name']}`
-                    return <Student key={student.id} name={fullName} id={student.id} gradebookNumber={student['gradebook_number']} groupId={id} />
+                    return <Student key={student.id} name={fullName} id={student.id} gradebookNumber={student['gradebook_number']} groupId={id} expelReason={student['expel_reason']} />
                 })}
             </div>
         </>
