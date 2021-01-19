@@ -10,6 +10,7 @@ import {Header} from "./components/ui/Header";
 import {makeStyles, MuiThemeProvider} from '@material-ui/core';
 import {theme} from "./theme";
 import '../css/app.css';
+import {Redirect} from "react-router";
 
 const useStyles = makeStyles({
     root: {
@@ -26,6 +27,9 @@ export const App = () => {
                 <Router>
                     <Header/>
                     <Switch>
+                        <Route path="/" exact>
+                            <Redirect to="/groups" />
+                        </Route>
                         <Route path="/groups">
                             <GroupPicker/>
                         </Route>

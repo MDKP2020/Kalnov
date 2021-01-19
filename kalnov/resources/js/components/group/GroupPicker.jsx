@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from "react";
-import ReactDOM from 'react-dom';
-import axios from '../../axios'
+import React from "react";
 import {makeStyles} from "@material-ui/core";
-import {Route, Switch, useLocation} from "react-router";
+import {Redirect, Route, Switch, useLocation} from "react-router";
 import {YearPicker} from "./YearPicker";
 import {StudyYearPicker} from "./StudyYearPicker";
 import {Group} from "./Group";
