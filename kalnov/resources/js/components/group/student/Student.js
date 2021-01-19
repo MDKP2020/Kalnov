@@ -1,8 +1,9 @@
-import React from 'react'
-import {useTheme, makeStyles} from "@material-ui/core";
+import React, {useState} from 'react'
+import {useTheme, makeStyles, FormControl, TextField} from "@material-ui/core";
 import {ArrowForward, Cancel, Edit} from "@material-ui/icons";
 import {DeanTooltip} from "../../ui/DeanTooltip";
 import {StudentCard} from "./StudentCard";
+import axios from "../../../axios";
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -35,10 +36,31 @@ export const Student = ({ name, id, gradebookNumber }) => {
     const theme = useTheme()
     const styles = useStyles(theme)
 
+    const [openExpelStudentModal, setOpenExpelStudentModal] = useState(false)
+    const [expelReason, setExpelReason] = useState('')
+
     const EDIT_BUTTON_COLOR = '#e6b710'
 
-    const handleExpelButtonClick = () => {
+    const handleExpelReasonChange = (event) => {
+        setExpelReason(event.target.value)
+    }
 
+    const ExpelReasonInput = (
+        <FormControl style={{ display: 'flex' }}>
+            <TextField
+                label="Причина отчисления"
+                value={expelReason}
+                onChange={handleExpelReasonChange}
+            />
+        </FormControl>
+    )
+
+    const handleStudentExpel = (studentId) => {
+        axios.post()
+    }
+
+    const handleExpelButtonClick = () => {
+        setOpenExpelStudentModal(true)
     }
 
     const handleEditButtonClick = () => {
