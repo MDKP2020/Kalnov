@@ -41,6 +41,10 @@ const useStyles = makeStyles(theme => ({
             marginTop: '1.5rem',
         },
     },
+    disabled: {
+        pointerEvents: 'none',
+        color: 'gray',
+    }
 }))
 
 export const Student = ({ id, gradebookNumber, groupId, expelReason: studentExpelReason, lastName, middleName, name, onUpdate }) => {
@@ -127,7 +131,7 @@ export const Student = ({ id, gradebookNumber, groupId, expelReason: studentExpe
 
     const handleStudentEdit = (studentId) => {
         const newStudentData = {}
-        if (newStudentName !== name) newStudentData.name = newStudentName
+        if (newStudentName !== name) newStudentData.firstName = newStudentName
         if (newStudentLastName !== lastName) newStudentData.lastName = newStudentLastName
         if (newStudentMiddleName !== middleName) newStudentData.middleName = newStudentMiddleName
         axios.patch(`/students/${id}/edit`, {
@@ -150,7 +154,12 @@ export const Student = ({ id, gradebookNumber, groupId, expelReason: studentExpe
 
     }
 
-    const actionIconClasses = { root: styles.actionIcon }
+    const iconClasses = [styles.actionIcon]
+    if(studentExpelReason !== null) {
+        iconClasses.push(styles.disabled)
+    }
+
+    const actionIconClasses = { root: iconClasses.join(' ') }
 
     const actions = [
         <DeanTooltip title="Отчислить студента" key='expel'>

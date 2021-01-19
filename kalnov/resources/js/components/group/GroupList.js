@@ -10,10 +10,16 @@ const useStyles = makeStyles(theme => ({
         paddingLeft: '15px'
     },
     majorContainer: {
-        display: 'flex'
+        display: 'flex',
+        '&:not(:first-of-type)': {
+            marginTop: '1.5rem'
+        }
     },
     group: {
-        cursor: 'pointer'
+        cursor: 'pointer',
+        '&:not(:first-of-type)': {
+            marginLeft: '1rem'
+        }
     },
     createNewGroupButton: {
       marginTop: '3rem',
