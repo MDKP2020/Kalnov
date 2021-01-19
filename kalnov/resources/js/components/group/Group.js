@@ -3,7 +3,7 @@ import axios from '../../axios'
 import {useHistory, useLocation, useParams} from "react-router";
 import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
 import {Student} from "./student/Student";
-import {useTheme, makeStyles, Snackbar, SnackbarContent} from "@material-ui/core";
+import {useTheme, makeStyles, Snackbar, SnackbarContent, CircularProgress} from "@material-ui/core";
 import {DeanButton} from "../ui/DeanButton";
 import {SearchBar} from "../ui/SearchBar";
 import {StudyTypes} from "../../types/studyTypes";
@@ -75,10 +75,13 @@ export const Group = () => {
     const [successExpelSnackbarOpen, setSuccessExpelSnackbarOpen] = useState(false)
     const [failureExpelSnackbarOpen, setFailureExpelSnackbarOpen] = useState(false)
     const [newGroupId, setNewGroupId] = useState(null)
+    const [studentNameQuery, setStudentNameQuery] = useState('')
 
     const id = new URLSearchParams(useLocation().search).get('groupId')
 
     const getStudents = (query) => {
+        setStudentNameQuery(query)
+
         axios.get(
             `/groups/${id}/students`,
             {
@@ -86,7 +89,10 @@ export const Group = () => {
                     name: query ? query : ''
                 }
             }
-        ).then(students => { setStudents(students.data); setStudentsAreLoaded(true) })
+        ).then(students => {
+            setStudents(students.data)
+            setStudentsAreLoaded(true)
+        })
     }
 
     const handleLastExamDateChange = (date) => {
@@ -132,9 +138,9 @@ export const Group = () => {
 
     let studentsContent;
     if(!studentsAreLoaded)
-        studentsContent = null
+        studentsContent = <CircularProgress size='2em'/>
     else {
-        studentsContent = students.length > 0  ? StudentList : NoStudentsContent
+        studentsContent = students.length === 0 && studentNameQuery === '' ? NoStudentsContent : StudentList
     }
 
     const expelStudentsHandler = async () => {
