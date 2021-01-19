@@ -5,6 +5,7 @@ namespace App\Models;
 use App\Exceptions\BadRequestException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class Student extends Model
