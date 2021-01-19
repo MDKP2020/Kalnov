@@ -37,6 +37,10 @@ export const GroupPicker = (props) => {
                     <NewGroup />
                 </Route>
 
+                <Route path='/groups/:year/:studyYearType/:studyYear/:number/enroll'>
+                    <StudentsEnrollment/>
+                </Route>
+
                 <Route path='/groups/:year/:studyYearType/:studyYear/:number'>
                     <Group/>
                 </Route>
@@ -47,10 +51,6 @@ export const GroupPicker = (props) => {
 
                 <Route path='/groups/:year'>
                     <StudyYearPicker/>
-                </Route>
-
-                <Route path='/groups/:year/:studyYearType/:studyYear/:number/enroll'>
-                    <StudentsEnrollment/>
                 </Route>
             </Switch>
         </div>
