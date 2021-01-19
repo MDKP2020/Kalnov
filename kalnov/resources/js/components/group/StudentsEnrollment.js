@@ -36,6 +36,9 @@ const useStyles = makeStyles(theme => ({
         flexDirection: 'column',
         maxWidth: '40%',
         minWidth: '30%'
+    },
+    toGroupListButton: {
+        maxWidth: '100%'
     }
 }))
 
@@ -91,6 +94,7 @@ export const StudentsEnrollment = (props) => {
 
         setStudentNameErrorMessage('')
         setNewStudent('')
+        setGradebookNumber('')
     }
 
     const handleStudentRemove = (name) => {
@@ -108,7 +112,8 @@ export const StudentsEnrollment = (props) => {
             students: newStudents.map(student => ({
                 name: student.firstName,
                 lastName: student.lastName,
-                middleName: student.middleName
+                middleName: student.middleName,
+                gradebookNumber: student.gradebookNumber
             }))
         }).then(response => {
             if(response.status === 200)
@@ -120,7 +125,7 @@ export const StudentsEnrollment = (props) => {
     groupPath = groupPath + history.location.search
 
     const ToGroupListButton = (
-        <DeanButton primary onClick={() => history.push(groupPath)}>К списку группы</DeanButton>
+        <DeanButton className={styles.toGroupListButton} primary onClick={() => history.push(groupPath)}>К списку группы</DeanButton>
     )
 
     return (
@@ -165,7 +170,7 @@ export const StudentsEnrollment = (props) => {
                         />
                     )
                 )}
-                {students.map(student => <StudentCard key={student.id} text={student.name} actions={[]}/>)}
+                {students.map(student => <StudentCard key={student.id} text={`${student['last_name']} ${student.name} ${student['middle_name']}`} actions={[]}/>)}
             </div>
 
             <div>
@@ -173,7 +178,7 @@ export const StudentsEnrollment = (props) => {
                 <DeanWarning text="Студенты будут зачислены в выбранную группу" />
             </div>
 
-            <Snackbar open={showSuccessEnrollmentSnackbar} autoHideDuration={5000} onClose={() => setShowSuccessEnrollmentSnackbar(false)}>
+            <Snackbar open={showSuccessEnrollmentSnackbar} autoHideDuration={10000} onClose={() => setShowSuccessEnrollmentSnackbar(false)}>
                 <SnackbarContent message='Студенты успешно зачислены' action={ToGroupListButton} />
             </Snackbar>
         </div>
