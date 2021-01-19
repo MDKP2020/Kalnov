@@ -68,7 +68,7 @@ export const GroupList = () => {
                             <div className={styles.majorContainer} key={major}>
                                 {groups[major].map(group => {
                                     const groupNumber = `${group['study_year']}${group.number}`
-                                    const groupName = `${group.name}-${groupNumber}`
+                                    const groupName = `${group.acronym}-${groupNumber}`
                                     return (
                                         <span
                                             key={groupName}
