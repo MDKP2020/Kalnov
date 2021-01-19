@@ -16,12 +16,12 @@ const useStyles = makeStyles(theme => ({
     warningBlock: {
         display: 'flex',
         alignItems: 'center',
-        marginLeft: '3rem',
+        marginLeft: props => props.inline ? '3rem' : '0',
     },
 }))
 
-export const DeanWarning = ({ text }) => {
-    const styles = useStyles()
+export const DeanWarning = ({ text, inline }) => {
+    const styles = useStyles({ inline })
 
     return (
         <div className={styles.warningBlock}>
