@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-export const Student = ({ name, id, gradebookNumber, groupId, expelReason: studentExpelReason }) => {
+export const Student = ({ fullName, id, gradebookNumber, groupId, expelReason: studentExpelReason, lastName, middleName, name }) => {
     const theme = useTheme()
     const styles = useStyles({ isExpel: studentExpelReason !== null })
 
@@ -44,7 +44,45 @@ export const Student = ({ name, id, gradebookNumber, groupId, expelReason: stude
     const [expelReason, setExpelReason] = useState('')
     const [showSuccessStudentExpelSnackbar, setShowSuccessStudentExpelSnackbar] = useState(false)
 
+    const [openEditStudentModal, setOpenEditStudentModal] = useState(false)
+    const [newStudentName, setNewStudentName] = useState(name)
+    const [newStudentMiddleName, setNewStudentMiddleName] = useState(middleName)
+    const [newStudentLastName, setNewStudentLastName] = useState(lastName)
+
     const EDIT_BUTTON_COLOR = '#e6b710'
+
+    const handleNewNameChange = (event) => {
+        setNewStudentName(event.target.value)
+    }
+
+    const handleNewMiddleNameChange = (event) => {
+        setNewStudentMiddleName(event.target.value)
+    }
+
+    const handleNewLastNameChange = (event) => {
+        setNewStudentLastName(event.target.value)
+    }
+
+    const createInputForName = (nameType, value, handler) => {
+        let inputLabel = 'Имя студента'
+        switch (nameType) {
+            case 'last':
+                inputLabel = 'Фамилия студента'
+                break;
+
+            case 'middle':
+                inputLabel = 'Отчество студента'
+                break;
+        }
+
+        return (
+            <TextField
+                value={value}
+                onChange={handler}
+                label={inputLabel}
+            />
+        )
+    }
 
     const handleExpelReasonChange = (event) => {
         setExpelReason(event.target.value)
@@ -68,6 +106,10 @@ export const Student = ({ name, id, gradebookNumber, groupId, expelReason: stude
             setOpenExpelStudentModal(false)
             setShowSuccessStudentExpelSnackbar(true)
         })
+    }
+
+    const handleStudentEdit = (studentId) => {
+
     }
 
     const handleExpelButtonClick = () => {
@@ -96,7 +138,7 @@ export const Student = ({ name, id, gradebookNumber, groupId, expelReason: stude
         </DeanTooltip>
     ]
 
-    let cardText = `${name}, №${gradebookNumber}`
+    let cardText = `${fullName}, №${gradebookNumber}`
     if (studentExpelReason) cardText += ` Отчислен по причине: "${studentExpelReason}"`
 
     return (
@@ -109,13 +151,25 @@ export const Student = ({ name, id, gradebookNumber, groupId, expelReason: stude
 
             <DialogModal
                 open={openExpelStudentModal}
-                title={`Отчислить студента ${name}`}
-                text="Укажите причину отчисления студента"
+                title={`Отчислить студента ${fullName}`}
+                text="Укажите причину отчисления студента:"
                 confirmButtonText="Отчислить"
                 closeButtonText="Отмена"
                 id="expel-student-modal"
                 onClose={() => setOpenExpelStudentModal(false)}
                 onConfirm={handleStudentExpel}
+            >
+                { ExpelReasonInput }
+            </DialogModal>
+            <DialogModal
+                open={openEditStudentModal}
+                title={`Изменить данные студента ${fullName}`}
+                text="Введите новые данные студента:"
+                confirmButtonText="Сохранить"
+                closeButtonText="Отмена"
+                id="edit-student-modal"
+                onClose={() => setOpenEditStudentModal(false)}
+                onConfirm={}
             >
                 { ExpelReasonInput }
             </DialogModal>
@@ -125,7 +179,7 @@ export const Student = ({ name, id, gradebookNumber, groupId, expelReason: stude
                 onClose={() => setShowSuccessStudentExpelSnackbar(false)}
             >
                 <SnackbarContent
-                    message={`Студент ${name} был успешно отчислен по причине: ${expelReason}`}
+                    message={`Студент ${fullName} был успешно отчислен по причине: ${expelReason}`}
                 />
             </Snackbar>
         </>
