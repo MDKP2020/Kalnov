@@ -109,6 +109,8 @@ class Group extends Model
             $nextYearGroup->setAttribute('year_range', $currentYear->next());
 
             $this->enrollAll($this->getStudents(null));
+
+            return $nextYearGroup->getAttribute('id');
         }
         else
             throw new InvalidNextYearTransfer();
