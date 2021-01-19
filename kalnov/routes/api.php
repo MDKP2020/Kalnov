@@ -96,7 +96,7 @@ Route::get('/groups', function(Request $request) {
 
 Route::post('/groups', function(Request $request) {
     $request->validate( [
-        'number' => ['required', 'integer', 'min:1900'],
+        'number' => ['required', 'integer'],
         'majorId' => ['required', 'integer', 'exists:majors,id'],
         'studyYearType' => ['required', 'in:bachelor,master'],
     ]);
