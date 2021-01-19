@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Exceptions\GroupAlreadyExists;
+use App\Exceptions\InvalidNewGroupData;
 use App\Exceptions\InvalidNextYearTransfer;
 use App\Exceptions\ResourceNotFound;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Validator;
 
 class Group extends Model
 {
@@ -17,6 +19,15 @@ class Group extends Model
 
     public static function newGroup($number, $studyYearType, $majorId) {
         $group = new Group();
+
+        $validator = Validator::make([ 'number' => $number, 'studyYearType' => $studyYearType, 'majorId' => $majorId ], [
+            'number' => ['required', 'integer'],
+            'studyYearType' => ['required', 'in:bachelor,master'],
+            'majorId' => ['required', 'exists:majors,id']
+        ]);
+
+        if($validator->fails())
+            new InvalidNewGroupData($validator->errors());
 
         $suchGroupExists = DB::table('groups')
                 ->where('number', '=', $number)
