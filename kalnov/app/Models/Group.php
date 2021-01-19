@@ -18,8 +18,12 @@ class Group extends Model
 {
     use HasFactory;
 
-    public static function newGroup($number, $studyYearType, $majorId) {
+    public static function newGroup($number, $studyYearType, $majorId, $yearRange) {
         $group = new Group();
+
+        $year = Carbon::now();
+        $year->year = $yearRange;
+        $yearStart = YearRange::whereRaw('date_part(\'year\', start) = ?', [$yearRange])->first()->start;
 
         $validator = Validator::make([ 'number' => $number, 'studyYearType' => $studyYearType, 'majorId' => $majorId ], [
             'number' => ['required', 'integer'],
@@ -34,6 +38,7 @@ class Group extends Model
                 ->where('number', '=', $number)
                 ->where('major_id', '=', $majorId)
                 ->where('study_year_type', '=', $studyYearType)
+                ->where('year_range', '=', $yearStart)
                 ->exists();
 
         if($suchGroupExists)
@@ -62,7 +67,7 @@ class Group extends Model
         self::createStudyYearIfNotExists($studyYear, $studyYearType);
 
         $group->setAttribute('number', $number);
-        $group->setAttribute('year_range', $currentDate);
+        $group->setAttribute('year_range', $yearStart);
         $group->setAttribute('study_year', $studyYear);
         $group->setAttribute('major_id', $majorId);
         $group->setAttribute('study_year_type', $studyYearType);

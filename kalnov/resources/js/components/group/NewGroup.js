@@ -67,8 +67,6 @@ export const NewGroup = () => {
     const history = useHistory()
     const studyType = params.studyYearType
 
-    console.log(studyType)
-
     const groupNumberHandler = (event) => {
         setGroupNumber(event.target.value)
     }
@@ -82,6 +80,7 @@ export const NewGroup = () => {
             number: groupNumber,
             studyYearType: studyType,
             majorId: majors.find(maj => maj.acronym === major).id,
+            yearRange: Number.parseInt(params.year),
         }).then(() => {
             history.goBack()
         })
