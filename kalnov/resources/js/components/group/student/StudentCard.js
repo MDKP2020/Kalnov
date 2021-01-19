@@ -25,7 +25,7 @@ const useStyles = makeStyles(theme => ({
     }
 }))
 
-export const StudentCard = ({ actions, text, disabled, textClass }) => {
+export const StudentCard = React.forwardRef(({ actions, text, disabled, textClass }, ref) => {
 
     const theme = useTheme()
     const styles = useStyles()
@@ -40,11 +40,11 @@ export const StudentCard = ({ actions, text, disabled, textClass }) => {
         cardStyles.push(styles.disabled)
 
     return (
-        <div className={cardStyles.join(' ')}>
+        <div className={cardStyles.join(' ')} ref={ref}>
             <span className={textClasses.join(' ')}>{text}</span>
             <div className={styles.actions}>
                 {actions}
             </div>
         </div>
     )
-}
+})

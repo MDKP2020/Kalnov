@@ -96,23 +96,16 @@ export const Student = ({ name, id, gradebookNumber, groupId, expelReason: stude
         </DeanTooltip>
     ]
 
-    const StudentCardContent = (
-        <StudentCard
-            text={`${name}, №${gradebookNumber}`}
-            actions={actions}
-            textClass={styles.studentName}
-        />
-    )
+    let cardText = `${name}, №${gradebookNumber}`
+    if (studentExpelReason) cardText += ` Отчислен по причине: "${studentExpelReason}"`
 
     return (
         <>
-            {studentExpelReason ? (
-                <DeanTooltip title={expelReason}>
-                    {StudentCardContent}
-                </DeanTooltip>
-            ) : (
-                StudentCardContent
-            )}
+            <StudentCard
+                text={cardText}
+                actions={actions}
+                textClass={styles.studentName}
+            />
 
             <DialogModal
                 open={openExpelStudentModal}
