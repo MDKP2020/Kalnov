@@ -185,6 +185,16 @@ Route::get('/students/{id}', function($id) {
     return Student::find($id);
 });
 
+Route::patch('/students/{id}/edit', function(Request $request, $id) {
+   $student = Student::find($id);
+
+   $student->edit(
+       $request->input('firstName'),
+       $request->input('lastName'),
+       $request->input('middleName'),
+   );
+});
+
 // API специальностей
 
 Route::get('/majors', function() {
