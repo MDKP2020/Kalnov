@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react'
-import {useLocation} from "react-router";
-import {makeStyles, useTheme} from "@material-ui/core";
+import {useHistory, useLocation} from "react-router";
+import {makeStyles, Snackbar, SnackbarContent, useTheme} from "@material-ui/core";
 import axios from "../../axios";
 import TextField from "@material-ui/core/TextField";
 import {validateStudentName} from "../../utils/students/validateStudentName";
@@ -8,13 +8,16 @@ import {DeanButton} from "../ui/DeanButton";
 import {StudentCard} from "./student/StudentCard";
 import {Cancel, Warning} from "@material-ui/icons";
 import {DeanWarning} from "../ui/DeanWarning";
+import {validateGradebookNumber} from "../../utils/students/validateGradebookNumber";
 
 const useStyles = makeStyles(theme => ({
-    studentNameField: {
-        minWidth: '40%'
+    textField: {
+        '&:not(:first-of-type)': {
+            marginTop: '1rem'
+        }
     },
     addStudentButton: {
-        marginLeft: '1.5rem'
+        marginLeft: '2.5rem'
     },
     removeStudentIcon: {
         cursor: 'pointer'
@@ -22,6 +25,17 @@ const useStyles = makeStyles(theme => ({
     studentsList: {
         marginTop: '2rem',
         marginBottom: '2.5rem'
+    },
+    inputContainer: {
+        display: 'flex',
+        flexDirection: 'row',
+        alignItems: 'flex-end'
+    },
+    fieldsContainer: {
+        display: 'flex',
+        flexDirection: 'column',
+        maxWidth: '40%',
+        minWidth: '30%'
     }
 }))
 
@@ -29,6 +43,7 @@ export const StudentsEnrollment = (props) => {
 
     const theme = useTheme()
     const styles = useStyles()
+    const history = useHistory()
 
     const groupId = new URLSearchParams(useLocation().search).get('groupId')
 
@@ -40,6 +55,17 @@ export const StudentsEnrollment = (props) => {
     const [newStudent, setNewStudent] = useState('')
     const [newStudents, setNewStudents] = useState([])
     const [studentNameErrorMessage, setStudentNameErrorMessage] = useState('')
+    const [showSuccessEnrollmentSnackbar, setShowSuccessEnrollmentSnackbar] = useState(false)
+
+    const [gradebookNumber, setGradebookNumber] = useState('')
+    const [isGradebookNumberValid, setGradebookNumberValid] = useState(false)
+
+    const handleGradebookNumberChange = (event) => {
+        const number = event.target.value
+
+        setGradebookNumber(number)
+        setGradebookNumberValid(validateGradebookNumber(number))
+    }
 
     const handleStudentNameChange = (event) => {
         const name = event.target.value
@@ -56,7 +82,8 @@ export const StudentsEnrollment = (props) => {
                 firstName: studentName[1],
                 lastName: studentName[0],
                 middleName: studentName[2],
-                fullName: newStudent
+                fullName: newStudent,
+                gradebookNumber
             })
 
             return updatedNewStudents
@@ -84,24 +111,41 @@ export const StudentsEnrollment = (props) => {
                 middleName: student.middleName
             }))
         }).then(response => {
-            if(response.status === 200) {
-                // TODO: показать тост об успешном зачислении студентов
-            }
+            if(response.status === 200)
+                setShowSuccessEnrollmentSnackbar(true)
         })
     }
 
+    let groupPath = history.location.pathname.replace('/enroll', '')
+    groupPath = groupPath + history.location.search
+
+    const ToGroupListButton = (
+        <DeanButton primary onClick={() => history.push(groupPath)}>К списку группы</DeanButton>
+    )
+
     return (
         <div>
-            <div>
-                <TextField
-                    classes={{ root:  styles.studentNameField}}
-                    label='ФИО студента'
-                    value={newStudent}
-                    placeholder='Петров Иван Фёдорович'
-                    onChange={handleStudentNameChange}
-                    helperText={studentNameErrorMessage}
-                    error={studentNameErrorMessage !== ''}
-                />
+            <div className={styles.inputContainer}>
+                <div className={styles.fieldsContainer}>
+                    <TextField
+                        classes={{ root:  styles.textField}}
+                        label='ФИО студента'
+                        value={newStudent}
+                        placeholder='Петров Иван Фёдорович'
+                        onChange={handleStudentNameChange}
+                        helperText={studentNameErrorMessage}
+                        error={studentNameErrorMessage !== ''}
+                    />
+                    <TextField
+                        classes={{ root:  styles.textField}}
+                        label='Номер зачётной книжки'
+                        value={gradebookNumber}
+                        placeholder='12345678'
+                        onChange={handleGradebookNumberChange}
+                        helperText={isGradebookNumberValid ? '' : 'Введите 8 цифр номера зачётной книжки'}
+                        error={!isGradebookNumberValid}
+                    />
+                </div>
                 <DeanButton primary onClick={handleStudentAdd} className={styles.addStudentButton} >Добавить</DeanButton>
             </div>
             <div className={styles.studentsList}>
@@ -128,6 +172,10 @@ export const StudentsEnrollment = (props) => {
                 <DeanButton primary onClick={handleStudentsEnroll}>Зачислить студентов</DeanButton>
                 <DeanWarning text="Студенты будут зачислены в выбранную группу" />
             </div>
+
+            <Snackbar open={showSuccessEnrollmentSnackbar} autoHideDuration={5000} onClose={() => setShowSuccessEnrollmentSnackbar(false)}>
+                <SnackbarContent message='Студенты успешно зачислены' action={ToGroupListButton} />
+            </Snackbar>
         </div>
     )
 }
