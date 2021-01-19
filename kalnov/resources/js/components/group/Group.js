@@ -48,7 +48,7 @@ export const Group = () => {
     const [successExpelSnackbarOpen, setSuccessExpelSnackbarOpen] = useState(false)
     const [failureExpelSnackbarOpen, setFailureExpelSnackbarOpen] = useState(false)
 
-    const id = useLocation().state.groupId
+    const id = new URLSearchParams(useLocation().search).get('groupId')
 
     const getStudents = (query) => {
         axios.get(

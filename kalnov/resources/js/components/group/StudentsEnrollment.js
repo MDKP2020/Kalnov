@@ -16,7 +16,7 @@ export const StudentsEnrollment = (props) => {
 
     const theme = useTheme()
 
-    const groupId = useLocation().state.id
+    const groupId = new URLSearchParams(useLocation().search).get('groupId')
 
     useEffect(() => {
         axios.get(`/groups/${groupId}/students`).then(response => setStudents(response.data))

@@ -35,9 +35,7 @@ export const GroupList = () => {
     const { year, studyYear, studyYearType } = useParams()
 
     const handleGroupClick = (groupNumber, id) => {
-        history.push(`${history.location.pathname}/${groupNumber}`, {
-            groupId: id
-        })
+        history.push(`${history.location.pathname}/${groupNumber}?groupId=${id}`)
         console.log(history)
     }
 
