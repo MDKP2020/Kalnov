@@ -2,9 +2,8 @@
 
 namespace Tests\Feature;
 
-use DateTime;
+use App\Models\StudyYear;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
 class StudyYearApiTest extends TestCase
@@ -19,7 +18,7 @@ class StudyYearApiTest extends TestCase
             'type' => 'master'
         ]);
 
-        $response->assertSessionHasErrors(['year']);
+        $response->assertStatus(400);
     }
 
     // POST: /study_years
@@ -30,7 +29,7 @@ class StudyYearApiTest extends TestCase
             'type' => null
         ]);
 
-        $response->assertSessionHasErrors(['type']);
+        $response->assertStatus(400);
     }
 
     // POST: /study_years
@@ -41,7 +40,7 @@ class StudyYearApiTest extends TestCase
             'type' => 'invalid'
         ]);
 
-        $response->assertSessionHasErrors(['type']);
+        $response->assertStatus(400);
     }
 
     // POST: /study_years
@@ -52,7 +51,7 @@ class StudyYearApiTest extends TestCase
             'type' => 'master'
         ]);
 
-        $response->assertSessionHasErrors(['year']);
+        $response->assertStatus(400);
     }
 
     // POST: /study_years
@@ -63,13 +62,13 @@ class StudyYearApiTest extends TestCase
             'type' => 'master'
         ]);
 
-        $response->assertSessionHasErrors(['year']);
+        $response->assertStatus(400);
     }
 
     // POST: /study_years
     public function testShouldCreateStudyYear()
     {
-        $year = 2021;
+        $year = 1;
         $type = 'bachelor';
 
         $response = $this->post('api/study_years', [
@@ -83,5 +82,74 @@ class StudyYearApiTest extends TestCase
             'year' => $year,
             'type' => $type
         ]);
+    }
+
+    // GET: /study_years
+    public function testShouldReturnAll() {
+        $count = 10;
+
+        StudyYear::factory()->count($count)->create();
+
+        $response = $this->get('api/study_years');
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonCount($count);
+    }
+
+    // GET: /study_years
+    public function testShouldReturnMasterType() {
+        $count = 10;
+
+        $studyYears = StudyYear::factory()->count($count)->create();
+        $expectedMasterCount = $studyYears->filter(function ($value) {
+           return $value['type'] === 'master';
+        })->count();
+
+        $response = $this->json('GET', 'api/study_years', [
+            'type' => 'master'
+        ]);
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonCount($expectedMasterCount);
+    }
+
+    // GET: /study_years
+    public function testShouldValidateInvalidType() {
+        $count = 10;
+
+        $studyYears = StudyYear::factory()->count($count)->create();
+        $expectedMasterCount = $studyYears->filter(function ($value) {
+            return $value['type'] === 'master';
+        })->count();
+
+        $response = $this->json('GET', 'api/study_years', [
+            'type' => 'invalid'
+        ]);
+
+        $response->assertStatus(422);
+    }
+
+    // GET: /study_years/types
+    public function testShouldReturnTypesOrderByAsc() {
+        StudyYear::factory()->create([
+           'type' => 'master'
+        ]);
+        StudyYear::factory()->create([
+            'type' => 'bachelor'
+        ]);
+        StudyYear::factory()->create([
+            'type' => 'bachelor'
+        ]);
+
+        $response = $this->get('api/study_years/types');
+
+        $response
+            ->assertStatus(200)
+            ->assertExactJson([
+                'bachelor',
+                'master'
+            ]);
     }
 }
