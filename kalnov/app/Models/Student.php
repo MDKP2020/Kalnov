@@ -12,7 +12,7 @@ class Student extends Model
     use HasFactory;
 
     public function edit($firstName, $lastName, $middleName) {
-        $nameValidationRules = [ 'string' ];
+        $nameValidationRules = [ 'string', 'nullable' ];
 
         $validator = Validator::make(['name' => $firstName, 'last_name' => $lastName, 'middle_name' => $middleName], [
             'name' => $nameValidationRules,
