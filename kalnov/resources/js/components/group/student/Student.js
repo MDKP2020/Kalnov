@@ -36,7 +36,7 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-export const Student = ({ fullName, id, gradebookNumber, groupId, expelReason: studentExpelReason, lastName, middleName, name }) => {
+export const Student = ({ fullName, id, gradebookNumber, groupId, expelReason: studentExpelReason, lastName, middleName, name, onUpdate }) => {
     const theme = useTheme()
     const styles = useStyles({ isExpel: studentExpelReason !== null })
 
@@ -64,7 +64,7 @@ export const Student = ({ fullName, id, gradebookNumber, groupId, expelReason: s
     }
 
     const createInputForName = (nameType, value, handler) => {
-        let inputLabel = 'Имя студента'
+        let inputLabel
         switch (nameType) {
             case 'last':
                 inputLabel = 'Фамилия студента'
@@ -72,6 +72,13 @@ export const Student = ({ fullName, id, gradebookNumber, groupId, expelReason: s
 
             case 'middle':
                 inputLabel = 'Отчество студента'
+                break;
+
+            case 'first':
+                inputLabel = 'Имя студента'
+                break;
+
+            default:
                 break;
         }
 
@@ -105,11 +112,21 @@ export const Student = ({ fullName, id, gradebookNumber, groupId, expelReason: s
         }).then(response => {
             setOpenExpelStudentModal(false)
             setShowSuccessStudentExpelSnackbar(true)
+            onUpdate()
         })
     }
 
     const handleStudentEdit = (studentId) => {
-
+        const newStudentData = {}
+        if (newStudentName !== name) newStudentData.name = newStudentName
+        if (newStudentLastName !== lastName) newStudentData.lastName = newStudentLastName
+        if (newStudentMiddleName !== middleName) newStudentData.middleName = newStudentMiddleName
+        axios.patch(`/students/${id}/edit`, {
+            ...newStudentData
+        }).then(response => {
+            setOpenEditStudentModal(false)
+            onUpdate()
+        })
     }
 
     const handleExpelButtonClick = () => {
@@ -117,7 +134,7 @@ export const Student = ({ fullName, id, gradebookNumber, groupId, expelReason: s
     }
 
     const handleEditButtonClick = () => {
-
+        setOpenEditStudentModal(true)
     }
 
     const handleTransferButtonClick = () => {
@@ -131,7 +148,7 @@ export const Student = ({ fullName, id, gradebookNumber, groupId, expelReason: s
             <Cancel htmlColor={theme.palette.error.main} classes={actionIconClasses} onClick={handleExpelButtonClick} />
         </DeanTooltip>,
         <DeanTooltip title="Редактировать информацию" key='edit'>
-            <Edit htmlColor={EDIT_BUTTON_COLOR} classes={actionIconClasses}/>
+            <Edit htmlColor={EDIT_BUTTON_COLOR} classes={actionIconClasses} onClick={handleEditButtonClick}/>
         </DeanTooltip>,
         <DeanTooltip title="Перевести в другую группу" key='transfer'>
             <ArrowForward htmlColor={theme.palette.primary.main} classes={actionIconClasses}/>
@@ -169,9 +186,11 @@ export const Student = ({ fullName, id, gradebookNumber, groupId, expelReason: s
                 closeButtonText="Отмена"
                 id="edit-student-modal"
                 onClose={() => setOpenEditStudentModal(false)}
-                onConfirm={}
+                onConfirm={handleStudentEdit}
             >
-                { ExpelReasonInput }
+                {createInputForName('first', newStudentName, handleNewNameChange)}
+                {createInputForName('last', newStudentLastName, handleNewLastNameChange)}
+                {createInputForName('middle', newStudentMiddleName, handleNewMiddleNameChange)}
             </DialogModal>
             <Snackbar
                 open={showSuccessStudentExpelSnackbar}

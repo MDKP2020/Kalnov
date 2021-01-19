@@ -109,6 +109,7 @@ export const Group = () => {
                         gradebookNumber={student['gradebook_number']}
                         groupId={id}
                         expelReason={student['expel_reason']}
+                        onUpdate={getStudents}
                     />
                 })}
             </div>
