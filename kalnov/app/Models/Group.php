@@ -28,9 +28,18 @@ class Group extends Model
             throw new GroupAlreadyExists();
 
         // Расчёт учебного года
+        $currentStudyYear = Carbon::now();
+        $currentStudyYear->month = 9;
+        $currentStudyYear->day = 1;
+
         $currentTime = Carbon::now();
-        $currentTime->day = 1;
-        $currentTime->month = 9;
+        $currentStudyYearEnd = Carbon::now();
+        $currentStudyYearEnd->day = 1;
+        $currentStudyYearEnd->month = 8;
+
+        if($currentTime->lt($currentStudyYearEnd))
+            $currentStudyYear->year -=1;
+
         $currentDate = $currentTime->format('Y-m-d');
 
         $yearRangeExists = YearRange::where('start', $currentDate)->exists();
