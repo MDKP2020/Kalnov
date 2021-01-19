@@ -52,7 +52,7 @@ Route::get('/years/{id}/next', function($id) {
 
 Route::post('/years', function(Request $request) {
     $request->validate([
-       'start'=> 'required'
+       'start'=> ['required', 'date']
     ]);
 
     return YearRange::store($request->input('start'));
