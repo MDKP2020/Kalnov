@@ -121,8 +121,8 @@ class Group extends Model
             $nextYearGroup->setAttribute('major_id', $this->getAttribute('major_id'));
 
             $nextStudyYear = StudyYear::
-                where('study_year_type', $this->getAttribute('study_year_type'))
-                ->where('study_year', $studyYear + 1);
+                where('type', $this->getAttribute('study_year_type'))
+                ->where('year', $studyYear + 1);
 
             if(!$nextStudyYear->exists()) {
                 StudyYear::store(
