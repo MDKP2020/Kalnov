@@ -86,7 +86,7 @@ Route::get('/groups', function(Request $request) {
 
     $validator = Validator::make($request->all(), [
         'year' => ['required', 'integer', 'min:1900'],
-        'studyYear' => ['required', 'integer', 'min:1900'],
+        'studyYear' => ['required', 'integer', 'min:1', 'max:4'],
         'studyYearType' => ['required', 'in:bachelor,master'],
     ]);
     throw_if($validator->fails(), new ValidationException($validator));
