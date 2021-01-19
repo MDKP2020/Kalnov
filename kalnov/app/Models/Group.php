@@ -6,6 +6,7 @@ use App\Exceptions\GroupAlreadyExists;
 use App\Exceptions\InvalidNewGroupData;
 use App\Exceptions\InvalidNextYearTransfer;
 use App\Exceptions\ResourceNotFound;
+use Composer\DependencyResolver\Rule;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
@@ -18,17 +19,18 @@ class Group extends Model
 {
     use HasFactory;
 
-    public static function newGroup($number, $studyYearType, $majorId, $yearRange) {
+    public static function newGroup($number, $studyYearType, $majorId, $yearRange, $studyYear) {
         $group = new Group();
 
         $year = Carbon::now();
         $year->year = $yearRange;
         $yearStart = YearRange::whereRaw('date_part(\'year\', start) = ?', [$yearRange])->first()->start;
 
-        $validator = Validator::make([ 'number' => $number, 'studyYearType' => $studyYearType, 'majorId' => $majorId ], [
+        $validator = Validator::make([ 'number' => $number, 'studyYearType' => $studyYearType, 'majorId' => $majorId , 'studyYear' => $studyYear], [
             'number' => ['required', 'integer'],
             'studyYearType' => ['required', 'in:bachelor,master'],
-            'majorId' => ['required', 'exists:majors,id']
+            'majorId' => ['required', 'exists:majors,id'],
+            'studyYear' => ['required', \Illuminate\Validation\Rule::in([1, 2, 3, 4])],
         ]);
 
         if($validator->fails())
@@ -39,6 +41,7 @@ class Group extends Model
                 ->where('major_id', '=', $majorId)
                 ->where('study_year_type', '=', $studyYearType)
                 ->where('year_range', '=', $yearStart)
+                ->where('study_year', '=', $studyYear)
                 ->exists();
 
         if($suchGroupExists)
