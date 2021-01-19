@@ -4,11 +4,13 @@ use App\Exceptions\InvalidNextYearTransfer;
 use App\Exceptions\InvalidStudentsEnrollmentData;
 use App\Exceptions\ResourceNotFound;
 use App\Models\Group;
+use App\Models\Student;
 use App\Models\StudyYear;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\YearRange;
 use App\Models\Major;
+use Illuminate\Validation\ValidationException;
 use function App\Helpers\Api\getGroup;
 use Illuminate\Support\Facades\Validator;
 
@@ -50,7 +52,7 @@ Route::get('/years/{id}/next', function($id) {
 
 Route::post('/years', function(Request $request) {
     $request->validate([
-       'start'=> 'required'
+       'start'=> ['required', 'date']
     ]);
 
     return YearRange::store($request->input('start'));
@@ -65,8 +67,11 @@ Route::get('/study_years', function(Request $request) {
     $type = $request->input('type');
     if($type == null)
         return StudyYear::all();
-    else
+    else {
+        $request->validate(['type' => 'in:bachelor,master']);
+
         return StudyYear::getAllByType($type);
+    }
 });
 
 Route::get('/study_years/types', function() {
@@ -79,10 +84,23 @@ Route::get('/groups', function(Request $request) {
     $studyYear = $request->input('studyYear');
     $studyYearType = $request->input('studyYearType');
 
+    $validator = Validator::make($request->all(), [
+        'year' => ['required', 'integer', 'min:1900'],
+        'studyYear' => ['required', 'integer', 'min:1900'],
+        'studyYearType' => ['required', 'in:bachelor,master'],
+    ]);
+    throw_if($validator->fails(), new ValidationException($validator));
+
     return Group::getAllByYearAndStudyYear($year, $studyYear, $studyYearType);
 });
 
 Route::post('/groups', function(Request $request) {
+    $request->validate( [
+        'number' => ['required', 'integer', 'min:1900'],
+        'majorId' => ['required', 'integer', 'exists:majors,id'],
+        'studyYearType' => ['required', 'in:bachelor,master'],
+    ]);
+
     return Group::newGroup(
         $request->input('number'),
         $request->input('studyYearType'),
