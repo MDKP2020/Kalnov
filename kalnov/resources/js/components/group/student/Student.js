@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-export const Student = ({ name, id }) => {
+export const Student = ({ name, id, gradebookNumber }) => {
     const theme = useTheme()
     const styles = useStyles(theme)
 
@@ -65,7 +65,7 @@ export const Student = ({ name, id }) => {
 
     return (
         <StudentCard
-            text={name}
+            text={`${name}, №${gradebookNumber}`}
             actions={actions}
         />
     )
