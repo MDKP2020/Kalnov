@@ -94,6 +94,10 @@ Route::post('/groups/{id}/nextYear', function(Request $request, $id) {
     // TODO валидация корректности времени перевода группы
 
     $group = Group::where('id', $id);
+
+    if(!$group->exists())
+        throw new ResourceNotFound('Группа не найдена');
+
     $group->moveToNextYear();
 });
 
