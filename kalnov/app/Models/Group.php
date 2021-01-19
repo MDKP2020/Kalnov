@@ -40,7 +40,7 @@ class Group extends Model
         if($currentTime->lt($currentStudyYearEnd))
             $currentStudyYear->year -=1;
 
-        $currentDate = $currentTime->format('Y-m-d');
+        $currentDate = $currentStudyYear->format('Y-m-d');
 
         $yearRangeExists = YearRange::where('start', $currentDate)->exists();
         if(!$yearRangeExists)
