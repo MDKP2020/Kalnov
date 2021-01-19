@@ -11,6 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class Group extends Model
@@ -27,7 +28,7 @@ class Group extends Model
         ]);
 
         if($validator->fails())
-            new InvalidNewGroupData($validator->errors());
+            throw new InvalidNewGroupData($validator->errors());
 
         $suchGroupExists = DB::table('groups')
                 ->where('number', '=', $number)
