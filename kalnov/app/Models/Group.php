@@ -135,7 +135,7 @@ class Group extends Model
             $nextYearGroup->setAttribute('year_range', $currentYear->next());
             $nextYearGroup->save();
 
-            $nextYearGroup->enrollAll($this->getStudents(null)->map(function($student) {
+            $nextYearGroup->enrollAll($this->getActiveStudents(null)->map(function($student) {
                 return $student->getAttribute('id');
             }));
 
@@ -147,6 +147,18 @@ class Group extends Model
 
     public function setLastExamDate($date) {
         $this->setAttribute('last_exam_date', $date);
+    }
+
+    public function getActiveStudents($name) {
+        $searchName = '';
+        if($name != null)
+            $searchName = $name;
+
+        return StudentRecord::join('students', 'students_to_groups.student_id', '=', 'students.id')
+            ->where('group_id', $this->getAttribute('id'))
+            ->where('expel_reason', null)
+            ->whereRaw('concat(last_name, \' \', "name", \' \', middle_name) ~* ?', [$searchName])
+            ->get();
     }
 
     public function getStudents(?string $name) {
