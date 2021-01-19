@@ -1,9 +1,10 @@
 import React, {useState} from 'react'
-import {useTheme, makeStyles, FormControl, TextField} from "@material-ui/core";
+import {useTheme, makeStyles, FormControl, TextField, SnackbarContent, Snackbar} from "@material-ui/core";
 import {ArrowForward, Cancel, Edit} from "@material-ui/icons";
 import {DeanTooltip} from "../../ui/DeanTooltip";
 import {StudentCard} from "./StudentCard";
 import axios from "../../../axios";
+import {DialogModal} from "../../ui/DialogModal";
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -32,12 +33,13 @@ const useStyles = makeStyles(theme => ({
     },
 }))
 
-export const Student = ({ name, id, gradebookNumber }) => {
+export const Student = ({ name, id, gradebookNumber, groupId }) => {
     const theme = useTheme()
     const styles = useStyles(theme)
 
     const [openExpelStudentModal, setOpenExpelStudentModal] = useState(false)
     const [expelReason, setExpelReason] = useState('')
+    const [showSuccessStudentExpelSnackbar, setShowSuccessStudentExpelSnackbar] = useState(false)
 
     const EDIT_BUTTON_COLOR = '#e6b710'
 
@@ -56,7 +58,12 @@ export const Student = ({ name, id, gradebookNumber }) => {
     )
 
     const handleStudentExpel = (studentId) => {
-        axios.post()
+        axios.patch(`/groups/${groupId}/expel`, {
+            reason: expelReason,
+            studentId: id
+        }).then(
+
+        )
     }
 
     const handleExpelButtonClick = () => {
@@ -75,7 +82,7 @@ export const Student = ({ name, id, gradebookNumber }) => {
 
     const actions = [
         <DeanTooltip title="Отчислить студента" key='expel'>
-            <Cancel htmlColor={theme.palette.error.main} classes={actionIconClasses} />
+            <Cancel htmlColor={theme.palette.error.main} classes={actionIconClasses} onClick={handleExpelButtonClick} />
         </DeanTooltip>,
         <DeanTooltip title="Редактировать информацию" key='edit'>
             <Edit htmlColor={EDIT_BUTTON_COLOR} classes={actionIconClasses}/>
@@ -86,9 +93,32 @@ export const Student = ({ name, id, gradebookNumber }) => {
     ]
 
     return (
-        <StudentCard
-            text={`${name}, №${gradebookNumber}`}
-            actions={actions}
-        />
+        <>
+            <StudentCard
+                text={`${name}, №${gradebookNumber}`}
+                actions={actions}
+            />
+            <DialogModal
+                open={openExpelStudentModal}
+                title={`Отчислить студента ${name}`}
+                text="Укажите причину отчисления студента"
+                confirmButtonText="Отчислить"
+                closeButtonText="Отмена"
+                id="expel-student-modal"
+                onClose={() => setOpenExpelStudentModal(false)}
+                onConfirm={handleStudentExpel}
+            >
+                { ExpelReasonInput }
+            </DialogModal>
+            <Snackbar
+                open={showSuccessStudentExpelSnackbar}
+                autoHideDuration={3500}
+                onClose={() => setShowSuccessStudentExpelSnackbar(false)}
+            >
+                <SnackbarContent
+                    message={`Студент ${name} был успешно отчислен по причине: ${expelReason}`}
+                />
+            </Snackbar>
+        </>
     )
 }
