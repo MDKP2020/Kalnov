@@ -34,6 +34,9 @@ export const theme = createMuiTheme({
                 borderRadius: '24px',
                 padding: '36px 32px',
             },
+            action: {
+                marginLeft: 0
+            },
             message: {
                 color: '#fff',
                 fontFamily: 'Roboto',
