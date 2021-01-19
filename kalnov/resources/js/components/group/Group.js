@@ -1,12 +1,13 @@
 import React, {useEffect, useState} from 'react'
 import axios from '../../axios'
-import {useLocation, useParams} from "react-router";
+import {useHistory, useLocation, useParams} from "react-router";
 import { KeyboardDatePicker } from '@material-ui/pickers'
 import {Student} from "./student/Student";
 import {useTheme, makeStyles, Snackbar, SnackbarContent} from "@material-ui/core";
 import {DeanButton} from "../ui/DeanButton";
 import {SearchBar} from "../ui/SearchBar";
 import {StudyTypes} from "../../types/studyTypes";
+import {ArrowUpward} from "@material-ui/icons";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -36,10 +37,26 @@ const useStyles = makeStyles(theme => ({
             marginTop: '2.5rem',
         },
     },
+    enrollStudentsLabelContainer: {
+        display: 'flex',
+        alignItems: 'center',
+        cursor: 'pointer',
+        marginTop: '1.5rem'
+    },
+    enrollStudentsIcon: {
+        fontSize: '2.4rem',
+        marginRight: '0.7rem'
+    },
+    enrollStudentsLabel: {
+        fontSize: '1.1rem'
+    }
 }))
 
 export const Group = () => {
-    const styles = useStyles(useTheme())
+    const theme = useTheme()
+    const styles = useStyles()
+
+    const history = useHistory()
 
     const { year, studyYear, studyYearType, number } = useParams()
     const [students, setStudents] = useState([])
@@ -80,13 +97,24 @@ export const Group = () => {
         </>
     )
 
+    const handleStudentsEnroll = () => {
+        history.push(`${history.location.pathname}/enroll?groupId=${id}`)
+    }
+
     const NoStudentsMessage = <span className={styles.noStudentsMessage}>В группе ещё нет студентов</span>
+    const NoStudentsContent = <div>
+        {NoStudentsMessage}
+        <div className={styles.enrollStudentsLabelContainer} onClick={handleStudentsEnroll}>
+            <ArrowUpward className={styles.enrollStudentsIcon} htmlColor={theme.palette.primary.main}/>
+            <span className={styles.enrollStudentsLabel}>Зачислить студентов</span>
+        </div>
+    </div>
 
     let studentsContent;
     if(!studentsAreLoaded)
         studentsContent = null
     else {
-        studentsContent = students.length > 0  ? StudentList : NoStudentsMessage
+        studentsContent = students.length > 0  ? StudentList : NoStudentsContent
     }
 
     const expelStudentsHandler = async () => {
