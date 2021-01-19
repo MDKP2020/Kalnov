@@ -177,7 +177,7 @@ class Group extends Model
     }
 
     public function expelStudent(string $reason, $studentId) {
-        StudentRecord::where('group_id', $this->getAttribute('id'))::where('student_id', $studentId)->update([
+        StudentRecord::where('group_id', $this->getAttribute('id'))->where('student_id', $studentId)->update([
             'expel_reason' => $reason
         ]);
     }
