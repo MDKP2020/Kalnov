@@ -20,16 +20,27 @@ class Student extends Model
             'middle_name' => $nameValidationRules
         ]);
 
+        $wasEdited = false;
+
         if($validator->fails())
             throw new BadRequestException($validator->errors());
 
-        if($firstName != null)
+        if($firstName != null) {
             $this->setAttribute('name', $firstName);
-        if($lastName != null)
-            $this->setAttribute('last_name', $lastName);
-        if($middleName != null)
-            $this->setAttribute('middle_name', $middleName);
+            $wasEdited = true;
+        }
 
-        $this->save();
+        if($lastName != null) {
+            $this->setAttribute('last_name', $lastName);
+            $wasEdited = true;
+        }
+
+        if($middleName != null) {
+            $this->setAttribute('middle_name', $middleName);
+            $wasEdited = true;
+        }
+
+        if($wasEdited)
+            $this->save();
     }
 }
