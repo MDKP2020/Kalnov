@@ -123,7 +123,7 @@ class Group extends Model
             $nextYearGroup = new Group();
 
             $nextYearGroup->setAttribute('previous_group_id', $this->id);
-            $nextYearGroup->setAttribute('number', $this->number);
+            $nextYearGroup->setAttribute('number', $this->getAttribute('number'));
             $nextYearGroup->setAttribute('study_year', $studyYear + 1);
             $nextYearGroup->setAttribute('study_year_type', $this->getAttribute('study_year_type'));
             $nextYearGroup->setAttribute('major_id', $this->getAttribute('major_id'));
@@ -140,7 +140,13 @@ class Group extends Model
             }
 
             $currentYear = YearRange::where('start', $this->getAttribute('year_range'))->first();
-            $nextYearGroup->setAttribute('year_range', $currentYear->next());
+            $nextYear = $currentYear->next();
+            $nextYearGroup->setAttribute('year_range', $nextYear);
+
+            $groupWasAlreadyMoved = Group::where('previous_group_id', $this->getAttribute('id'))->exists();
+
+            if($groupWasAlreadyMoved)
+                throw new GroupAlreadyExists();
 
             $nextYearGroup->save();
 
