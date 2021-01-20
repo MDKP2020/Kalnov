@@ -14,6 +14,6 @@ class InvalidNextYearTransfer extends Exception
      */
     public function render($request)
     {
-        return response(['error' => 'Cannot transfer group to next year'], 400);
+        return response(['error' => 'Cannot transfer group to next year: you can move group to next year only after the end of last exam'], 400);
     }
 }
