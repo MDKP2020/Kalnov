@@ -99,14 +99,16 @@ Route::post('/groups', function(Request $request) {
         'number' => ['required', 'integer'],
         'majorId' => ['required', 'integer', 'exists:majors,id'],
         'studyYearType' => ['required', 'in:bachelor,master'],
-        'yearRange' => ['required']
+        'yearRange' => ['required'],
+        'studyYear' => ['required', 'min:1', 'max:4'],
     ]);
 
     return Group::newGroup(
         $request->input('number'),
         $request->input('studyYearType'),
         $request->input('majorId'),
-        $request->input('yearRange')
+        $request->input('yearRange'),
+        $request->input('studyYear'),
     );
 });
 

@@ -81,6 +81,7 @@ export const NewGroup = () => {
             studyYearType: studyType,
             majorId: majors.find(maj => maj.acronym === major).id,
             yearRange: Number.parseInt(params.year),
+            studyYear: Number.parseInt(params.studyYear),
         }).then(() => {
             history.goBack()
         })
