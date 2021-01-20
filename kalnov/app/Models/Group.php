@@ -126,7 +126,8 @@ class Group extends Model
             throw new BadRequestException(new MessageBag([ 'last_exam_date' => 'Last exam date should not be null' ]));
 
         $lastExamDate = Carbon::createFromFormat('Y-m-d', $groupLastExamDate);
-        if($studyYear < 4 && time() < $lastExamDate->timestamp) {
+
+        if($studyYear < 4 && time() >= $lastExamDate->timestamp) {
             $nextYearGroup = new Group();
 
             $nextYearGroup->setAttribute('previous_group_id', $this->id);
