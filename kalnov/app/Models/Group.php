@@ -38,15 +38,7 @@ class Group extends Model
         if($validator->fails())
             throw new InvalidNewGroupData($validator->errors());
 
-        $suchGroupExists = DB::table('groups')
-                ->where('number', '=', $number)
-                ->where('major_id', '=', $majorId)
-                ->where('study_year_type', '=', $studyYearType)
-                ->where('year_range', '=', $yearStart)
-                ->where('study_year', '=', $studyYear)
-                ->exists();
-
-        if($suchGroupExists)
+        if(self::alreadyExists($number, $majorId, $studyYearType, $yearStart, $studyYear))
             throw new GroupAlreadyExists();
 
         // Расчёт учебного года
@@ -149,6 +141,7 @@ class Group extends Model
 
             $currentYear = YearRange::where('start', $this->getAttribute('year_range'))->first();
             $nextYearGroup->setAttribute('year_range', $currentYear->next());
+
             $nextYearGroup->save();
 
             $nextYearGroup->enrollAll($this->getActiveStudents(null)->map(function($student) {
@@ -271,5 +264,15 @@ class Group extends Model
             && $this->getAttribute('year_range') === $otherGroup->getAttribute('year_range')
             && $this->getAttribute('study_year') === $otherGroup->getAttribute('study_year')
         );
+    }
+
+    public static function alreadyExists($number, $major_id, $study_year_type, $year_range, $study_year) : bool {
+        return DB::table('groups')
+            ->where('number', '=', $number)
+            ->where('major_id', '=', $major_id)
+            ->where('study_year_type', '=', $study_year_type)
+            ->where('year_range', '=', $year_range)
+            ->where('study_year', '=', $study_year)
+            ->exists();
     }
 }
