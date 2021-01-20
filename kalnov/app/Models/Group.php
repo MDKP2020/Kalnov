@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Exceptions\BadRequestException;
 use App\Exceptions\GroupAlreadyExists;
 use App\Exceptions\InvalidNewGroupData;
 use App\Exceptions\InvalidNextYearTransfer;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\MessageBag;
 
 class Group extends Model
 {
@@ -117,8 +119,13 @@ class Group extends Model
 
     public function moveToNextYear() {
         $studyYear = $this->getAttribute('study_year');
-        // Невозможно осуществить перевести с последнего курса
-        $lastExamDate = Carbon::createFromFormat('Y-m-d', $this->getAttribute('last_exam_date'));
+
+        $groupLastExamDate = $this->getAttribute('last_exam_date');
+
+        if($groupLastExamDate == null)
+            throw new BadRequestException(new MessageBag([ 'last_exam_date' => 'Last exam date should not be null' ]));
+
+        $lastExamDate = Carbon::createFromFormat('Y-m-d', $groupLastExamDate);
         if($studyYear < 4 && time() < $lastExamDate->timestamp) {
             $nextYearGroup = new Group();
 
