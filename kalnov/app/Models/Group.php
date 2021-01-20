@@ -262,4 +262,14 @@ class Group extends Model
     public function getMajorName() : string {
         return DB::table('majors')->get('acronym')->where('id', $this->getAttribute('major_id'));
     }
+
+    public function equals(Group $otherGroup) {
+        return (
+            $this->getAttribute('number') === $otherGroup->getAttribute('number')
+            && $this->getAttribute('major_id') === $otherGroup->getAttribute('major_id')
+            && $this->getAttribute('study_year_type') === $otherGroup->getAttribute('study_year_type')
+            && $this->getAttribute('year_range') === $otherGroup->getAttribute('year_range')
+            && $this->getAttribute('study_year') === $otherGroup->getAttribute('study_year')
+        );
+    }
 }
