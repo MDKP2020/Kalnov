@@ -117,8 +117,10 @@ export const Student = ({ id, gradebookNumber, groupId, expelReason: studentExpe
         axios.get(`/groups/${groupId}/transferTo`).then(response => {
             setGroupsForTransferTo(response.data)
             const firstGroup = response.data[0]
-            const valueForGroupSelect = `${firstGroup.id}/${firstGroup.acronym}-${firstGroup['study_year']}${firstGroup.number}`
-            setNewGroup(valueForGroupSelect)
+            const firstGroupFullName = `${firstGroup.id}/${firstGroup.acronym}-${firstGroup['study_year']}${firstGroup.number}`
+            setNewGroup(firstGroupFullName)
+            setNewGroupId(firstGroup.id)
+            setNewGroupFullName(firstGroupFullName)
             setAreGroupsForTransferToLoaded(true)
         }).catch(error => {
             console.log(error)
@@ -192,9 +194,10 @@ export const Student = ({ id, gradebookNumber, groupId, expelReason: studentExpe
     }
 
     const handleStudentTransfer = () => {
+        console.log('New group ID: ', newGroupId)
         axios.patch(`/students/${id}/transfer`, {
             previousGroupId: groupId,
-            newGroupId
+            newGroupId: newGroupId,
         }).then(response => {
             setSuccessTransferSnackbarOpen(true)
             setOpenTransferStudentModal(false)
