@@ -1,15 +1,15 @@
 import React, {useEffect, useState} from 'react'
 import axios from '../../axios'
 import {useHistory, useLocation, useParams} from "react-router";
-import { KeyboardDatePicker, MuiPickersUtilsProvider } from '@material-ui/pickers'
+import { KeyboardDatePicker } from '@material-ui/pickers'
 import {Student} from "./student/Student";
 import {useTheme, makeStyles, Snackbar, SnackbarContent, CircularProgress} from "@material-ui/core";
 import {DeanButton} from "../ui/DeanButton";
 import {SearchBar} from "../ui/SearchBar";
 import {StudyTypes} from "../../types/studyTypes";
 import {ArrowUpward} from "@material-ui/icons";
-import DateFnsUtils from '@date-io/date-fns'
 import { format } from 'date-fns'
+import {PickerLocalization} from "../../utils/date/PickerLocalization";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -193,7 +193,7 @@ export const Group = () => {
             { studentsContent }
 
             <div className={styles.lastExamDateInputContainer}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils}>
+                <PickerLocalization>
                     <KeyboardDatePicker
                         disableToolbar
                         variant="inline"
@@ -204,7 +204,7 @@ export const Group = () => {
                         value={lastExamDate}
                         onChange={handleLastExamDateChange}
                     />
-                </MuiPickersUtilsProvider>
+                </PickerLocalization>
                 <DeanButton primary onClick={handleSetLastExamDate} className={styles.setLastExamDateButton}>Установить</DeanButton>
             </div>
             <div className={styles.actionsWithGroup}>
