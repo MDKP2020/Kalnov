@@ -5,7 +5,6 @@ namespace App\Models;
 use App\Exceptions\BadRequestException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\MessageBag;
 
@@ -52,25 +51,21 @@ class Student extends Model
             'newGroupId' => ['required', 'integer'],
         ]);
 
-        $previousGroup = Group::where('id', '=', $previousGroupId);
-        if (!($previousGroupId->exists()))
-            throw new BadRequestException(new MessageBag([error => "Group with id $previousGroupId does not exist"]));
+        $previousGroup = Group::findOrFail($previousGroupId);
 
-        $newGroup = Group::where('id', '=', $newGroupId);
-        if (!($newGroup->exists()))
-            throw new BadRequestException(new MessageBag([error => "Group with id $newGroupId does not exist"]));
+        $newGroup = Group::findOrFail($newGroupId);
 
         $canTransferToNewGroup =
-            $newGroup->get()->getAttribute('study_year') == $previousGroup->get()->getAttribute('study_year') &&
-            $newGroup->get()->getAttribute('year_range') == $previousGroup->get()->getAttribute('year_range') &&
-            $newGroup->get()->getAttribute('study_year_type') == $previousGroup->get()->getAttribute('study_year_type');
+            $newGroup->getAttribute('study_year') == $previousGroup->getAttribute('study_year') &&
+            $newGroup->getAttribute('year_range') == $previousGroup->getAttribute('year_range') &&
+            $newGroup->getAttribute('study_year_type') == $previousGroup->getAttribute('study_year_type');
 
         if ($validator->fails())
             throw new BadRequestException($validator->errors());
 
         if ($canTransferToNewGroup)
-            StudentRecord::where('student_id', '=', $this->getAttribute('student_id'))
-                ->where('group_id', '=', $previousGroupId)
+            StudentRecord::where('student_id', $this->getAttribute('id'))
+                ->where('group_id', $previousGroupId)
                 ->update(['group_id' => $newGroupId]);
         else
             throw new BadRequestException(new MessageBag([error => 'Can not transfer student to such group: not the same year range or study year']));
