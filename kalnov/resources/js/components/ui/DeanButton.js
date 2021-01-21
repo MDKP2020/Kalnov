@@ -7,7 +7,7 @@ const useStyles = makeStyles(theme => ({
         fontWeight: 700, // default font-weight
         maxWidth: '50%',
         textTransform: 'none',
-        fontSize: '1.1rem'
+        fontSize: '1.1rem',
     },
     primary: {
         backgroundColor: theme.palette.primary.main,
@@ -29,7 +29,7 @@ const useStyles = makeStyles(theme => ({
         '&:hover': {
             backgroundColor: theme.palette.background.dark
         }
-    }
+    },
 }))
 
 export const DeanButton = (props) => {
