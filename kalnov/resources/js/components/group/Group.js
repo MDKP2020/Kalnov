@@ -74,6 +74,8 @@ export const Group = () => {
     const [lastExamDate, setLastExamDate] = useState(`01.01.${Number.parseInt(year) + 1}`)
     const [successExpelSnackbarOpen, setSuccessExpelSnackbarOpen] = useState(false)
     const [failureExpelSnackbarOpen, setFailureExpelSnackbarOpen] = useState(false)
+    const [successSetLastExamDateSnackbarOpen, setSuccessSetLastExamDateSnackbarOpen] = useState(false)
+    const [failureNextYearMoveSnackbarOpen, setFailureNextYearMoveSnackbarOpen] = useState(false)
     const [newGroupId, setNewGroupId] = useState(null)
     const [studentNameQuery, setStudentNameQuery] = useState('')
 
@@ -158,6 +160,10 @@ export const Group = () => {
     const handleMoveToNextYear = () => {
         axios.post(`/groups/${id}/nextYear`).then(response => {
             setNewGroupId(response.data)
+        }).catch(error => {
+            if (error.data.message === 'Data missing') {
+                setFailureNextYearMoveSnackbarOpen(true)
+            }
         })
     }
 
@@ -172,7 +178,7 @@ export const Group = () => {
     const handleSetLastExamDate = () => {
         axios.post(`/groups/${id}/lastExamDate`, {
             lastExamDate: format(lastExamDate, 'yyyy-MM-dd')
-        }).then(response => console.log(response))
+        }).then(response => setSuccessSetLastExamDateSnackbarOpen(true)).catch(error => console.log(error))
     }
 
     return (
@@ -185,7 +191,7 @@ export const Group = () => {
                 <MuiPickersUtilsProvider utils={DateFnsUtils}>
                     <KeyboardDatePicker
                         disableToolbar
-                        variant='inline'
+                        variant="inline"
                         format="dd.MM.yyyy"
                         margin="normal"
                         id="last-exam-date"
@@ -206,23 +212,33 @@ export const Group = () => {
                     Отчислить студентов в связи с окончанием обучения
                 </DeanButton>
             </div>
+
             <Snackbar
                 open={successExpelSnackbarOpen}
                 autoHideDuration={2500}
                 onClose={() => setSuccessExpelSnackbarOpen(false)}
             >
-                <SnackbarContent message={'Студенты успешно отчислены'} />
+                <SnackbarContent message="Студенты успешно отчислены" />
             </Snackbar>
+
             <Snackbar
                 open={failureExpelSnackbarOpen}
                 autoHideDuration={2500}
                 onClose={() => setFailureExpelSnackbarOpen(false)}
             >
-                <SnackbarContent message={'При отчислении студентов возникла ошибка'} />
+                <SnackbarContent message="При отчислении студентов возникла ошибка" />
             </Snackbar>
 
             <Snackbar open={newGroupId !== null} autoHideDuration={10000} onClose={() => setNewGroupId(null)}>
-                <SnackbarContent message='Группа успешно переведена на следующий курс' action={ToNewGroupButton} />
+                <SnackbarContent message="Группа успешно переведена на следующий курс" action={ToNewGroupButton} />
+            </Snackbar>
+
+            <Snackbar open={successSetLastExamDateSnackbarOpen} autoHideDuration={3500} onClose={() => setSuccessSetLastExamDateSnackbarOpen(false)}>
+                <SnackbarContent message="Дата последнего экзамена успешно установлена" />
+            </Snackbar>
+
+            <Snackbar open={failureNextYearMoveSnackbarOpen} autoHideDuration={4500} onClose={() => setFailureNextYearMoveSnackbarOpen(false)}>
+                <SnackbarContent message="Установите дату последнего экзамена для перевода студентов на следующий курс!" />
             </Snackbar>
         </div>
     )
