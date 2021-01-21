@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react'
-import { Warning } from '@material-ui/icons'
 import {
     InputLabel,
     makeStyles,
@@ -40,7 +39,10 @@ const useStyles = makeStyles(theme => ({
     },
     majorNameLoadingProgress: {
         color: theme.palette.primary.main,
-    }
+    },
+    pageHeader: {
+        marginBottom: 0,
+    },
 }))
 
 export const NewGroup = () => {
@@ -101,7 +103,7 @@ export const NewGroup = () => {
 
     return (
         <div className={styles.container}>
-            <h2>Новая группа</h2>
+            <h2 className={styles.pageHeader}>Новая группа</h2>
             <FormControl className={styles.formControl}>
                 <TextField
                     label='Номер группы'
