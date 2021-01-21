@@ -7,6 +7,7 @@ use App\Exceptions\ResourceNotFound;
 use App\Models\Group;
 use App\Models\Student;
 use App\Models\StudyYear;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\YearRange;
@@ -185,14 +186,17 @@ Route::post('/groups/{id}/enrollment', function (Request $request, $id) {
     $group->enrollStudents($students);
 });
 
-Route::get('/groups/{id}', function (Request $request, $id) {
-    $group = Group::where('id', '=', $id);
+Route::get('/groups/{id}/transferTo', function (Request $request, $id) {
+    $group = Group::find($id);
     if ($group->exists()) {
-        $studyYear = $group->get()->getAttribute('study_year');
-        $yearRange = $group->get()->getAttribute('year_range')->start;
-        $studyYearType = $group->get()->getAttribute('study_year_type');
+        $studyYear = $group->getAttribute('study_year');
+        $yearRange = $group->getAttribute('year_range');
+        $yearFromRange = Carbon::createFromFormat('Y-m-d', $yearRange)->format('Y');
+        $studyYearType = $group->getAttribute('study_year_type');
 
-        return Group::findAllByYearAndStudyYear($yearRange, $studyYear, $studyYearType)->get();
+        return Group::findAllByYearAndStudyYear($yearFromRange, $studyYear, $studyYearType)
+            ->where('groups.id', '!=', $id)
+            ->get();
     } else
         throw new BadRequestException(new MessageBag([error => "Group with id $id does not exist"]));
 });
@@ -211,6 +215,15 @@ Route::patch('/students/{id}/edit', function(Request $request, $id) {
        $request->input('lastName'),
        $request->input('middleName'),
    );
+});
+
+Route::patch('/students/{id}/transfer', function(Request $request, $id) {
+    $student = Student::find($id);
+
+    $student->transferToGroup(
+        $request->input('previousGroupId'),
+        $request->input('newGroupId')
+    );
 });
 
 // API специальностей
