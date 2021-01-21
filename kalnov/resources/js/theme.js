@@ -42,6 +42,7 @@ export const theme = createMuiTheme({
                 fontFamily: 'Roboto',
                 fontWeight: 700,
                 fontSize: '1.5rem',
+                textAlign: 'center',
             },
         }
     }
