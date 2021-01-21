@@ -29,4 +29,8 @@ export const routes = [
         path: '/groups/:year/:studyType/:studyYear/:number',
         breadcrumb: match => `${match.params.studyYear}${match.params.number}`
     },
+    {
+        path: '/majors',
+        breadcrumb: match => 'Специальности'
+    }
 ]
