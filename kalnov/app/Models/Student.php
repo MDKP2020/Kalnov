@@ -53,11 +53,11 @@ class Student extends Model
         ]);
 
         $previousGroup = Group::where('id', '=', $previousGroupId);
-        if ($previousGroupId->exists())
+        if (!($previousGroupId->exists()))
             throw new BadRequestException(new MessageBag([error => "Group with id $previousGroupId does not exist"]));
 
         $newGroup = Group::where('id', '=', $newGroupId);
-        if ($newGroup->exists())
+        if (!($newGroup->exists()))
             throw new BadRequestException(new MessageBag([error => "Group with id $newGroupId does not exist"]));
 
         $canTransferToNewGroup =

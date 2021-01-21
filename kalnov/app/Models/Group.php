@@ -82,7 +82,7 @@ class Group extends Model
         }
     }
 
-    private static function findAllByYearAndStudyYear($year, $studyYear, $studyYearType) {
+    public static function findAllByYearAndStudyYear($year, $studyYear, $studyYearType) {
         return Group::
             join('majors', 'groups.major_id', '=', 'majors.id')
             ->select(
