@@ -1,5 +1,14 @@
 import React, {useState} from 'react'
-import {useTheme, makeStyles, FormControl, TextField, SnackbarContent, Snackbar} from "@material-ui/core";
+import {
+    useTheme,
+    makeStyles,
+    FormControl,
+    TextField,
+    SnackbarContent,
+    Snackbar,
+    Select,
+    MenuItem, InputLabel
+} from "@material-ui/core";
 import {ArrowForward, Cancel, Edit} from "@material-ui/icons";
 import {DeanTooltip} from "../../ui/DeanTooltip";
 import {StudentCard} from "./StudentCard";
@@ -44,7 +53,15 @@ const useStyles = makeStyles(theme => ({
     disabled: {
         pointerEvents: 'none',
         color: 'gray',
-    }
+    },
+    selectGroups: {
+        display: 'flex',
+        width: '80%',
+    },
+    formControl: {
+        display: 'flex',
+        width: '100%',
+    },
 }))
 
 export const Student = ({ id, gradebookNumber, groupId, expelReason: studentExpelReason, lastName, middleName, name, onUpdate }) => {
@@ -60,6 +77,16 @@ export const Student = ({ id, gradebookNumber, groupId, expelReason: studentExpe
     const [newStudentMiddleName, setNewStudentMiddleName] = useState(middleName)
     const [newStudentLastName, setNewStudentLastName] = useState(lastName)
 
+    const [openTransferStudentModal, setOpenTransferStudentModal] = useState(false)
+    const [newGroup, setNewGroup] = useState('')
+    const [newGroupFullName, setNewGroupFullName] = useState('')
+    const [newGroupId, setNewGroupId] = useState('')
+    const [successTransferSnackbarOpen, setSuccessTransferSnackbarOpen] = useState(false)
+    const [failureTransferSnackbarOpen, setFailureTransferSnackbarOpen] = useState(false)
+    const [failureTransferGroupsLoadSnackbarOpen, setFailureTransferGroupsLoadSnackbarOpen] = useState(false)
+    const [groupsForTransferTo, setGroupsForTransferTo] = useState([])
+    const [areGroupsForTransferToLoaded, setAreGroupsForTransferToLoaded] = useState(false)
+
     const EDIT_BUTTON_COLOR = '#e6b710'
 
     const fullName = `${lastName} ${name} ${middleName}`
@@ -74,6 +101,28 @@ export const Student = ({ id, gradebookNumber, groupId, expelReason: studentExpe
 
     const handleNewLastNameChange = (event) => {
         setNewStudentLastName(event.target.value)
+    }
+
+    const handleGroupChange = (event) => {
+        const groupIdAndName = event.target.value
+        const idAndNameBorderIndex = groupIdAndName.indexOf('/')
+        const groupId = groupIdAndName.slice(0, idAndNameBorderIndex)
+        const groupFullName = groupIdAndName.slice(idAndNameBorderIndex + 1)
+        setNewGroup(event.target.value)
+        setNewGroupId(groupId)
+        setNewGroupFullName(groupFullName)
+    }
+
+    const fetchGroupsForTransferTo = () => {
+        axios.get(`/groups/${groupId}/transferTo`).then(response => {
+            setGroupsForTransferTo(response.data)
+            const firstGroup = response.data[0]
+            const valueForGroupSelect = `${firstGroup.id}/${firstGroup.acronym}-${firstGroup['study_year']}${firstGroup.number}`
+            setNewGroup(valueForGroupSelect)
+            setAreGroupsForTransferToLoaded(true)
+        }).catch(error => {
+            console.log(error)
+        })
     }
 
     const createInputForName = (nameType, value, handler) => {
@@ -129,7 +178,7 @@ export const Student = ({ id, gradebookNumber, groupId, expelReason: studentExpe
         })
     }
 
-    const handleStudentEdit = (studentId) => {
+    const handleStudentEdit = () => {
         const newStudentData = {}
         if (newStudentName !== name) newStudentData.firstName = newStudentName
         if (newStudentLastName !== lastName) newStudentData.lastName = newStudentLastName
@@ -142,6 +191,19 @@ export const Student = ({ id, gradebookNumber, groupId, expelReason: studentExpe
         })
     }
 
+    const handleStudentTransfer = () => {
+        axios.patch(`/students/${id}/transfer`, {
+            previousGroupId: groupId,
+            newGroupId
+        }).then(response => {
+            setSuccessTransferSnackbarOpen(true)
+            setOpenTransferStudentModal(false)
+            onUpdate()
+        }).catch(error => {
+            setFailureTransferSnackbarOpen(true)
+        })
+    }
+
     const handleExpelButtonClick = () => {
         setOpenExpelStudentModal(true)
     }
@@ -150,7 +212,13 @@ export const Student = ({ id, gradebookNumber, groupId, expelReason: studentExpe
         setOpenEditStudentModal(true)
     }
 
-    const handleTransferButtonClick = () => {
+    const handleTransferButtonClick = async () => {
+        try {
+            await fetchGroupsForTransferTo()
+            setOpenTransferStudentModal(true)
+        } catch (error) {
+            setFailureTransferGroupsLoadSnackbarOpen(true)
+        }
 
     }
 
@@ -168,13 +236,33 @@ export const Student = ({ id, gradebookNumber, groupId, expelReason: studentExpe
         <DeanTooltip title="Редактировать информацию" key='edit'>
             <Edit htmlColor={EDIT_BUTTON_COLOR} classes={actionIconClasses} onClick={handleEditButtonClick}/>
         </DeanTooltip>,
-        <DeanTooltip title="Перевести в другую группу" key='transfer'>
+        <DeanTooltip title="Перевести в другую группу" key='transfer' onClick={handleTransferButtonClick}>
             <ArrowForward htmlColor={theme.palette.primary.main} classes={actionIconClasses}/>
         </DeanTooltip>
     ]
 
     let cardText = `${fullName}, №${gradebookNumber}`
     if (studentExpelReason) cardText += ` Отчислен по причине: "${studentExpelReason}"`
+
+    const GroupsSelect = (
+        <FormControl className={styles.formControl}>
+            <InputLabel htmlFor="select-new-group-for-student">Новая группа для перевода</InputLabel>
+            <Select
+                inputProps={{ id: 'select-new-group-for-student' }}
+                value={newGroup}
+                onChange={handleGroupChange}
+            >
+                {groupsForTransferTo.map(group => {
+                    const groupFullName = `${group.acronym}-${group['study_year']}${group.number}`
+                    return (
+                        <MenuItem key={group.id} value={`${group.id}/${groupFullName}`}>
+                            {groupFullName}
+                        </MenuItem>
+                    )
+                })}
+            </Select>
+        </FormControl>
+    )
 
     return (
         <>
@@ -202,7 +290,7 @@ export const Student = ({ id, gradebookNumber, groupId, expelReason: studentExpe
                 text="Введите новые данные студента:"
                 confirmButtonText="Сохранить"
                 closeButtonText="Отмена"
-                id="edit-student-modal"
+                id={`edit-student-${id}-modal`}
                 onClose={() => setOpenEditStudentModal(false)}
                 onConfirm={handleStudentEdit}
             >
@@ -212,6 +300,23 @@ export const Student = ({ id, gradebookNumber, groupId, expelReason: studentExpe
                     {createInputForName('middle', newStudentMiddleName, handleNewMiddleNameChange)}
                 </div>
             </DialogModal>
+            <DialogModal
+                maxWidth='md'
+                fullWidth
+                open={openTransferStudentModal}
+                title={`Перевести студента ${fullName} в другую группу`}
+                text="Выберите новую группу:"
+                confirmButtonText="Перевести"
+                closeButtonText="Отмена"
+                id={`transfer-student-${id}-to-new-group`}
+                onClose={() => setOpenTransferStudentModal(false)}
+                onConfirm={handleStudentTransfer}
+            >
+                <div className={styles.selectGroups}>
+                    {GroupsSelect}
+                </div>
+            </DialogModal>
+
             <Snackbar
                 open={showSuccessStudentExpelSnackbar}
                 autoHideDuration={3500}
@@ -220,6 +325,18 @@ export const Student = ({ id, gradebookNumber, groupId, expelReason: studentExpe
                 <SnackbarContent
                     message={`Студент ${fullName} был успешно отчислен по причине: ${expelReason}`}
                 />
+            </Snackbar>
+
+            <Snackbar open={failureTransferGroupsLoadSnackbarOpen} autoHideDuration={4500} onClose={() => setFailureTransferGroupsLoadSnackbarOpen(false)}>
+                <SnackbarContent message="При загрузке групп для перевода произошла ошибка" />
+            </Snackbar>
+
+            <Snackbar open={successTransferSnackbarOpen} autoHideDuration={3500} onClose={() => setSuccessTransferSnackbarOpen(false)}>
+                <SnackbarContent message={`Студент ${fullName} был успешно переведён в группу ${newGroupFullName}`} />
+            </Snackbar>
+
+            <Snackbar open={failureTransferSnackbarOpen} autoHideDuration={4500} onClose={() => setFailureTransferSnackbarOpen(false)}>
+                <SnackbarContent message="При переводе студента в другую группу произошла ошибка" />
             </Snackbar>
         </>
     )
