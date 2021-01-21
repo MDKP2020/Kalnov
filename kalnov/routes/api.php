@@ -204,3 +204,7 @@ Route::patch('/students/{id}/edit', function(Request $request, $id) {
 Route::get('/majors', function() {
     return Major::getAll();
 });
+
+Route::post('/majors', function(Request $request) {
+    Major::newMajor($request->input('name'), $request->input('acronym'));
+});
