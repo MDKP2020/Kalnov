@@ -1,5 +1,6 @@
 <?php
 
+use App\Exceptions\BadRequestException;
 use App\Exceptions\InvalidNextYearTransfer;
 use App\Exceptions\InvalidStudentsEnrollmentData;
 use App\Exceptions\ResourceNotFound;
@@ -10,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Models\YearRange;
 use App\Models\Major;
+use Illuminate\Support\MessageBag;
 use Illuminate\Validation\ValidationException;
 use function App\Helpers\Api\getGroup;
 use Illuminate\Support\Facades\Validator;
@@ -181,6 +183,18 @@ Route::post('/groups/{id}/enrollment', function (Request $request, $id) {
     $students = $request['students'];
 
     $group->enrollStudents($students);
+});
+
+Route::get('/groups/{id}', function (Request $request, $id) {
+    $group = Group::where('id', '=', $id);
+    if ($group->exists()) {
+        $studyYear = $group->get()->getAttribute('study_year');
+        $yearRange = $group->get()->getAttribute('year_range')->start;
+        $studyYearType = $group->get()->getAttribute('study_year_type');
+
+        return Group::findAllByYearAndStudyYear($yearRange, $studyYear, $studyYearType)->get();
+    } else
+        throw new BadRequestException(new MessageBag([error => "Group with id $id does not exist"]));
 });
 
 // API студентов
