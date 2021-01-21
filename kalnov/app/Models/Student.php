@@ -62,7 +62,8 @@ class Student extends Model
 
         $canTransferToNewGroup =
             $newGroup->get()->getAttribute('study_year') == $previousGroup->get()->getAttribute('study_year') &&
-            $newGroup->get()->getAttribute('year_range') == $previousGroup->get()->getAttribute('year_range');
+            $newGroup->get()->getAttribute('year_range') == $previousGroup->get()->getAttribute('year_range') &&
+            $newGroup->get()->getAttribute('study_year_type') == $previousGroup->get()->getAttribute('study_year_type');
 
         if ($validator->fails())
             throw new BadRequestException($validator->errors());
