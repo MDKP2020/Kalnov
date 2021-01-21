@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Exceptions\BadRequestException;
 use App\Exceptions\GroupAlreadyExists;
 use App\Exceptions\InvalidNewGroupData;
 use App\Exceptions\InvalidNextYearTransfer;
@@ -14,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\MessageBag;
 
 class Group extends Model
 {
@@ -36,15 +38,7 @@ class Group extends Model
         if($validator->fails())
             throw new InvalidNewGroupData($validator->errors());
 
-        $suchGroupExists = DB::table('groups')
-                ->where('number', '=', $number)
-                ->where('major_id', '=', $majorId)
-                ->where('study_year_type', '=', $studyYearType)
-                ->where('year_range', '=', $yearStart)
-                ->where('study_year', '=', $studyYear)
-                ->exists();
-
-        if($suchGroupExists)
+        if(self::alreadyExists($number, $majorId, $studyYearType, $yearStart, $studyYear))
             throw new GroupAlreadyExists();
 
         // Расчёт учебного года
@@ -117,13 +111,19 @@ class Group extends Model
 
     public function moveToNextYear() {
         $studyYear = $this->getAttribute('study_year');
-        // Невозможно осуществить перевести с последнего курса
-        $lastExamDate = Carbon::createFromFormat('Y-m-d', $this->getAttribute('last_exam_date'));
-        if($studyYear < 4 && time() < $lastExamDate->timestamp) {
+
+        $groupLastExamDate = $this->getAttribute('last_exam_date');
+
+        if($groupLastExamDate == null)
+            throw new BadRequestException(new MessageBag([ 'last_exam_date' => 'Last exam date should not be null' ]));
+
+        $lastExamDate = Carbon::createFromFormat('Y-m-d', $groupLastExamDate);
+
+        if($studyYear < 4 && time() >= $lastExamDate->timestamp) {
             $nextYearGroup = new Group();
 
             $nextYearGroup->setAttribute('previous_group_id', $this->id);
-            $nextYearGroup->setAttribute('number', $this->number);
+            $nextYearGroup->setAttribute('number', $this->getAttribute('number'));
             $nextYearGroup->setAttribute('study_year', $studyYear + 1);
             $nextYearGroup->setAttribute('study_year_type', $this->getAttribute('study_year_type'));
             $nextYearGroup->setAttribute('major_id', $this->getAttribute('major_id'));
@@ -140,7 +140,14 @@ class Group extends Model
             }
 
             $currentYear = YearRange::where('start', $this->getAttribute('year_range'))->first();
-            $nextYearGroup->setAttribute('year_range', $currentYear->next());
+            $nextYear = $currentYear->next();
+            $nextYearGroup->setAttribute('year_range', $nextYear);
+
+            $groupWasAlreadyMoved = Group::where('previous_group_id', $this->getAttribute('id'))->exists();
+
+            if($groupWasAlreadyMoved)
+                throw new GroupAlreadyExists();
+
             $nextYearGroup->save();
 
             $nextYearGroup->enrollAll($this->getActiveStudents(null)->map(function($student) {
@@ -253,5 +260,25 @@ class Group extends Model
 
     public function getMajorName() : string {
         return DB::table('majors')->get('acronym')->where('id', $this->getAttribute('major_id'));
+    }
+
+    public function equals(Group $otherGroup) {
+        return (
+            $this->getAttribute('number') === $otherGroup->getAttribute('number')
+            && $this->getAttribute('major_id') === $otherGroup->getAttribute('major_id')
+            && $this->getAttribute('study_year_type') === $otherGroup->getAttribute('study_year_type')
+            && $this->getAttribute('year_range') === $otherGroup->getAttribute('year_range')
+            && $this->getAttribute('study_year') === $otherGroup->getAttribute('study_year')
+        );
+    }
+
+    public static function alreadyExists($number, $major_id, $study_year_type, $year_range, $study_year) : bool {
+        return DB::table('groups')
+            ->where('number', '=', $number)
+            ->where('major_id', '=', $major_id)
+            ->where('study_year_type', '=', $study_year_type)
+            ->where('year_range', '=', $year_range)
+            ->where('study_year', '=', $study_year)
+            ->exists();
     }
 }

@@ -11,7 +11,7 @@ import {StudentsEnrollment} from "./StudentsEnrollment";
 
 const useStyles = makeStyles((theme) => ({
     container: {
-        padding: "20px 60px 0"
+        padding: "20px 60px"
     },
 }))
 
