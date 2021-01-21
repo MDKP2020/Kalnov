@@ -32,11 +32,6 @@ const useStyles = makeStyles(theme => ({
         },
         width: '37%',
     },
-    selectComponent: {
-        '&:focus': {
-            backgroundColor: 'inherit',
-        },
-    },
     majorNameLoadingProgress: {
         color: theme.palette.primary.main,
     },
@@ -119,7 +114,6 @@ export const NewGroup = () => {
                     inputProps={{ id: 'selectMajor' }}
                     value={major}
                     onChange={majorHandler}
-                    classes={{ select: styles.selectComponent }}
                     renderValue={renderMajorSelectValue}
                 >
                     {majors.map(major => (

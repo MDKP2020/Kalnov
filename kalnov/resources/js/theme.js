@@ -44,6 +44,13 @@ export const theme = createMuiTheme({
                 fontSize: '1.5rem',
                 textAlign: 'center',
             },
-        }
-    }
+        },
+        MuiSelect: {
+            select: {
+                '&:focus': {
+                    backgroundColor: 'inherit',
+                }
+            }
+        },
+    },
 })
