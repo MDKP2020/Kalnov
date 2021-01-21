@@ -76,6 +76,7 @@ export const Group = () => {
     const [failureExpelSnackbarOpen, setFailureExpelSnackbarOpen] = useState(false)
     const [successSetLastExamDateSnackbarOpen, setSuccessSetLastExamDateSnackbarOpen] = useState(false)
     const [failureNextYearMoveSnackbarOpen, setFailureNextYearMoveSnackbarOpen] = useState(false)
+    const [failureNextYearMoveError, setFailureNextYearMoveError] = useState('')
     const [newGroupId, setNewGroupId] = useState(null)
     const [studentNameQuery, setStudentNameQuery] = useState('')
 
@@ -161,9 +162,13 @@ export const Group = () => {
         axios.post(`/groups/${id}/nextYear`).then(response => {
             setNewGroupId(response.data)
         }).catch(error => {
-            if (error.data.message === 'Data missing') {
-                setFailureNextYearMoveSnackbarOpen(true)
+            if (error.response.status === 400 && error.response.data.errors?.['last_exam_date']) {
+                setFailureNextYearMoveError('Не установлена дата последнего экзамена')
             }
+            if (error.response.status === 400 && error.response.data.error.includes('only after the end of last exam')) {
+                setFailureNextYearMoveError('Невозможно перевести студентов, пока не наступит дата последнего экзамена')
+            }
+            setFailureNextYearMoveSnackbarOpen(true)
         })
     }
 
@@ -238,7 +243,7 @@ export const Group = () => {
             </Snackbar>
 
             <Snackbar open={failureNextYearMoveSnackbarOpen} autoHideDuration={4500} onClose={() => setFailureNextYearMoveSnackbarOpen(false)}>
-                <SnackbarContent message="Установите дату последнего экзамена для перевода студентов на следующий курс!" />
+                <SnackbarContent message={failureNextYearMoveError} />
             </Snackbar>
         </div>
     )
