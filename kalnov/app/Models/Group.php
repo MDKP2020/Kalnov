@@ -196,9 +196,16 @@ class Group extends Model
 
     // Зачисление списка студентов
     private function enrollAll($studentsIds) {
-        DB::table('students_to_groups')->insert(
-            $studentsIds->map(function($studentId) {
-                return ['group_id' => $this->id, 'student_id' => $studentId];
+        $now = Carbon::now('utc')->toDateTimeString();
+
+        StudentRecord::insert(
+            $studentsIds->map(function($studentId) use ($now) {
+                return [
+                    'group_id' => $this->id,
+                    'student_id' => $studentId,
+                    'created_at' => $now,
+                    'updated_at' => $now
+                ];
             })->toArray()
         );
     }
@@ -243,12 +250,16 @@ class Group extends Model
         DB::transaction(function() use ($students) {
             $studentsIds = new Collection();
 
+            $now = Carbon::now('utc')->toDateTimeString();
+
             foreach ($students as $student) {
                 $studentId = Student::insertGetId([
                     'name' => $student['name'],
                     'middle_name' => $student['middleName'],
                     'last_name' => $student['lastName'],
-                    'gradebook_number' => $student['gradebookNumber']
+                    'gradebook_number' => $student['gradebookNumber'],
+                    'created_at' => $now,
+                    'updated_at' => $now
                 ]);
 
                 $studentsIds->add($studentId);
