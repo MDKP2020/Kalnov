@@ -6,7 +6,7 @@ import {
     Select,
     TextField,
     FormControl,
-    CircularProgress,
+    CircularProgress, Snackbar, SnackbarContent,
 } from "@material-ui/core";
 import { DeanButton } from "../ui/DeanButton";
 import axios from "../../axios";
@@ -38,6 +38,9 @@ const useStyles = makeStyles(theme => ({
     pageHeader: {
         marginBottom: 0,
     },
+    groupNumberErrorSnackbar: {
+        backgroundColor: theme.palette.warning.main
+    }
 }))
 
 export const NewGroup = () => {
@@ -57,6 +60,7 @@ export const NewGroup = () => {
     const [major, setMajor] = useState('ПрИн')
     const [majors, setMajors] = useState([])
     const [majorsAreLoaded, setMajorsLoaded] = useState(false)
+    const [groupNumberErrorSnackbarOpen, setGroupNumberErrorSnackbarOpen] = useState(false)
 
     const styles = useStyles()
 
@@ -81,6 +85,9 @@ export const NewGroup = () => {
             studyYear: Number.parseInt(params.studyYear),
         }).then(() => {
             history.goBack()
+        }).catch(error => {
+            if(error.response.data.errors.number)
+                setGroupNumberErrorSnackbarOpen(true)
         })
     }
 
@@ -127,6 +134,10 @@ export const NewGroup = () => {
                 <DeanButton primary onClick={groupCreationHandler}>Создать группу</DeanButton>
                 <DeanWarning inline text="Группа будет создана на первом курсе в текущем учебном году" />
             </div>
+
+            <Snackbar autoHideDuration={4500} open={groupNumberErrorSnackbarOpen} onClose={() => setGroupNumberErrorSnackbarOpen(false)}>
+                <SnackbarContent classes={{ root: styles.groupNumberErrorSnackbar }} message='Номер группы должен быть числом' />
+            </Snackbar>
         </div>
     )
 }
