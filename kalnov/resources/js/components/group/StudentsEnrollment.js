@@ -151,7 +151,14 @@ export const StudentsEnrollment = (props) => {
                         error={!isGradebookNumberValid}
                     />
                 </div>
-                <DeanButton primary onClick={handleStudentAdd} className={styles.addStudentButton} >Добавить</DeanButton>
+                <DeanButton
+                    primary
+                    disabled={!isGradebookNumberValid || studentNameErrorMessage !== '' || gradebookNumber === '' || newStudent === ''}
+                    onClick={handleStudentAdd}
+                    className={styles.addStudentButton}
+                >
+                    Добавить
+                </DeanButton>
             </div>
             <div className={styles.studentsList}>
                 {newStudents.map(
