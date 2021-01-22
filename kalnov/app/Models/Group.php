@@ -184,7 +184,7 @@ class Group extends Model
         return StudentRecord::join('students', 'students_to_groups.student_id', '=', 'students.id')
             ->where('group_id', $this->getAttribute('id'))
             ->whereRaw('concat(last_name, \' \', "name", \' \', middle_name) ~* ?', [$searchName])
-            ->orderBy('concat(last_name, \' \', "name", \' \', middle_name')
+            ->orderByRaw('concat(last_name, \' \', "name", \' \', middle_name)')
             ->get();
     }
 
