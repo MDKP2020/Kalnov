@@ -50,9 +50,11 @@ export const StudentsEnrollment = (props) => {
 
     const groupId = new URLSearchParams(useLocation().search).get('groupId')
 
-    useEffect(() => {
+    const fetchExistingStudents = () => {
         axios.get(`/groups/${groupId}/students`).then(response => setStudents(response.data))
-    }, [])
+    }
+
+    useEffect(fetchExistingStudents, [])
 
     const [students, setStudents] = useState([])
     const [newStudent, setNewStudent] = useState('')
@@ -116,8 +118,12 @@ export const StudentsEnrollment = (props) => {
                 gradebookNumber: student.gradebookNumber
             }))
         }).then(response => {
-            if(response.status === 200)
+            if(response.status === 200) {
                 setShowSuccessEnrollmentSnackbar(true)
+                setNewStudents([])
+                fetchExistingStudents()
+            }
+
         })
     }
 
