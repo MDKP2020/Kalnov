@@ -39,6 +39,9 @@ const useStyles = makeStyles(theme => ({
     },
     toGroupListButton: {
         maxWidth: '100%'
+    },
+    enrollErrorSnackbar: {
+        backgroundColor: theme.palette.error.dark
     }
 }))
 
@@ -61,6 +64,7 @@ export const StudentsEnrollment = (props) => {
     const [newStudents, setNewStudents] = useState([])
     const [studentNameErrorMessage, setStudentNameErrorMessage] = useState('')
     const [showSuccessEnrollmentSnackbar, setShowSuccessEnrollmentSnackbar] = useState(false)
+    const [enrollErrorSnackbarOpen, setEnrollErrorSnackbarOpen] = useState(false)
 
     const [gradebookNumber, setGradebookNumber] = useState('')
     const [isGradebookNumberValid, setGradebookNumberValid] = useState(true)
@@ -123,7 +127,10 @@ export const StudentsEnrollment = (props) => {
                 setNewStudents([])
                 fetchExistingStudents()
             }
-
+        }).catch(error => {
+            if(error.response.data.message.includes('SQLSTATE[23505]')) {
+                setEnrollErrorSnackbarOpen(true)
+            }
         })
     }
 
@@ -193,6 +200,14 @@ export const StudentsEnrollment = (props) => {
 
             <Snackbar open={showSuccessEnrollmentSnackbar} autoHideDuration={10000} onClose={() => setShowSuccessEnrollmentSnackbar(false)}>
                 <SnackbarContent message='Студенты успешно зачислены' action={ToGroupListButton} />
+            </Snackbar>
+
+            <Snackbar open={showSuccessEnrollmentSnackbar} autoHideDuration={10000} onClose={() => setShowSuccessEnrollmentSnackbar(false)}>
+                <SnackbarContent message='Студенты успешно зачислены' action={ToGroupListButton} />
+            </Snackbar>
+
+            <Snackbar open={enrollErrorSnackbarOpen} autoHideDuration={4500} onClose={() => setEnrollErrorSnackbarOpen(false)}>
+                <SnackbarContent message='Номера зачётных книжек должны быть уникальными' classes={{ root: styles.enrollErrorSnackbar}} />
             </Snackbar>
         </div>
     )
