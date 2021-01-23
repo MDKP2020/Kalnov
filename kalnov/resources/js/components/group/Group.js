@@ -10,6 +10,7 @@ import {StudyTypes} from "../../types/studyTypes";
 import {ArrowUpward} from "@material-ui/icons";
 import { format } from 'date-fns'
 import {PickerLocalization} from "../../utils/date/PickerLocalization";
+import {useDefaultStyles} from "../../hooks/useDefaultStyles";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -65,6 +66,7 @@ const useStyles = makeStyles(theme => ({
 export const Group = () => {
     const theme = useTheme()
     const styles = useStyles()
+    const defaultStyles = useDefaultStyles()
 
     const history = useHistory()
 
@@ -75,6 +77,7 @@ export const Group = () => {
     const [successExpelSnackbarOpen, setSuccessExpelSnackbarOpen] = useState(false)
     const [failureExpelSnackbarOpen, setFailureExpelSnackbarOpen] = useState(false)
     const [successSetLastExamDateSnackbarOpen, setSuccessSetLastExamDateSnackbarOpen] = useState(false)
+    const [failureSetLastExamDateSnackbarOpen, setFailureSetLastExamDateSnackbarOpen] = useState(false)
     const [failureNextYearMoveSnackbarOpen, setFailureNextYearMoveSnackbarOpen] = useState(false)
     const [failureNextYearMoveError, setFailureNextYearMoveError] = useState('')
     const [newGroupId, setNewGroupId] = useState(null)
@@ -183,7 +186,12 @@ export const Group = () => {
     const handleSetLastExamDate = () => {
         axios.post(`/groups/${id}/lastExamDate`, {
             lastExamDate: format(lastExamDate, 'yyyy-MM-dd')
-        }).then(response => setSuccessSetLastExamDateSnackbarOpen(true)).catch(error => console.log(error))
+        }).then(response => setSuccessSetLastExamDateSnackbarOpen(true))
+          .catch(error => {
+            if (error.response.data.errors?.['last_exam_year']?.[0].includes('should be equal to last year of year range')) {
+                setFailureSetLastExamDateSnackbarOpen(true)
+            }
+        })
     }
 
     return (
@@ -244,6 +252,13 @@ export const Group = () => {
 
             <Snackbar open={failureNextYearMoveSnackbarOpen} autoHideDuration={4500} onClose={() => setFailureNextYearMoveSnackbarOpen(false)}>
                 <SnackbarContent message={failureNextYearMoveError} />
+            </Snackbar>
+
+            <Snackbar open={failureSetLastExamDateSnackbarOpen} autoHideDuration={4500} onClose={() => setFailureSetLastExamDateSnackbarOpen(false)}>
+                <SnackbarContent
+                    message="Год даты последнего экзамена должен совпадать с последним годом текущего учебного года"
+                    classes={{ root: defaultStyles.errorSnackbar}}
+                />
             </Snackbar>
         </div>
     )
