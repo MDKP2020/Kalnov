@@ -73,7 +73,7 @@ export const Group = () => {
     const { year, studyYear, studyYearType, number } = useParams()
     const [students, setStudents] = useState([])
     const [studentsAreLoaded, setStudentsAreLoaded] = useState(false)
-    const [lastExamDate, setLastExamDate] = useState(`01.01.${Number.parseInt(year) + 1}`)
+    const [lastExamDate, setLastExamDate] = useState(new Date(Number.parseInt(year) + 1, 0, 1))
     const [successExpelSnackbarOpen, setSuccessExpelSnackbarOpen] = useState(false)
     const [failureExpelSnackbarOpen, setFailureExpelSnackbarOpen] = useState(false)
     const [successSetLastExamDateSnackbarOpen, setSuccessSetLastExamDateSnackbarOpen] = useState(false)
