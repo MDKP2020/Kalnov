@@ -168,7 +168,8 @@ class Group extends Model
         if ($newLastExamDateYear == $yearRangeEnd)
             $this->setAttribute('last_exam_date', $date);
         else
-            throw new BadRequestException(new MessageBag(['error', 'Year of last exam date should be equal to last year of year range']));
+            throw new BadRequestException(
+                new MessageBag(['last_exam_year' => 'Year of last exam date should be equal to last year of year range']));
     }
 
     public function getActiveStudents($name) {
