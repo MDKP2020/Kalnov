@@ -168,7 +168,7 @@ export const Group = () => {
             if (error.response.status === 400 && error.response.data.errors?.['last_exam_date']) {
                 setFailureNextYearMoveError('Не установлена дата последнего экзамена')
             }
-            if (error.response.status === 400 && error.response.data.error.includes('only after the end of last exam')) {
+            if (error.response.status === 400 && error.response.data.error?.includes('only after the end of last exam')) {
                 setFailureNextYearMoveError('Невозможно перевести студентов, пока не наступит дата последнего экзамена')
             }
             setFailureNextYearMoveSnackbarOpen(true)
@@ -239,7 +239,7 @@ export const Group = () => {
                 autoHideDuration={2500}
                 onClose={() => setFailureExpelSnackbarOpen(false)}
             >
-                <SnackbarContent message="При отчислении студентов возникла ошибка" />
+                <SnackbarContent message="При отчислении студентов возникла ошибка" classes={{ root: defaultStyles.errorSnackbar}} />
             </Snackbar>
 
             <Snackbar open={newGroupId !== null} autoHideDuration={10000} onClose={() => setNewGroupId(null)}>
@@ -251,7 +251,7 @@ export const Group = () => {
             </Snackbar>
 
             <Snackbar open={failureNextYearMoveSnackbarOpen} autoHideDuration={4500} onClose={() => setFailureNextYearMoveSnackbarOpen(false)}>
-                <SnackbarContent message={failureNextYearMoveError} />
+                <SnackbarContent message={failureNextYearMoveError} classes={{ root: defaultStyles.errorSnackbar}} />
             </Snackbar>
 
             <Snackbar open={failureSetLastExamDateSnackbarOpen} autoHideDuration={4500} onClose={() => setFailureSetLastExamDateSnackbarOpen(false)}>
