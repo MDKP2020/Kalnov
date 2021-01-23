@@ -9,6 +9,7 @@ import {StudentCard} from "./student/StudentCard";
 import {Cancel, Warning} from "@material-ui/icons";
 import {DeanWarning} from "../ui/DeanWarning";
 import {validateGradebookNumber} from "../../utils/students/validateGradebookNumber";
+import {useDefaultStyles} from "../../hooks/useDefaultStyles";
 
 const useStyles = makeStyles(theme => ({
     textField: {
@@ -40,15 +41,13 @@ const useStyles = makeStyles(theme => ({
     toGroupListButton: {
         maxWidth: '100%'
     },
-    enrollErrorSnackbar: {
-        backgroundColor: theme.palette.error.dark
-    }
 }))
 
 export const StudentsEnrollment = (props) => {
 
     const theme = useTheme()
     const styles = useStyles()
+    const defaultStyles = useDefaultStyles()
     const history = useHistory()
 
     const groupId = new URLSearchParams(useLocation().search).get('groupId')
@@ -207,7 +206,7 @@ export const StudentsEnrollment = (props) => {
             </Snackbar>
 
             <Snackbar open={enrollErrorSnackbarOpen} autoHideDuration={4500} onClose={() => setEnrollErrorSnackbarOpen(false)}>
-                <SnackbarContent message='Номера зачётных книжек должны быть уникальными' classes={{ root: styles.enrollErrorSnackbar}} />
+                <SnackbarContent message='Номера зачётных книжек должны быть уникальными' classes={{ root: defaultStyles.errorSnackbar}} />
             </Snackbar>
         </div>
     )
