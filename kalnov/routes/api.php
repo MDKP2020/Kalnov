@@ -198,7 +198,7 @@ Route::get('/groups/{id}/transferTo', function (Request $request, $id) {
             ->where('groups.id', '!=', $id)
             ->get();
     } else
-        throw new BadRequestException(new MessageBag([error => "Group with id $id does not exist"]));
+        throw new BadRequestException(new MessageBag(['error' => "Group with id $id does not exist"]));
 });
 
 // API студентов
