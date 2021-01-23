@@ -194,7 +194,7 @@ export const StudentsEnrollment = (props) => {
             </div>
 
             <div>
-                <DeanButton primary onClick={handleStudentsEnroll}>Зачислить студентов</DeanButton>
+                <DeanButton disabled={newStudents.length === 0} primary onClick={handleStudentsEnroll}>Зачислить студентов</DeanButton>
                 <DeanWarning text="Студенты будут зачислены в выбранную группу" />
             </div>
 
