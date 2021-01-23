@@ -161,7 +161,14 @@ class Group extends Model
     }
 
     public function setLastExamDate($date) {
-        $this->setAttribute('last_exam_date', $date);
+        $yearRange = $this->getAttribute('year_range');
+        $yearRangeStart = Carbon::createFromFormat('Y-m-d', $yearRange)->year;
+        $yearRangeEnd = $yearRangeStart + 1;
+        $newLastExamDateYear = Carbon::createFromFormat('Y-m-d', $date)->year;
+        if ($newLastExamDateYear == $yearRangeEnd)
+            $this->setAttribute('last_exam_date', $date);
+        else
+            throw new BadRequestException(new MessageBag(['error', 'Year of last exam date should be equal to last year of year range']));
     }
 
     public function getActiveStudents($name) {
