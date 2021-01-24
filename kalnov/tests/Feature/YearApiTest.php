@@ -71,7 +71,7 @@ class YearApiTest extends TestCase
     }
 
     // GET: /years/{id}/next
-    public function testShouldReturnNotFoundForNotExistingNextYear() {
+    public function testShouldReturnNullableNextYearForNotExistingNextYear() {
         $year = YearRange::factory()->create([
             'start' => new DateTime('2020-01-01')
         ]);
@@ -79,7 +79,7 @@ class YearApiTest extends TestCase
         $id = $year['id'];
         $response = $this->get("api/years/$id/next");
 
-        $response->assertNotFound();
+        $response->assertJson([]);
     }
 
     // POST: /years

@@ -1,18 +1,18 @@
-import React, { useEffect, useState } from "react";
-import ReactDOM from 'react-dom';
-import axios from '../../axios'
+import React from "react";
 import {makeStyles} from "@material-ui/core";
-import {Route, Switch, useLocation} from "react-router";
+import {Redirect, Route, Switch, useLocation} from "react-router";
 import {YearPicker} from "./YearPicker";
 import {StudyYearPicker} from "./StudyYearPicker";
 import {Group} from "./Group";
 import {GroupList} from "./GroupList";
 import {Breadcrumbs} from "../ui/breadcrumbs/Breadcrumbs";
+import { NewGroup } from "./NewGroup";
+import {StudentsEnrollment} from "./StudentsEnrollment";
 
 const useStyles = makeStyles((theme) => ({
     container: {
-        padding: "20px 60px 0"
-    }
+        padding: "20px 60px"
+    },
 }))
 
 export const GroupPicker = (props) => {
@@ -29,6 +29,14 @@ export const GroupPicker = (props) => {
             <Switch>
                 <Route path='/groups' exact>
                     <YearPicker/>
+                </Route>
+
+                <Route path="/groups/:year/:studyYearType/:studyYear/newGroup">
+                    <NewGroup />
+                </Route>
+
+                <Route path='/groups/:year/:studyYearType/:studyYear/:number/enroll'>
+                    <StudentsEnrollment/>
                 </Route>
 
                 <Route path='/groups/:year/:studyYearType/:studyYear/:number'>

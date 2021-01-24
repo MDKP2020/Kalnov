@@ -5,6 +5,7 @@ namespace App\Models;
 
 
 use App\Exceptions\InvalidYearStart;
+use Carbon\Carbon;
 use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -17,7 +18,7 @@ class YearRange extends Model
 
     protected $table = 'year_ranges';
 
-    public static function create(string $startDate) {
+    public static function build(string $startDate) {
         $yearRange = new YearRange();
         $yearRange->setAttribute('start', $startDate);
 
@@ -26,8 +27,8 @@ class YearRange extends Model
 
     public static function store(string $startDate) {
         if($startDate != null) {
-            $yearRange = YearRange::create($startDate);
-            $yearRange->saveOrFail();
+            $yearRange = YearRange::build($startDate);
+            return $yearRange->saveOrFail();
         }
         else
             throw new InvalidYearStart();
@@ -37,6 +38,17 @@ class YearRange extends Model
         $yearRangeStart = new DateTime($this->start);
         $year = $yearRangeStart->format('Y');
 
-        return YearRange::whereRaw('date_part(\'year\', start) = ?', [intval($year) + 1])->get();
+        $nextYear = YearRange::whereRaw('date_part(\'year\', start) = ?', [intval($year) + 1]);
+        if($nextYear->exists())
+            return $nextYear->first()->start;
+        else {
+            $nextYearDate = Carbon::createFromFormat('Y-m-d', $this->start);
+            $nextYearDate->year += 1;
+            $nextYear = self::build($nextYearDate->format('Y-m-d'));
+
+            $nextYear->save();
+
+            return $nextYear->start;
+        }
     }
 }

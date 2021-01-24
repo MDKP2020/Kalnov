@@ -1,11 +1,17 @@
 import React, {useEffect, useState} from 'react'
 import axios from '../../axios'
-import {useLocation, useParams} from "react-router";
+import {useHistory, useLocation, useParams} from "react-router";
 import { KeyboardDatePicker } from '@material-ui/pickers'
-import {StudentCard} from "./student/StudentCard";
-import {useTheme, makeStyles} from "@material-ui/core";
+import {Student} from "./student/Student";
+import {useTheme, makeStyles, CircularProgress} from "@material-ui/core";
 import {DeanButton} from "../ui/DeanButton";
 import {SearchBar} from "../ui/SearchBar";
+import {StudyTypes} from "../../types/studyTypes";
+import {ArrowUpward} from "@material-ui/icons";
+import { format } from 'date-fns'
+import {PickerLocalization} from "../../utils/date/PickerLocalization";
+import {useDefaultStyles} from "../../hooks/useDefaultStyles";
+import {DeanSnackbar} from "../ui/DeanSnackbar";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -18,7 +24,9 @@ const useStyles = makeStyles(theme => ({
         marginTop: '1.5rem'
     },
     lastExamDateInputContainer: {
+        marginTop: '1.5rem',
         display: 'flex',
+        alignItems: 'center'
     },
     transferButton: {
         marginTop: '3rem'
@@ -27,20 +35,60 @@ const useStyles = makeStyles(theme => ({
         color: theme.palette.error.main,
         fontSize: '1.2rem',
         display: 'block'
-    }
+    },
+    actionsWithGroup: {
+        display: 'flex',
+        flexDirection: 'column',
+        '& > button:not(:first-of-type)': {
+            marginTop: '2.5rem',
+        },
+    },
+    enrollStudentsLabelContainer: {
+        display: 'flex',
+        alignItems: 'center',
+        cursor: 'pointer',
+        marginTop: '1.5rem'
+    },
+    enrollStudentsIcon: {
+        fontSize: '2.4rem',
+        marginRight: '0.7rem'
+    },
+    enrollStudentsLabel: {
+        fontSize: '1.1rem'
+    },
+    setLastExamDateButton: {
+        marginLeft: '2rem',
+    },
+    toNewGroupButton: {
+        width: '100%',
+    },
 }))
 
 export const Group = () => {
-    const styles = useStyles(useTheme())
+    const theme = useTheme()
+    const styles = useStyles()
+    const defaultStyles = useDefaultStyles()
+
+    const history = useHistory()
 
     const { year, studyYear, studyYearType, number } = useParams()
     const [students, setStudents] = useState([])
     const [studentsAreLoaded, setStudentsAreLoaded] = useState(false)
-    const [lastExamDate, setLastExamDate] = useState('')
+    const [lastExamDate, setLastExamDate] = useState(new Date(Number.parseInt(year) + 1, 0, 1))
+    const [successExpelSnackbarOpen, setSuccessExpelSnackbarOpen] = useState(false)
+    const [failureExpelSnackbarOpen, setFailureExpelSnackbarOpen] = useState(false)
+    const [successSetLastExamDateSnackbarOpen, setSuccessSetLastExamDateSnackbarOpen] = useState(false)
+    const [failureSetLastExamDateSnackbarOpen, setFailureSetLastExamDateSnackbarOpen] = useState(false)
+    const [failureNextYearMoveSnackbarOpen, setFailureNextYearMoveSnackbarOpen] = useState(false)
+    const [failureNextYearMoveError, setFailureNextYearMoveError] = useState('')
+    const [newGroupId, setNewGroupId] = useState(null)
+    const [studentNameQuery, setStudentNameQuery] = useState('')
 
-    const id = useLocation().state.groupId
+    const id = new URLSearchParams(useLocation().search).get('groupId')
 
     const getStudents = (query) => {
+        setStudentNameQuery(query)
+
         axios.get(
             `/groups/${id}/students`,
             {
@@ -48,14 +96,25 @@ export const Group = () => {
                     name: query ? query : ''
                 }
             }
-        ).then(students => { setStudents(students.data); setStudentsAreLoaded(true) })
+        ).then(students => {
+            setStudents(students.data)
+            setStudentsAreLoaded(true)
+        })
+    }
+
+    const getGroupData = () => {
+        axios.get(`/groups/${id}`).then(group => {
+            setLastExamDate(new Date(group.data.lastExamDate))
+            setStudents(group.data.students)
+            setStudentsAreLoaded(true)
+        })
     }
 
     const handleLastExamDateChange = (date) => {
         setLastExamDate(date)
     }
 
-    useEffect(getStudents, [year, studyYear, studyYearType])
+    useEffect(getGroupData, [year, studyYear, studyYearType])
 
     const StudentList = (
         <>
@@ -63,20 +122,89 @@ export const Group = () => {
 
             <div className={styles.studentList}>
                 {students.map(student => {
-                    const fullName = `${student['last_name']} ${student.name} ${student['middle_name']}`
-                    return <StudentCard key={student.id} name={fullName} id={student.id} />
+                    return <Student
+                        key={student.id}
+                        id={student.id}
+                        gradebookNumber={student['gradebook_number']}
+                        groupId={id}
+                        expelReason={student['expel_reason']}
+                        onUpdate={getStudents}
+                        name={student.name}
+                        lastName={student['last_name']}
+                        middleName={student['middle_name']}
+                    />
                 })}
             </div>
         </>
     )
 
+    const handleStudentsEnroll = () => {
+        history.push(`${history.location.pathname}/enroll?groupId=${id}`)
+    }
+
     const NoStudentsMessage = <span className={styles.noStudentsMessage}>В группе ещё нет студентов</span>
+    const NoStudentsContent = <div>
+        {NoStudentsMessage}
+        <div className={styles.enrollStudentsLabelContainer} onClick={handleStudentsEnroll}>
+            <ArrowUpward className={styles.enrollStudentsIcon} htmlColor={theme.palette.primary.main}/>
+            <span className={styles.enrollStudentsLabel}>Зачислить студентов</span>
+        </div>
+    </div>
 
     let studentsContent;
     if(!studentsAreLoaded)
-        studentsContent = null
+        studentsContent = <CircularProgress size='2em'/>
     else {
-        studentsContent = students.length > 0  ? StudentList : NoStudentsMessage
+        studentsContent = students.length === 0 && studentNameQuery === '' ? NoStudentsContent : StudentList
+    }
+
+    const expelStudentsHandler = async () => {
+        try {
+            const response = await axios.patch(`/groups/${id}/expel/studyEnd`)
+            if (response.status === 200) {
+                setSuccessExpelSnackbarOpen(true)
+                await getStudents()
+            }
+        } catch (e) {
+            setFailureExpelSnackbarOpen(true)
+        }
+    }
+
+    const handleMoveToNextYear = () => {
+        axios.post(`/groups/${id}/nextYear`).then(response => {
+            setNewGroupId(response.data)
+        }).catch(error => {
+            if (error.response.status === 400 && error.response.data.errors?.['last_exam_date']) {
+                setFailureNextYearMoveError('Не установлена дата последнего экзамена')
+            }
+            if (error.response.status === 400 && error.response.data.error?.includes('only after the end of last exam')) {
+                setFailureNextYearMoveError('Невозможно перевести студентов, пока не наступит дата последнего экзамена')
+            }
+
+            if (error.response.status === 400 && error.response.data.error?.includes('already exists')) {
+                setFailureNextYearMoveError('Такая группа уже существует на следующем курсе!')
+            }
+            setFailureNextYearMoveSnackbarOpen(true)
+        })
+    }
+
+    const openNewGroupPage = () => {
+        history.push(`/groups/${Number.parseInt(year) + 1}/${studyYearType}/${Number.parseInt(studyYear) + 1}/${number}?groupId=${newGroupId}`)
+    }
+
+    const ToNewGroupButton = (
+        <DeanButton primary className={styles.toNewGroupButton} onClick={openNewGroupPage}>Перейти к новой группе</DeanButton>
+    )
+
+    const handleSetLastExamDate = () => {
+        axios.post(`/groups/${id}/lastExamDate`, {
+            lastExamDate: format(lastExamDate, 'yyyy-MM-dd')
+        }).then(response => setSuccessSetLastExamDateSnackbarOpen(true))
+          .catch(error => {
+            if (error.response.data.errors?.['last_exam_year']?.[0].includes('should be equal to last year of year range')) {
+                setFailureSetLastExamDateSnackbarOpen(true)
+            }
+        })
     }
 
     return (
@@ -86,10 +214,76 @@ export const Group = () => {
             { studentsContent }
 
             <div className={styles.lastExamDateInputContainer}>
-
+                <PickerLocalization>
+                    <KeyboardDatePicker
+                        disableToolbar
+                        variant="inline"
+                        format="dd.MM.yyyy"
+                        margin="normal"
+                        id="last-exam-date"
+                        label="Дата последнего экзамена во втором семестре"
+                        value={lastExamDate}
+                        onChange={handleLastExamDateChange}
+                    />
+                </PickerLocalization>
+                <DeanButton primary onClick={handleSetLastExamDate} className={styles.setLastExamDateButton}>Установить</DeanButton>
+            </div>
+            <div className={styles.actionsWithGroup}>
+                <DeanButton onClick={handleMoveToNextYear} disabled={studentsAreLoaded && students.length === 0} primary className={styles.transferButton}>Перевести студентов на следующий курс</DeanButton>
+                <DeanButton
+                    error
+                    disabled={(studyYearType === StudyTypes.bachelor && studyYear !== 4) || (studyYearType === StudyTypes.master && studyYear !== 2)}
+                    onClick={expelStudentsHandler}
+                >
+                    Отчислить студентов в связи с окончанием обучения
+                </DeanButton>
             </div>
 
-            <DeanButton disabled={studentsAreLoaded && students.length === 0} primary className={styles.transferButton}>Перевести студентов на следующий курс</DeanButton>
+            <DeanSnackbar
+                open={successExpelSnackbarOpen}
+                autoHideDuration={2500}
+                onClose={() => setSuccessExpelSnackbarOpen(false)}
+                message="Студенты успешно отчислены"
+            />
+
+            <DeanSnackbar
+                error
+                open={failureExpelSnackbarOpen}
+                autoHideDuration={2500}
+                onClose={() => setFailureExpelSnackbarOpen(false)}
+                message="При отчислении студентов возникла ошибка"
+            />
+
+            <DeanSnackbar
+                open={newGroupId !== null}
+                autoHideDuration={10000}
+                onClose={() => setNewGroupId(null)}
+                message="Группа успешно переведена на следующий курс"
+                action={ToNewGroupButton}
+            />
+
+            <DeanSnackbar
+                open={successSetLastExamDateSnackbarOpen}
+                autoHideDuration={3500}
+                onClose={() => setSuccessSetLastExamDateSnackbarOpen(false)}
+                message="Дата последнего экзамена успешно установлена"
+            />
+
+            <DeanSnackbar
+                error
+                open={failureNextYearMoveSnackbarOpen}
+                autoHideDuration={4500}
+                onClose={() => setFailureNextYearMoveSnackbarOpen(false)}
+                message={failureNextYearMoveError}
+            />
+
+            <DeanSnackbar
+                error
+                open={failureSetLastExamDateSnackbarOpen}
+                autoHideDuration={4500}
+                onClose={() => setFailureSetLastExamDateSnackbarOpen(false)}
+                message="Год даты последнего экзамена должен совпадать с последним годом текущего учебного года"
+            />
         </div>
     )
 

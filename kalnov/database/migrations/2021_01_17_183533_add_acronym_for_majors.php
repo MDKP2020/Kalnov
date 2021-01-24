@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class RemoveGradebookNumberColumn extends Migration
+class AddAcronymForMajors extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,8 @@ class RemoveGradebookNumberColumn extends Migration
      */
     public function up()
     {
-        Schema::table('students', function($table) {
-            $table->dropColumn('gradebook_number');
+        Schema::table('majors', function (Blueprint $table) {
+            $table->string('acronym', '10');
         });
     }
 
@@ -25,8 +25,8 @@ class RemoveGradebookNumberColumn extends Migration
      */
     public function down()
     {
-        Schema::table('students', function($table) {
-            $table->integer('gradebook_number');
+        Schema::table('majors', function (Blueprint $table) {
+            $table->dropColumn('acronym');
         });
     }
 }

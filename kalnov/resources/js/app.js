@@ -10,14 +10,16 @@ import {Header} from "./components/ui/Header";
 import {makeStyles, MuiThemeProvider} from '@material-ui/core';
 import {theme} from "./theme";
 import '../css/app.css';
+import {Navigation} from "./components/Navigation";
+import {NewMajor} from "./components/major/NewMajor";
 
 const useStyles = makeStyles({
     root: {
         fontFamily: 'Roboto'
-    }
+    },
 })
 
-export const App = (props) => {
+export const App = () => {
     const styles = useStyles()
 
     return (
@@ -26,8 +28,14 @@ export const App = (props) => {
                 <Router>
                     <Header/>
                     <Switch>
+                        <Route path="/" exact>
+                            <Navigation />
+                        </Route>
                         <Route path="/groups">
                             <GroupPicker/>
+                        </Route>
+                        <Route path="/majors">
+                            <NewMajor />
                         </Route>
                     </Switch>
                 </Router>

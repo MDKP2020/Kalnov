@@ -12,11 +12,45 @@ export const theme = createMuiTheme({
             dark: '#a1a1a1'
         },
         error: {
-            main: '#D31F1F'
+            main: '#D31F1F',
+            dark: '#B51414',
+        },
+        warning: {
+            main: '#FFC52F'
         },
         text: {
             main: '#202020',
-            light: '#888888'
+            light: '#888888',
+            gray: '#9E9E9E'
         }
-    }
+    },
+    overrides: {
+        MuiSnackbarContent: {
+            root: {
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: 'rgba(47, 41, 41, 0.8)',
+                borderRadius: '24px',
+                padding: '36px 32px',
+            },
+            action: {
+                marginLeft: 0
+            },
+            message: {
+                color: '#fff',
+                fontFamily: 'Roboto',
+                fontWeight: 700,
+                fontSize: '1.5rem',
+                textAlign: 'center',
+            },
+        },
+        MuiSelect: {
+            select: {
+                '&:focus': {
+                    backgroundColor: 'inherit',
+                }
+            }
+        },
+    },
 })

@@ -3,10 +3,11 @@ import {Button, makeStyles, useTheme} from '@material-ui/core'
 
 const useStyles = makeStyles(theme => ({
     root: {
-        padding: '4px 16px', // change default padding for the button
-        fontWeight: 500, // default font-weight
+        padding: '12px 34px', // change default padding for the button
+        fontWeight: 700, // default font-weight
         maxWidth: '50%',
-        textTransform: 'none'
+        textTransform: 'none',
+        fontSize: '1.1rem',
     },
     primary: {
         backgroundColor: theme.palette.primary.main,
@@ -15,13 +16,20 @@ const useStyles = makeStyles(theme => ({
             backgroundColor: theme.palette.primary.dark
         }
     },
+    error: {
+        backgroundColor: theme.palette.error.main,
+        color: 'white',
+        '&:hover': {
+            backgroundColor: theme.palette.error.dark,
+        }
+    },
     secondary: {
         backgroundColor: theme.palette.background.main,
         color: 'black',
         '&:hover': {
             backgroundColor: theme.palette.background.dark
         }
-    }
+    },
 }))
 
 export const DeanButton = (props) => {
@@ -36,6 +44,9 @@ export const DeanButton = (props) => {
         buttonClasses.push(styles.primary)
     else if(secondary)
         buttonClasses.push(styles.secondary)
+    else if(error) {
+        buttonClasses.push(styles.error)
+    }
 
     buttonClasses.push(className)
 
