@@ -5,6 +5,7 @@ import { SnackbarContent, Snackbar } from "@material-ui/core";
 import {DeanButton} from "../ui/DeanButton";
 import {Breadcrumbs} from "../ui/breadcrumbs/Breadcrumbs";
 import {ErrorSnackbarContent} from "../ui/ErrorSnackbarContent";
+import {DeanSnackbar} from "../ui/DeanSnackbar";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -86,7 +87,8 @@ export const NewMajor = () => {
                 <DeanButton primary className={styles.createButton} onClick={handleNewMajorCreation}>
                     Создать специальность
                 </DeanButton>
-                <Snackbar
+
+                <DeanSnackbar
                     open={successMajorCreationSnackbarOpen}
                     autoHideDuration={3500}
                     onClose={() => {
@@ -94,12 +96,17 @@ export const NewMajor = () => {
                         setMajorName('')
                         setMajorAcronym('')
                     }}
-                >
-                    <SnackbarContent message={`Специальность "${majorName}" успешно создана`} />
-                </Snackbar>
-                <Snackbar open={failureMajorCreationSnackbarOpen} autoHideDuration={3500} onClose={() => setFailureMajorCreationSnackbarOpen(false)}>
-                    <ErrorSnackbarContent message={`Не удалось создать специальность "${majorName}"`} />
-                </Snackbar>
+                    message={`Специальность "${majorName}" успешно создана`}
+                />
+
+
+                <DeanSnackbar
+                    error
+                    open={failureMajorCreationSnackbarOpen}
+                    autoHideDuration={3500}
+                    onClose={() => setFailureMajorCreationSnackbarOpen(false)}
+                    message={`Не удалось создать специальность "${majorName}"`}
+                />
             </div>
         </div>
     )
