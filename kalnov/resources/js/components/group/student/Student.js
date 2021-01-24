@@ -4,8 +4,6 @@ import {
     makeStyles,
     FormControl,
     TextField,
-    SnackbarContent,
-    Snackbar,
     Select,
     MenuItem, InputLabel
 } from "@material-ui/core";
@@ -14,7 +12,6 @@ import {DeanTooltip} from "../../ui/DeanTooltip";
 import {StudentCard} from "./StudentCard";
 import axios from "../../../axios";
 import {DialogModal} from "../../ui/DialogModal";
-import {ErrorSnackbarContent} from "../../ui/ErrorSnackbarContent";
 import {DeanSnackbar} from "../../ui/DeanSnackbar";
 
 const useStyles = makeStyles(theme => ({
