@@ -158,13 +158,6 @@ Route::get('/groups/{id}', function(Request $request, $id) {
     return \App\Models\Dto\GroupDto::fromGroup($group);
 });
 
-
-Route::get('/groups/{id}', function(Request $request, $id) {
-    $group = Group::find($id);
-
-    return \App\Models\Dto\GroupDto::fromGroup($group);
-});
-
 Route::post('/groups/{id}/enrollment', function (Request $request, $id) {
     $studentsValidator = Validator::make($request->all(), [
         'students.*.name' => ['required', 'string'],
