@@ -16,7 +16,4 @@ export const useDefaultStyles = makeStyles(theme => ({
         alignItems: 'center',
         justifyContent: 'center',
     },
-    errorSnackbar: {
-        backgroundColor: theme.palette.error.dark,
-    },
 }))
