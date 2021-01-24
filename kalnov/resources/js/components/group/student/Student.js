@@ -14,6 +14,7 @@ import {DeanTooltip} from "../../ui/DeanTooltip";
 import {StudentCard} from "./StudentCard";
 import axios from "../../../axios";
 import {DialogModal} from "../../ui/DialogModal";
+import {ErrorSnackbarContent} from "../../ui/ErrorSnackbarContent";
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -331,7 +332,7 @@ export const Student = ({ id, gradebookNumber, groupId, expelReason: studentExpe
             </Snackbar>
 
             <Snackbar open={failureTransferGroupsLoadSnackbarOpen} autoHideDuration={4500} onClose={() => setFailureTransferGroupsLoadSnackbarOpen(false)}>
-                <SnackbarContent message="При загрузке групп для перевода произошла ошибка" />
+                <ErrorSnackbarContent message="При загрузке групп для перевода произошла ошибка" />
             </Snackbar>
 
             <Snackbar open={successTransferSnackbarOpen} autoHideDuration={3500} onClose={() => setSuccessTransferSnackbarOpen(false)}>
@@ -339,7 +340,7 @@ export const Student = ({ id, gradebookNumber, groupId, expelReason: studentExpe
             </Snackbar>
 
             <Snackbar open={failureTransferSnackbarOpen} autoHideDuration={4500} onClose={() => setFailureTransferSnackbarOpen(false)}>
-                <SnackbarContent message="При переводе студента в другую группу произошла ошибка" />
+                <ErrorSnackbarContent message="При переводе студента в другую группу произошла ошибка" />
             </Snackbar>
         </>
     )
