@@ -3,7 +3,7 @@ import axios from '../../axios'
 import {useHistory, useLocation, useParams} from "react-router";
 import { KeyboardDatePicker } from '@material-ui/pickers'
 import {Student} from "./student/Student";
-import {useTheme, makeStyles, Snackbar, SnackbarContent, CircularProgress} from "@material-ui/core";
+import {useTheme, makeStyles, CircularProgress} from "@material-ui/core";
 import {DeanButton} from "../ui/DeanButton";
 import {SearchBar} from "../ui/SearchBar";
 import {StudyTypes} from "../../types/studyTypes";
@@ -11,7 +11,7 @@ import {ArrowUpward} from "@material-ui/icons";
 import { format } from 'date-fns'
 import {PickerLocalization} from "../../utils/date/PickerLocalization";
 import {useDefaultStyles} from "../../hooks/useDefaultStyles";
-import {ErrorSnackbarContent} from "../ui/ErrorSnackbarContent";
+import {DeanSnackbar} from "../ui/DeanSnackbar";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -231,39 +231,50 @@ export const Group = () => {
                 </DeanButton>
             </div>
 
-            <Snackbar
+            <DeanSnackbar
                 open={successExpelSnackbarOpen}
                 autoHideDuration={2500}
                 onClose={() => setSuccessExpelSnackbarOpen(false)}
-            >
-                <SnackbarContent message="Студенты успешно отчислены" />
-            </Snackbar>
+                message="Студенты успешно отчислены"
+            />
 
-            <Snackbar
+            <DeanSnackbar
+                error
                 open={failureExpelSnackbarOpen}
                 autoHideDuration={2500}
                 onClose={() => setFailureExpelSnackbarOpen(false)}
-            >
-                <ErrorSnackbarContent message="При отчислении студентов возникла ошибка" />
-            </Snackbar>
+                message="При отчислении студентов возникла ошибка"
+            />
 
-            <Snackbar open={newGroupId !== null} autoHideDuration={10000} onClose={() => setNewGroupId(null)}>
-                <SnackbarContent message="Группа успешно переведена на следующий курс" action={ToNewGroupButton} />
-            </Snackbar>
+            <DeanSnackbar
+                open={newGroupId !== null}
+                autoHideDuration={10000}
+                onClose={() => setNewGroupId(null)}
+                message="Группа успешно переведена на следующий курс" action={ToNewGroupButton}
+            />
 
-            <Snackbar open={successSetLastExamDateSnackbarOpen} autoHideDuration={3500} onClose={() => setSuccessSetLastExamDateSnackbarOpen(false)}>
-                <SnackbarContent message="Дата последнего экзамена успешно установлена" />
-            </Snackbar>
+            <DeanSnackbar
+                open={successSetLastExamDateSnackbarOpen}
+                autoHideDuration={3500}
+                onClose={() => setSuccessSetLastExamDateSnackbarOpen(false)}
+                message="Дата последнего экзамена успешно установлена"
+            />
 
-            <Snackbar open={failureNextYearMoveSnackbarOpen} autoHideDuration={4500} onClose={() => setFailureNextYearMoveSnackbarOpen(false)}>
-                <ErrorSnackbarContent message={failureNextYearMoveError} />
-            </Snackbar>
+            <DeanSnackbar
+                error
+                open={failureNextYearMoveSnackbarOpen}
+                autoHideDuration={4500}
+                onClose={() => setFailureNextYearMoveSnackbarOpen(false)}
+                message={failureNextYearMoveError}
+            />
 
-            <Snackbar open={failureSetLastExamDateSnackbarOpen} autoHideDuration={4500} onClose={() => setFailureSetLastExamDateSnackbarOpen(false)}>
-                <ErrorSnackbarContent
-                    message="Год даты последнего экзамена должен совпадать с последним годом текущего учебного года"
-                />
-            </Snackbar>
+            <DeanSnackbar
+                error
+                open={failureSetLastExamDateSnackbarOpen}
+                autoHideDuration={4500}
+                onClose={() => setFailureSetLastExamDateSnackbarOpen(false)}
+                message="Год даты последнего экзамена должен совпадать с последним годом текущего учебного года"
+            />
         </div>
     )
 
