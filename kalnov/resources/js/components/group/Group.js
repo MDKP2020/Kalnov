@@ -11,6 +11,7 @@ import {ArrowUpward} from "@material-ui/icons";
 import { format } from 'date-fns'
 import {PickerLocalization} from "../../utils/date/PickerLocalization";
 import {useDefaultStyles} from "../../hooks/useDefaultStyles";
+import {ErrorSnackbarContent} from "../ui/ErrorSnackbarContent";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -243,7 +244,7 @@ export const Group = () => {
                 autoHideDuration={2500}
                 onClose={() => setFailureExpelSnackbarOpen(false)}
             >
-                <SnackbarContent message="При отчислении студентов возникла ошибка" classes={{ root: defaultStyles.errorSnackbar}} />
+                <ErrorSnackbarContent message="При отчислении студентов возникла ошибка" />
             </Snackbar>
 
             <Snackbar open={newGroupId !== null} autoHideDuration={10000} onClose={() => setNewGroupId(null)}>
@@ -255,13 +256,12 @@ export const Group = () => {
             </Snackbar>
 
             <Snackbar open={failureNextYearMoveSnackbarOpen} autoHideDuration={4500} onClose={() => setFailureNextYearMoveSnackbarOpen(false)}>
-                <SnackbarContent message={failureNextYearMoveError} classes={{ root: defaultStyles.errorSnackbar}} />
+                <ErrorSnackbarContent message={failureNextYearMoveError} />
             </Snackbar>
 
             <Snackbar open={failureSetLastExamDateSnackbarOpen} autoHideDuration={4500} onClose={() => setFailureSetLastExamDateSnackbarOpen(false)}>
-                <SnackbarContent
+                <ErrorSnackbarContent
                     message="Год даты последнего экзамена должен совпадать с последним годом текущего учебного года"
-                    classes={{ root: defaultStyles.errorSnackbar}}
                 />
             </Snackbar>
         </div>
