@@ -171,6 +171,10 @@ export const Group = () => {
             if (error.response.status === 400 && error.response.data.error?.includes('only after the end of last exam')) {
                 setFailureNextYearMoveError('Невозможно перевести студентов, пока не наступит дата последнего экзамена')
             }
+
+            if (error.response.status === 400 && error.response.data.error?.includes('already exists')) {
+                setFailureNextYearMoveError('Такая группа уже существует на следующем курсе!')
+            }
             setFailureNextYearMoveSnackbarOpen(true)
         })
     }
