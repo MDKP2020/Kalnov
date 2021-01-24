@@ -4,6 +4,7 @@ use App\Exceptions\BadRequestException;
 use App\Exceptions\InvalidNextYearTransfer;
 use App\Exceptions\InvalidStudentsEnrollmentData;
 use App\Exceptions\ResourceNotFound;
+use App\Models\Dto\GroupDto;
 use App\Models\Group;
 use App\Models\Student;
 use App\Models\StudyYear;
@@ -155,7 +156,7 @@ Route::patch('/groups/{id}/expel/studyEnd', function(Request $request, $id) {
 Route::get('/groups/{id}', function(Request $request, $id) {
     $group = Group::find($id);
 
-    return \App\Models\Dto\GroupDto::fromGroup($group);
+    return response()->json(GroupDto::fromGroup($group));
 });
 
 Route::post('/groups/{id}/enrollment', function (Request $request, $id) {
