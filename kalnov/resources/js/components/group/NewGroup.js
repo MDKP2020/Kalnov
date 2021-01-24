@@ -12,6 +12,7 @@ import { DeanButton } from "../ui/DeanButton";
 import axios from "../../axios";
 import {useHistory, useParams} from "react-router";
 import {DeanWarning} from "../ui/DeanWarning";
+import {WarningSnackbarContent} from "../ui/WarningSnackbarContent";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -38,9 +39,6 @@ const useStyles = makeStyles(theme => ({
     pageHeader: {
         marginBottom: 0,
     },
-    groupNumberErrorSnackbar: {
-        backgroundColor: theme.palette.warning.main
-    }
 }))
 
 export const NewGroup = () => {
@@ -136,7 +134,7 @@ export const NewGroup = () => {
             </div>
 
             <Snackbar autoHideDuration={4500} open={groupNumberErrorSnackbarOpen} onClose={() => setGroupNumberErrorSnackbarOpen(false)}>
-                <SnackbarContent classes={{ root: styles.groupNumberErrorSnackbar }} message='Номер группы должен быть числом' />
+                <WarningSnackbarContent message='Номер группы должен быть числом' />
             </Snackbar>
         </div>
     )
