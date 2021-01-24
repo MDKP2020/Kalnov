@@ -9,7 +9,7 @@ use Spatie\DataTransferObject\DataTransferObject;
 
 class GroupDto extends DataTransferObject
 {
-    public string $lastExamDate;
+    public ?string $lastExamDate;
     public int $id;
     public string $createdAt;
     public string $updatedAt;
