@@ -4,6 +4,7 @@ import axios from '../../axios';
 import { SnackbarContent, Snackbar } from "@material-ui/core";
 import {DeanButton} from "../ui/DeanButton";
 import {Breadcrumbs} from "../ui/breadcrumbs/Breadcrumbs";
+import {ErrorSnackbarContent} from "../ui/ErrorSnackbarContent";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -97,7 +98,7 @@ export const NewMajor = () => {
                     <SnackbarContent message={`Специальность "${majorName}" успешно создана`} />
                 </Snackbar>
                 <Snackbar open={failureMajorCreationSnackbarOpen} autoHideDuration={3500} onClose={() => setFailureMajorCreationSnackbarOpen(false)}>
-                    <SnackbarContent message={`Не удалось создать специальность "${majorName}"`} />
+                    <ErrorSnackbarContent message={`Не удалось создать специальность "${majorName}"`} />
                 </Snackbar>
             </div>
         </div>
