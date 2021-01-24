@@ -10,6 +10,7 @@ import {Cancel, Warning} from "@material-ui/icons";
 import {DeanWarning} from "../ui/DeanWarning";
 import {validateGradebookNumber} from "../../utils/students/validateGradebookNumber";
 import {useDefaultStyles} from "../../hooks/useDefaultStyles";
+import {ErrorSnackbarContent} from "../ui/ErrorSnackbarContent";
 
 const useStyles = makeStyles(theme => ({
     textField: {
@@ -201,12 +202,8 @@ export const StudentsEnrollment = (props) => {
                 <SnackbarContent message='Студенты успешно зачислены' action={ToGroupListButton} />
             </Snackbar>
 
-            <Snackbar open={showSuccessEnrollmentSnackbar} autoHideDuration={10000} onClose={() => setShowSuccessEnrollmentSnackbar(false)}>
-                <SnackbarContent message='Студенты успешно зачислены' action={ToGroupListButton} />
-            </Snackbar>
-
             <Snackbar open={enrollErrorSnackbarOpen} autoHideDuration={4500} onClose={() => setEnrollErrorSnackbarOpen(false)}>
-                <SnackbarContent message='Номера зачётных книжек должны быть уникальными' classes={{ root: defaultStyles.errorSnackbar}} />
+                <ErrorSnackbarContent message='Номера зачётных книжек должны быть уникальными' />
             </Snackbar>
         </div>
     )
