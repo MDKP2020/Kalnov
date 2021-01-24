@@ -258,7 +258,8 @@ export const Group = () => {
                 open={newGroupId !== null}
                 autoHideDuration={10000}
                 onClose={() => setNewGroupId(null)}
-                message="Группа успешно переведена на следующий курс" action={ToNewGroupButton}
+                message="Группа успешно переведена на следующий курс"
+                action={ToNewGroupButton}
             />
 
             <DeanSnackbar
