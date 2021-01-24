@@ -11,6 +11,7 @@ import {DeanWarning} from "../ui/DeanWarning";
 import {validateGradebookNumber} from "../../utils/students/validateGradebookNumber";
 import {useDefaultStyles} from "../../hooks/useDefaultStyles";
 import {ErrorSnackbarContent} from "../ui/ErrorSnackbarContent";
+import {DeanSnackbar} from "../ui/DeanSnackbar";
 
 const useStyles = makeStyles(theme => ({
     textField: {
@@ -198,13 +199,21 @@ export const StudentsEnrollment = (props) => {
                 <DeanWarning text="Студенты будут зачислены в выбранную группу" />
             </div>
 
-            <Snackbar open={showSuccessEnrollmentSnackbar} autoHideDuration={10000} onClose={() => setShowSuccessEnrollmentSnackbar(false)}>
-                <SnackbarContent message='Студенты успешно зачислены' action={ToGroupListButton} />
-            </Snackbar>
+            <DeanSnackbar
+                open={showSuccessEnrollmentSnackbar}
+                autoHideDuration={10000}
+                onClose={() => setShowSuccessEnrollmentSnackbar(false)}
+                message="Студенты успешно зачислены"
+                action={ToGroupListButton}
+            />
 
-            <Snackbar open={enrollErrorSnackbarOpen} autoHideDuration={4500} onClose={() => setEnrollErrorSnackbarOpen(false)}>
-                <ErrorSnackbarContent message='Номера зачётных книжек должны быть уникальными' />
-            </Snackbar>
+            <DeanSnackbar
+                error
+                open={enrollErrorSnackbarOpen}
+                autoHideDuration={4500}
+                onClose={() => setEnrollErrorSnackbarOpen(false)}
+                message="Номера зачётных книжек должны быть уникальными"
+            />
         </div>
     )
 }
