@@ -104,7 +104,8 @@ export const Group = () => {
 
     const getGroupData = () => {
         axios.get(`/groups/${id}`).then(group => {
-            setLastExamDate(new Date(group.data.lastExamDate))
+            if (group.data.lastExamDate !== null)
+                setLastExamDate(new Date(group.data.lastExamDate))
             setStudents(group.data.students)
             setStudentsAreLoaded(true)
         })
