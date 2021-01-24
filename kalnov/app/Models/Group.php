@@ -301,4 +301,8 @@ class Group extends Model
             ->where('study_year', '=', $study_year)
             ->exists();
     }
+
+    public function students() {
+        return $this->belongsToMany(Student::class, 'students_to_groups', 'group_id', 'student_id');
+    }
 }
