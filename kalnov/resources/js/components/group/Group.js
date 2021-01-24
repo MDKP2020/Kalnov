@@ -102,11 +102,19 @@ export const Group = () => {
         })
     }
 
+    const getGroupData = () => {
+        axios.get(`/groups/${id}`).then(group => {
+            setLastExamDate(new Date(group.data.lastExamDate))
+            setStudents(group.data.students)
+            setStudentsAreLoaded(true)
+        })
+    }
+
     const handleLastExamDateChange = (date) => {
         setLastExamDate(date)
     }
 
-    useEffect(getStudents, [year, studyYear, studyYearType])
+    useEffect(getGroupData, [year, studyYear, studyYearType])
 
     const StudentList = (
         <>
