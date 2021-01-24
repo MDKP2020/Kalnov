@@ -13,6 +13,7 @@ import axios from "../../axios";
 import {useHistory, useParams} from "react-router";
 import {DeanWarning} from "../ui/DeanWarning";
 import {WarningSnackbarContent} from "../ui/WarningSnackbarContent";
+import {DeanSnackbar} from "../ui/DeanSnackbar";
 
 const useStyles = makeStyles(theme => ({
     container: {
@@ -133,9 +134,13 @@ export const NewGroup = () => {
                 <DeanWarning inline text="Группа будет создана на первом курсе в текущем учебном году" />
             </div>
 
-            <Snackbar autoHideDuration={4500} open={groupNumberErrorSnackbarOpen} onClose={() => setGroupNumberErrorSnackbarOpen(false)}>
-                <WarningSnackbarContent message='Номер группы должен быть числом' />
-            </Snackbar>
+            <DeanSnackbar
+                warning
+                autoHideDuration={4500}
+                open={groupNumberErrorSnackbarOpen}
+                onClose={() => setGroupNumberErrorSnackbarOpen(false)}
+                message="Номер группы должен быть числом"
+            />
         </div>
     )
 }
