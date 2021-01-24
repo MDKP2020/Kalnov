@@ -15,6 +15,7 @@ import {StudentCard} from "./StudentCard";
 import axios from "../../../axios";
 import {DialogModal} from "../../ui/DialogModal";
 import {ErrorSnackbarContent} from "../../ui/ErrorSnackbarContent";
+import {DeanSnackbar} from "../../ui/DeanSnackbar";
 
 const useStyles = makeStyles(theme => ({
     card: {
@@ -321,27 +322,36 @@ export const Student = ({ id, gradebookNumber, groupId, expelReason: studentExpe
                 </div>
             </DialogModal>
 
-            <Snackbar
+            <DeanSnackbar
                 open={showSuccessStudentExpelSnackbar}
                 autoHideDuration={3500}
                 onClose={() => setShowSuccessStudentExpelSnackbar(false)}
-            >
-                <SnackbarContent
-                    message={`Студент ${fullName} был успешно отчислен по причине: ${expelReason}`}
-                />
-            </Snackbar>
+                message={`Студент ${fullName} был успешно отчислен по причине: ${expelReason}`}
+            />
 
-            <Snackbar open={failureTransferGroupsLoadSnackbarOpen} autoHideDuration={4500} onClose={() => setFailureTransferGroupsLoadSnackbarOpen(false)}>
-                <ErrorSnackbarContent message="При загрузке групп для перевода произошла ошибка" />
-            </Snackbar>
+            <DeanSnackbar
+                error
+                open={failureTransferGroupsLoadSnackbarOpen}
+                autoHideDuration={4500}
+                onClose={() => setFailureTransferGroupsLoadSnackbarOpen(false)}
+                message="При загрузке групп для перевода произошла ошибка"
+            />
 
-            <Snackbar open={successTransferSnackbarOpen} autoHideDuration={3500} onClose={() => setSuccessTransferSnackbarOpen(false)}>
-                <SnackbarContent message={`Студент ${fullName} был успешно переведён в группу ${newGroupFullName}`} />
-            </Snackbar>
+            <DeanSnackbar
+                open={successTransferSnackbarOpen}
+                autoHideDuration={3500}
+                onClose={() => setSuccessTransferSnackbarOpen(false)}
+                message={`Студент ${fullName} был успешно переведён в группу ${newGroupFullName}`}
+            />
 
-            <Snackbar open={failureTransferSnackbarOpen} autoHideDuration={4500} onClose={() => setFailureTransferSnackbarOpen(false)}>
-                <ErrorSnackbarContent message="При переводе студента в другую группу произошла ошибка" />
-            </Snackbar>
+            <DeanSnackbar
+                error
+                open={failureTransferSnackbarOpen}
+                autoHideDuration={4500}
+                onClose={() => setFailureTransferSnackbarOpen(false)}
+                message="При переводе студента в другую группу произошла ошибка"
+            />
+
         </>
     )
 }
