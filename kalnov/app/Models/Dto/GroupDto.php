@@ -19,7 +19,7 @@ class GroupDto extends DataTransferObject
         return new self([
             'id' => $group->getAttribute('id'),
             'lastExamDate' => $group->getAttribute('last_exam_date'),
-            'students' => $group->students()->get(),
+            'students' => $group->getStudents(null),
             'createdAt' => $group->getAttribute('created_at')->format(DateTime::ISO8601),
             'updatedAt' => $group->getAttribute('updated_at')->format(DateTime::ISO8601)
         ]);
